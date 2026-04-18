@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 const productSearchTypeSchema = z.enum(["name", "slug", "brand"]);
+
 const productSortBySchema = z.enum([
 	"name",
 	"createdAt",
@@ -8,6 +9,7 @@ const productSortBySchema = z.enum([
 	"rating",
 	"price",
 ]);
+
 const productSortOrderSchema = z.enum(["asc", "desc"]);
 
 export const getProductValidationSchema = z.object({
@@ -120,48 +122,6 @@ const productCategorySchema = z.object({
 	categoryId: z.string().uuid("Category id must be a valid UUID"),
 });
 
-const productVariantSchema = z
-	.object({
-		sku: z.string().trim().min(1, "Variant SKU is required"),
-		price: z.number().nonnegative("Variant price must be 0 or greater"),
-		compareAtPrice: z
-			.number()
-			.nonnegative("Compare-at price must be 0 or greater")
-			.nullable()
-			.optional(),
-		stockQuantity: z
-			.number()
-			.int("Stock quantity must be an integer")
-			.nonnegative("Stock quantity must be 0 or greater")
-			.default(0),
-		colorId: z.string().uuid("Color id must be a valid UUID").nullable().optional(),
-		storageId: z
-			.string()
-			.uuid("Storage id must be a valid UUID")
-			.nullable()
-			.optional(),
-		ramId: z.string().uuid("RAM id must be a valid UUID").nullable().optional(),
-		screenSizeId: z
-			.string()
-			.uuid("Screen size id must be a valid UUID")
-			.nullable()
-			.optional(),
-		isDefault: z.boolean().default(false),
-		images: z
-			.array(z.string().trim().min(1, "Variant image is required"))
-			.min(1, "At least one variant image is required"),
-	})
-	.refine(
-		(value) =>
-			value.compareAtPrice === undefined ||
-			value.compareAtPrice === null ||
-			value.compareAtPrice >= value.price,
-		{
-			message: "Compare-at price cannot be less than the variant price",
-			path: ["compareAtPrice"],
-		},
-	);
-
 const productBaseSchema = z.object({
 	name: z.string().trim().min(2, "Name must be at least 2 characters"),
 	brand: z.string().trim().min(1, "Brand is required"),
@@ -175,13 +135,9 @@ const productBaseSchema = z.object({
 	isActive: z.boolean().default(true),
 });
 
-export const createProductValidationSchema = productBaseSchema
-	.merge(productCategorySchema)
-	.extend({
-		variants: z
-			.array(productVariantSchema)
-			.min(1, "At least one variant is required"),
-	});
+export const createProductValidationSchema = productBaseSchema.merge(
+	productCategorySchema,
+);
 
 export const updateProductValidationSchema = z.object({
 	productId: z.string().min(1, "Product id is required"),
@@ -196,9 +152,6 @@ export const updateProductValidationSchema = z.object({
 	isFeatured: z.boolean().optional(),
 	isBestseller: z.boolean().optional(),
 	isActive: z.boolean().optional(),
-	variants: z.array(productVariantSchema.extend({
-		variantId: z.string().uuid("Variant id must be a valid UUID").optional(),
-	})).optional(),
 });
 
 export const deleteProductValidationSchema = z.object({

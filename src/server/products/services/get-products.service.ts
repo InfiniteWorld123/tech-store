@@ -17,7 +17,7 @@ import { handleError } from "#/errors/error-handler";
 import type {
 	GetProductsInputType,
 	GetProductsOutputType,
-} from "../products.admin.type";
+} from "../products.type";
 
 export const getProducts = async (
 	data: GetProductsInputType,
@@ -181,7 +181,7 @@ export const getProducts = async (
 				updatedAt: product.updatedAt,
 			})
 			.from(product)
-			.innerJoin(
+			.leftJoin(
 				variant,
 				and(eq(variant.productId, product.id), eq(variant.isDefault, true)),
 			)
@@ -192,7 +192,7 @@ export const getProducts = async (
 
 		const items = rows.map((row) => ({
 			...row,
-			price: Number(row.price),
+			price: row.price === null ? null : Number(row.price),
 			compareAtPrice:
 				row.compareAtPrice === null ? null : Number(row.compareAtPrice),
 			ratingAvg: Number(row.ratingAvg),

@@ -16,7 +16,7 @@ import { handleError } from "#/errors/error-handler";
 import type {
 	GetProductInputType,
 	GetProductOutputType,
-} from "../products.admin.type";
+} from "../products.type";
 
 export const getProduct = async (
 	data: GetProductInputType,
@@ -68,7 +68,7 @@ export const getProduct = async (
 			})
 			.from(product)
 			.innerJoin(category, eq(category.id, product.categoryId))
-			.innerJoin(variant, eq(variant.productId, product.id))
+			.leftJoin(variant, eq(variant.productId, product.id))
 			.leftJoin(variantImage, eq(variantImage.variantId, variant.id))
 			.leftJoin(color, eq(color.id, variant.colorId))
 			.leftJoin(storage, eq(storage.id, variant.storageId))
@@ -94,6 +94,10 @@ export const getProduct = async (
 		>();
 
 		for (const row of rows) {
+			if (!row.variantId) {
+				continue;
+			}
+
 			const existingVariant = variantsById.get(row.variantId);
 
 			if (existingVariant) {
@@ -106,14 +110,14 @@ export const getProduct = async (
 
 			variantsById.set(row.variantId, {
 				id: row.variantId,
-				sku: row.variantSku,
-				price: Number(row.variantPrice),
+				sku: row.variantSku as string,
+				price: Number(row.variantPrice as string),
 				compareAtPrice:
 					row.variantCompareAtPrice === null
 						? null
 						: Number(row.variantCompareAtPrice),
-				stockQuantity: row.variantStockQuantity,
-				isDefault: row.variantIsDefault,
+				stockQuantity: row.variantStockQuantity as number,
+				isDefault: row.variantIsDefault as boolean,
 				images: row.variantImage ? [row.variantImage] : [],
 				color: row.colorId
 					? {
@@ -143,8 +147,8 @@ export const getProduct = async (
 							valueInches: Number(row.screenSizeValueInches),
 						}
 					: null,
-				createdAt: row.variantCreatedAt.toISOString(),
-				updatedAt: row.variantUpdatedAt.toISOString(),
+				createdAt: (row.variantCreatedAt as Date).toISOString(),
+				updatedAt: (row.variantUpdatedAt as Date).toISOString(),
 			});
 		}
 

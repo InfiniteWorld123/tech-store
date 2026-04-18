@@ -1,4 +1,5 @@
 import type { z } from "zod";
+import type { AdminVariantType } from "../variants/variants.type";
 import type {
 	createProductValidationSchema,
 	deleteProductsValidationSchema,
@@ -6,14 +7,22 @@ import type {
 	getProductsValidationSchema,
 	getProductValidationSchema,
 	updateProductValidationSchema,
-} from "./products.admin.validation";
+} from "./products.validation";
 
 export type GetProductInputType = z.infer<typeof getProductValidationSchema>;
 export type GetProductsInputType = z.infer<typeof getProductsValidationSchema>;
-export type CreateProductInputType = z.infer<typeof createProductValidationSchema>;
-export type UpdateProductInputType = z.infer<typeof updateProductValidationSchema>;
-export type DeleteProductInputType = z.infer<typeof deleteProductValidationSchema>;
-export type DeleteProductsInputType = z.infer<typeof deleteProductsValidationSchema>;
+export type CreateProductInputType = z.infer<
+	typeof createProductValidationSchema
+>;
+export type UpdateProductInputType = z.infer<
+	typeof updateProductValidationSchema
+>;
+export type DeleteProductInputType = z.infer<
+	typeof deleteProductValidationSchema
+>;
+export type DeleteProductsInputType = z.infer<
+	typeof deleteProductsValidationSchema
+>;
 
 export type AdminProductListItemType = {
 	id: string;
@@ -21,47 +30,15 @@ export type AdminProductListItemType = {
 	image: string | null;
 	slug: string;
 	brand: string;
-	sku: string;
-	price: number;
+	sku: string | null;
+	price: number | null;
 	compareAtPrice: number | null;
-	stockQuantity: number;
+	stockQuantity: number | null;
 	reviewsCount: number;
 	ratingAvg: number;
 	isFeatured: boolean;
 	isBestseller: boolean;
 	isActive: boolean;
-	createdAt: string;
-	updatedAt: string;
-};
-
-export type AdminProductVariantType = {
-	id: string;
-	sku: string;
-	price: number;
-	compareAtPrice: number | null;
-	stockQuantity: number;
-	isDefault: boolean;
-	images: string[];
-	color: {
-		id: string;
-		name: string;
-		hexCode: string | null;
-	} | null;
-	storage: {
-		id: string;
-		name: string;
-		valueGb: number;
-	} | null;
-	ram: {
-		id: string;
-		name: string;
-		valueGb: number;
-	} | null;
-	screenSize: {
-		id: string;
-		name: string;
-		valueInches: number;
-	} | null;
 	createdAt: string;
 	updatedAt: string;
 };
@@ -88,7 +65,7 @@ export type AdminProductDetailsType = {
 	isActive: boolean;
 	createdAt: string;
 	updatedAt: string;
-	variants: AdminProductVariantType[];
+	variants: AdminVariantType[];
 };
 
 export type GetProductsOutputType = {
@@ -114,12 +91,31 @@ export type GetProductOutputType = {
 	product: AdminProductDetailsType | null;
 };
 
+export type AdminProductMutationType = {
+	id: string;
+	categoryId: string;
+	name: string;
+	brand: string;
+	slug: string;
+	shortDescription: string | null;
+	description: string;
+	warrantyInfo: string | null;
+	image: string | null;
+	ratingAvg: string;
+	reviewsCount: number;
+	isFeatured: boolean;
+	isBestseller: boolean;
+	isActive: boolean;
+	createdAt: Date;
+	updatedAt: Date;
+};
+
 export type CreateProductOutputType = {
-	product: CreateProductInputType;
+	product: AdminProductMutationType;
 };
 
 export type UpdateProductOutputType = {
-	product: UpdateProductInputType;
+	product: AdminProductMutationType;
 };
 
 export type DeleteProductOutputType = {

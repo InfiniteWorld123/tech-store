@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { ensureSession } from "../../auth/ensure-session.middleware";
+import { ensureSession } from "../auth/ensure-session.middleware";
 import {
 	createProductValidationSchema,
 	deleteProductsValidationSchema,
@@ -7,7 +7,7 @@ import {
 	getProductsValidationSchema,
 	getProductValidationSchema,
 	updateProductValidationSchema,
-} from "./products.admin.validation";
+} from "./products.validation";
 import { createProduct } from "./services/create-product.service";
 import { deleteProduct } from "./services/delete-product.service";
 import { deleteProducts } from "./services/delete-products.service";
