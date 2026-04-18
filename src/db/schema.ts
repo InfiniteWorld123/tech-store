@@ -178,7 +178,6 @@ export const variant = pgTable(
 			onDelete: "set null",
 		}),
 		isDefault: boolean("is_default").default(false).notNull(),
-		image: text("image"),
 		...timestamps,
 	},
 	(table) => [
@@ -188,6 +187,23 @@ export const variant = pgTable(
 		index("variant_storage_id_idx").on(table.storageId),
 		index("variant_ram_id_idx").on(table.ramId),
 		index("variant_screen_size_id_idx").on(table.screenSizeId),
+	],
+);
+
+export const variantImage = pgTable(
+	"variant_image",
+	{
+		id: uuidId(),
+		variantId: uuid("variant_id")
+			.notNull()
+			.references(() => variant.id, { onDelete: "cascade" }),
+		image: text("image").notNull(),
+		sortOrder: integer("sort_order").default(0).notNull(),
+		...timestamps,
+	},
+	(table) => [
+		index("variant_image_variant_id_idx").on(table.variantId),
+		index("variant_image_sort_order_idx").on(table.sortOrder),
 	],
 );
 
@@ -415,8 +431,16 @@ export const variantRelations = relations(variant, ({ one, many }) => ({
 		fields: [variant.screenSizeId],
 		references: [screenSize.id],
 	}),
+	images: many(variantImage),
 	cartItems: many(cartItem),
 	orderItems: many(orderItem),
+}));
+
+export const variantImageRelations = relations(variantImage, ({ one }) => ({
+	variant: one(variant, {
+		fields: [variantImage.variantId],
+		references: [variant.id],
+	}),
 }));
 
 export const colorRelations = relations(color, ({ many }) => ({

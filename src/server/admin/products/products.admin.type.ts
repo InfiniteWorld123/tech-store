@@ -41,7 +41,7 @@ export type AdminProductVariantType = {
 	compareAtPrice: number | null;
 	stockQuantity: number;
 	isDefault: boolean;
-	image: string | null;
+	images: string[];
 	color: {
 		id: string;
 		name: string;
@@ -112,4 +112,20 @@ export type GetProductsOutputType = {
 
 export type GetProductOutputType = {
 	product: AdminProductDetailsType | null;
+};
+
+export type CreateProductOutputType = {
+	product: CreateProductInputType;
+};
+
+export type UpdateProductOutputType = {
+	product: UpdateProductInputType;
+};
+
+export type DeleteProductOutputType = {
+	productId: DeleteProductInputType["productId"];
+};
+
+export type DeleteProductsOutputType = {
+	productIds: DeleteProductsInputType["productIds"];
 };

@@ -15,6 +15,13 @@
       "when": 1776375403107,
       "tag": "0001_wonderful_spacker_dave",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1776446110095,
+      "tag": "0002_luxuriant_lady_mastermind",
+      "breakpoints": true
     }
   ]
 }
