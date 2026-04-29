@@ -5,6 +5,7 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import appCss from "../styles.css?url";
+import { Toast } from "@heroui/react";
 
 interface MyRouterContext {
 	queryClient: QueryClient;
@@ -41,6 +42,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
+				<Toast.Provider />
 				{children}
 				<Scripts />
 			</body>
