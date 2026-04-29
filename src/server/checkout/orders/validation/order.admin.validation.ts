@@ -156,3 +156,7 @@ export const getAllOrdersValidationSchema = z.object({
 			.default(10),
 	}),
 });
+
+export const getOrderDetailValidationSchema = z.object({
+	orderId: z.uuid("Order id must be a valid UUID"),
+});

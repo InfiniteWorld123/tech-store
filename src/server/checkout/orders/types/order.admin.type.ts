@@ -1,6 +1,7 @@
 import type { z } from "zod";
 import type {
 	getAllOrdersValidationSchema,
+	getOrderDetailValidationSchema,
 	orderStatusSchema,
 	paymentMethodSchema,
 	paymentStatusSchema,
@@ -11,6 +12,10 @@ import type {
 
 export type GetAllOrdersInputType = z.infer<
 	typeof getAllOrdersValidationSchema
+>;
+
+export type GetOrderDetailInputType = z.infer<
+	typeof getOrderDetailValidationSchema
 >;
 
 export type OrderStatusType = z.infer<typeof orderStatusSchema>;
@@ -50,14 +55,50 @@ export type AdminOrderListItemType = {
 		status: PaymentStatusType;
 		amount: number;
 		paidAt: string | null;
-	} | null;
+	};
 	shipping: {
 		id: string;
 		carrier: ShippingCarrierType;
 		method: ShippingMethodType;
 		status: ShippingStatusType;
 		trackingNumber: string | null;
-	} | null;
+	};
+	itemCount: number;
+};
+
+export type AdminOrderDetailItemType = {
+	id: string;
+	variantId: string;
+	productName: string;
+	variantName: string;
+	sku: string;
+	quantity: number;
+	unitPrice: number;
+	totalPrice: number;
+};
+
+export type AdminOrderDetailType = Omit<AdminOrderListItemType, "itemCount"> & {
+	address: {
+		id: string;
+		fullName: string;
+		phone: string;
+		street: string;
+		postalCode: string;
+		city: string;
+		state: string | null;
+		country: string;
+	};
+	payment: AdminOrderListItemType["payment"] & {
+		createdAt: string;
+		updatedAt: string;
+	};
+	shipping: AdminOrderListItemType["shipping"] & {
+		shippedAt: string | null;
+		deliveredAt: string | null;
+		createdAt: string;
+		updatedAt: string;
+	};
+	items: AdminOrderDetailItemType[];
 	itemCount: number;
 };
 
@@ -78,4 +119,8 @@ export type GetAllOrdersOutputType = {
 		hasNextPage: boolean;
 		hasPreviousPage: boolean;
 	};
+};
+
+export type GetOrderDetailOutputType = {
+	item: AdminOrderDetailType;
 };
