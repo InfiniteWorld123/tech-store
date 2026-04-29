@@ -4,6 +4,7 @@ import {
 	index,
 	integer,
 	numeric,
+	pgEnum,
 	pgTable,
 	text,
 	timestamp,
@@ -20,6 +21,49 @@ const timestamps = {
 };
 
 const uuidId = () => uuid("id").defaultRandom().primaryKey();
+
+export const orderStatusEnum = pgEnum("order_status", [
+	"pending",
+	"processing",
+	"shipped",
+	"delivered",
+	"cancelled",
+]);
+
+export const paymentStatusEnum = pgEnum("payment_status", [
+	"pending",
+	"paid",
+	"failed",
+	"refunded",
+]);
+
+export const paymentMethodEnum = pgEnum("payment_method", [
+	"card",
+	"paypal",
+	"bank_transfer",
+	"cash_on_delivery",
+]);
+
+export const shippingStatusEnum = pgEnum("shipping_status", [
+	"pending",
+	"packed",
+	"shipped",
+	"in_transit",
+	"delivered",
+]);
+
+export const shippingMethodEnum = pgEnum("shipping_method", [
+	"standard",
+	"express",
+	"same_day",
+]);
+
+export const shippingCarrierEnum = pgEnum("shipping_carrier", [
+	"dhl",
+	"hermes",
+	"ups",
+	"fedex",
+]);
 
 // Better Auth tables
 export const user = pgTable("user", {
@@ -274,7 +318,7 @@ export const order = pgTable(
 			.notNull()
 			.references(() => address.id, { onDelete: "restrict" }),
 		orderNumber: text("order_number").notNull(),
-		status: text("status").notNull(),
+		status: orderStatusEnum("status").notNull(),
 		subtotal: numeric("subtotal", { precision: 10, scale: 2 }).notNull(),
 		shippingFee: numeric("shipping_fee", { precision: 10, scale: 2 })
 			.default("0.00")
@@ -324,9 +368,9 @@ export const payment = pgTable(
 		orderId: uuid("order_id")
 			.notNull()
 			.references(() => order.id, { onDelete: "cascade" }),
-		method: text("method").notNull(),
+		method: paymentMethodEnum("method").notNull(),
 		amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
-		status: text("status").notNull(),
+		status: paymentStatusEnum("status").notNull(),
 		paidAt: timestamp("paid_at"),
 		...timestamps,
 	},
@@ -340,10 +384,10 @@ export const shipping = pgTable(
 		orderId: uuid("order_id")
 			.notNull()
 			.references(() => order.id, { onDelete: "cascade" }),
-		carrier: text("carrier").notNull(),
-		method: text("method").notNull(),
+		carrier: shippingCarrierEnum("carrier").notNull(),
+		method: shippingMethodEnum("method").notNull(),
 		trackingNumber: text("tracking_number"),
-		status: text("status").notNull(),
+		status: shippingStatusEnum("status").notNull(),
 		shippedAt: timestamp("shipped_at"),
 		deliveredAt: timestamp("delivered_at"),
 		...timestamps,

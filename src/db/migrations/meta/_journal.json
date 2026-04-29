@@ -1,27 +1,48 @@
 {
-	"version": "7",
-	"dialect": "postgresql",
-	"entries": [
-		{
-			"idx": 0,
-			"version": "7",
-			"when": 1776339364572,
-			"tag": "0000_huge_albert_cleary",
-			"breakpoints": true
-		},
-		{
-			"idx": 1,
-			"version": "7",
-			"when": 1776375403107,
-			"tag": "0001_wonderful_spacker_dave",
-			"breakpoints": true
-		},
-		{
-			"idx": 2,
-			"version": "7",
-			"when": 1776446110095,
-			"tag": "0002_luxuriant_lady_mastermind",
-			"breakpoints": true
-		}
-	]
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1776339364572,
+      "tag": "0000_huge_albert_cleary",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1776375403107,
+      "tag": "0001_wonderful_spacker_dave",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1776446110095,
+      "tag": "0002_luxuriant_lady_mastermind",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1777462370149,
+      "tag": "0003_fine_cassandra_nova",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1777472216361,
+      "tag": "0004_rare_the_watchers",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1777472335942,
+      "tag": "0005_modern_carlie_cooper",
+      "breakpoints": true
+    }
+  ]
 }

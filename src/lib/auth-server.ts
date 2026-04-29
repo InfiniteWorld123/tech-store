@@ -2,21 +2,44 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { emailOTP } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
+import {
+	resetPasswordEmailTemplate,
+	verifyEmailTemplate,
+	welcomeEmailTemplate,
+} from "#/components/emails";
+import { env } from "#/constants/env";
 import { db } from "#/db/drizzle";
 import * as schema from "#/db/schema";
+import { sendEmail } from "./mailer";
 
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
 		provider: "pg",
 		schema,
 	}),
+	databaseHooks: {
+		user: {
+			create: {
+				after: async (user) => {
+					await sendEmail({
+						to: user.email,
+						subject: "Welcome to Tech Store",
+						html: welcomeEmailTemplate({
+							name: user.name,
+							url: env.BASE_URL,
+						}),
+					});
+				},
+			},
+		},
+	},
 	emailAndPassword: {
 		enabled: true,
 		sendResetPassword: async ({ user, url, token }) => {
-			console.info("[auth] password reset requested", {
-				email: user.email,
-				url,
-				token,
+			await sendEmail({
+				to: user.email,
+				subject: "Reset your Tech Store password",
+				html: resetPasswordEmailTemplate({ url, token }),
 			});
 		},
 		onPasswordReset: async ({ user }) => {
@@ -30,10 +53,10 @@ export const auth = betterAuth({
 		emailOTP({
 			async sendVerificationOTP({ email, otp, type }) {
 				if (type === "email-verification") {
-					console.info("[auth] verification OTP requested", {
-						email,
-						otp,
-						type,
+					await sendEmail({
+						to: email,
+						subject: "Verify your Tech Store email",
+						html: verifyEmailTemplate({ otp }),
 					});
 				}
 			},

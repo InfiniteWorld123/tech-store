@@ -1,0 +1,2 @@
+CREATE TYPE "public"."payment_method" AS ENUM('card', 'paypal', 'bank_transfer', 'cash_on_delivery');--> statement-breakpoint
+ALTER TABLE "payment" ALTER COLUMN "method" SET DATA TYPE "public"."payment_method" USING "method"::"public"."payment_method";
