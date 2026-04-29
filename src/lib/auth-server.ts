@@ -12,24 +12,29 @@ export const auth = betterAuth({
 	}),
 	emailAndPassword: {
 		enabled: true,
-		sendResetPassword: async ({ user, url, token }, request) => {
-			console.log(user)
-			console.log(url)
-			console.log(token)
-			console.log(request)
+		sendResetPassword: async ({ user, url, token }) => {
+			console.info("[auth] password reset requested", {
+				email: user.email,
+				url,
+				token,
+			});
 		},
-		onPasswordReset: async ({ user }, request) => {
-			console.log(user)
-			console.log(request)
+		onPasswordReset: async ({ user }) => {
+			console.info("[auth] password reset completed", {
+				email: user.email,
+				userId: user.id,
+			});
 		},
 	},
 	plugins: [
 		emailOTP({
 			async sendVerificationOTP({ email, otp, type }) {
 				if (type === "email-verification") {
-					console.log(email)
-					console.log(otp)
-					console.log(type)
+					console.info("[auth] verification OTP requested", {
+						email,
+						otp,
+						type,
+					});
 				}
 			},
 		}),

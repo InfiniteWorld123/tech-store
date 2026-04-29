@@ -6,22 +6,6 @@ const getEnvVar = (key: string) => {
 	return value;
 };
 
-const getOptionalEnvVar = (key: string) => {
-	const value = process.env[key];
-	if (value === undefined || value.trim() === "") {
-		return undefined;
-	}
-	return value;
-};
-
-const getBooleanEnvVar = (key: string, fallback: boolean) => {
-	const value = process.env[key];
-	if (value === undefined || value.trim() === "") {
-		return fallback;
-	}
-	return ["1", "true", "yes", "on"].includes(value.trim().toLowerCase());
-};
-
 export const env = {
 	BASE_URL: getEnvVar("BASE_URL"),
 	// API_KEY: getEnvVar("BETTER_AUTH_SECRET"),
