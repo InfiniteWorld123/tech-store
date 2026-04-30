@@ -1,21 +1,25 @@
 import type { z } from "zod";
 import type {
-	getAllOrdersValidationSchema,
-	getOrderDetailValidationSchema,
+	getOrderDetailSchema,
+	listOrdersSchema,
 	orderStatusSchema,
 	paymentMethodSchema,
 	paymentStatusSchema,
 	shippingCarrierSchema,
 	shippingMethodSchema,
 	shippingStatusSchema,
-} from "../validation/order.admin.validation";
+	toggleOrderArchiveSchema,
+	updateOrderPaymentStatusSchema,
+	updateOrderShippingStatusSchema,
+	updateOrderStatusSchema,
+} from "./admin.schemas";
 
-export type GetAllOrdersInputType = z.infer<
-	typeof getAllOrdersValidationSchema
->;
+export type ListOrdersInputType = z.infer<typeof listOrdersSchema>;
 
-export type GetOrderDetailInputType = z.infer<
-	typeof getOrderDetailValidationSchema
+export type GetOrderDetailInputType = z.infer<typeof getOrderDetailSchema>;
+
+export type ToggleOrderArchiveInputType = z.infer<
+	typeof toggleOrderArchiveSchema
 >;
 
 export type OrderStatusType = z.infer<typeof orderStatusSchema>;
@@ -29,6 +33,18 @@ export type ShippingStatusType = z.infer<typeof shippingStatusSchema>;
 export type ShippingMethodType = z.infer<typeof shippingMethodSchema>;
 
 export type ShippingCarrierType = z.infer<typeof shippingCarrierSchema>;
+
+export type UpdateOrderStatusInputType = z.infer<
+	typeof updateOrderStatusSchema
+>;
+
+export type UpdateOrderPaymentStatusInputType = z.infer<
+	typeof updateOrderPaymentStatusSchema
+>;
+
+export type UpdateOrderShippingStatusInputType = z.infer<
+	typeof updateOrderShippingStatusSchema
+>;
 
 export type AdminOrderListItemType = {
 	id: string;
@@ -102,18 +118,18 @@ export type AdminOrderDetailType = Omit<AdminOrderListItemType, "itemCount"> & {
 	itemCount: number;
 };
 
-export type GetAllOrdersOutputType = {
+export type ListOrdersOutputType = {
 	items: AdminOrderListItemType[];
 	query: {
-		searching?: GetAllOrdersInputType["searching"];
-		sorting?: GetAllOrdersInputType["sorting"];
-		filters?: GetAllOrdersInputType["filters"];
-		flags?: GetAllOrdersInputType["flags"];
-		ranges?: GetAllOrdersInputType["ranges"];
+		searching?: ListOrdersInputType["searching"];
+		sorting?: ListOrdersInputType["sorting"];
+		filters?: ListOrdersInputType["filters"];
+		flags?: ListOrdersInputType["flags"];
+		ranges?: ListOrdersInputType["ranges"];
 	};
 	pagination: {
-		page: GetAllOrdersInputType["pagination"]["page"];
-		limit: GetAllOrdersInputType["pagination"]["limit"];
+		page: ListOrdersInputType["pagination"]["page"];
+		limit: ListOrdersInputType["pagination"]["limit"];
 		total: number;
 		totalPages: number;
 		hasNextPage: boolean;
@@ -123,4 +139,25 @@ export type GetAllOrdersOutputType = {
 
 export type GetOrderDetailOutputType = {
 	item: AdminOrderDetailType;
+};
+
+export type ToggleOrderArchiveOutputType = {
+	orderId: string;
+	archived: boolean;
+	archivedAt: string | null;
+};
+
+export type UpdateOrderStatusOutputType = {
+	orderId: string;
+	orderStatus: OrderStatusType;
+};
+
+export type UpdateOrderPaymentStatusOutputType = {
+	orderId: string;
+	orderPaymentStatus: PaymentStatusType;
+};
+
+export type UpdateOrderShippingStatusOutputType = {
+	orderId: string;
+	orderShippingStatus: ShippingStatusType;
 };

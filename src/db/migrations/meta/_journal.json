@@ -50,6 +50,20 @@
       "when": 1777480000000,
       "tag": "0006_tiny_order_integrity",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1777564561182,
+      "tag": "0007_eager_menace",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1777569558572,
+      "tag": "0008_mute_warpath",
+      "breakpoints": true
     }
   ]
 }

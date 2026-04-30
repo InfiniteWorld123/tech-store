@@ -3,8 +3,7 @@ import { z } from "zod";
 export const orderStatusSchema = z.enum([
 	"pending",
 	"processing",
-	"shipped",
-	"delivered",
+	"completed",
 	"cancelled",
 ]);
 
@@ -94,7 +93,7 @@ export const dateRangeSchema = z
 		},
 	);
 
-export const getAllOrdersValidationSchema = z.object({
+export const listOrdersSchema = z.object({
 	searching: z
 		.object({
 			search: z.string().trim().min(1, "Search term is required").optional(),
@@ -157,6 +156,25 @@ export const getAllOrdersValidationSchema = z.object({
 	}),
 });
 
-export const getOrderDetailValidationSchema = z.object({
+export const getOrderDetailSchema = z.object({
 	orderId: z.uuid("Order id must be a valid UUID"),
+});
+
+export const toggleOrderArchiveSchema = z.object({
+	orderId: z.uuid("Order id must be a valid UUID"),
+});
+
+export const updateOrderStatusSchema = z.object({
+	orderId: z.uuid("Order id must be a valid UUID"),
+	orderStatus: orderStatusSchema,
+});
+
+export const updateOrderPaymentStatusSchema = z.object({
+	orderId: z.uuid("Order id must be a valid UUID"),
+	paymentStatus: paymentStatusSchema,
+});
+
+export const updateOrderShippingStatusSchema = z.object({
+	orderId: z.uuid("Order id must be a valid UUID"),
+	shippingStatus: shippingStatusSchema,
 });

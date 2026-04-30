@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import type { AdminVariantType } from "./variants/variants.type";
+import type { AdminVariantType } from "../variants/variants.type";
 import type {
 	createProductValidationSchema,
 	deleteProductsValidationSchema,

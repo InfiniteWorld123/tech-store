@@ -16,9 +16,9 @@ import type {
 	AdminOrderDetailType,
 	GetOrderDetailInputType,
 	GetOrderDetailOutputType,
-} from "../../types/order.admin.type";
+} from "../admin.types";
 
-export const getOrder = async (
+export const getOrderDetail = async (
 	data: GetOrderDetailInputType,
 ): Promise<JsonOk<GetOrderDetailOutputType>> => {
 	try {

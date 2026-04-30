@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { ensureSession } from "../../../auth/ensure-session.middleware";
+import { ensureSession } from "../../auth/ensure-session.middleware";
 import { createVariant } from "./services/create-variant.service";
 import { deleteVariant } from "./services/delete-variant.service";
 import { updateVariant } from "./services/update-variant.service";

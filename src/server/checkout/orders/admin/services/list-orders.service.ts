@@ -9,6 +9,7 @@ import {
 	ilike,
 	inArray,
 	isNotNull,
+	isNull,
 	lte,
 	or,
 	sql,
@@ -20,17 +21,14 @@ import { jsonOk } from "#/constants/json";
 import { db } from "#/db/drizzle";
 import { order, orderItem, payment, shipping, user } from "#/db/schema";
 import { handleError } from "#/errors/error-handler";
-import type {
-	GetAllOrdersInputType,
-	GetAllOrdersOutputType,
-} from "../../types/order.admin.type";
+import type { ListOrdersInputType, ListOrdersOutputType } from "../admin.types";
 
-type SearchType = NonNullable<GetAllOrdersInputType["searching"]>;
-type SortType = NonNullable<GetAllOrdersInputType["sorting"]>;
-type FilterType = NonNullable<GetAllOrdersInputType["filters"]>;
-type FlagType = NonNullable<GetAllOrdersInputType["flags"]>;
-type RangeType = NonNullable<GetAllOrdersInputType["ranges"]>;
-type PaginationType = GetAllOrdersInputType["pagination"];
+type SearchType = NonNullable<ListOrdersInputType["searching"]>;
+type SortType = NonNullable<ListOrdersInputType["sorting"]>;
+type FilterType = NonNullable<ListOrdersInputType["filters"]>;
+type FlagType = NonNullable<ListOrdersInputType["flags"]>;
+type RangeType = NonNullable<ListOrdersInputType["ranges"]>;
+type PaginationType = ListOrdersInputType["pagination"];
 
 const orderItemForCount = alias(orderItem, "order_item_for_count");
 
@@ -279,12 +277,12 @@ const buildPagination = (pagination: PaginationType) => {
 	};
 };
 
-export const getAllOrders = async (
-	data: GetAllOrdersInputType,
-): Promise<JsonOk<GetAllOrdersOutputType>> => {
+export const listOrders = async (
+	data: ListOrdersInputType,
+): Promise<JsonOk<ListOrdersOutputType>> => {
 	try {
 		const { searching, sorting, filters, flags, ranges, pagination } = data;
-		const conditions: SQL[] = [];
+		const conditions: SQL[] = [isNull(order.archivedAt)];
 
 		if (searching) {
 			const searchCondition = buildSearchCondition(searching);
@@ -438,7 +436,7 @@ export const getAllOrders = async (
 		const total = totalResult?.total ?? 0;
 		const totalPages = Math.ceil(total / limit);
 
-		return jsonOk<GetAllOrdersOutputType>({
+		return jsonOk<ListOrdersOutputType>({
 			status: HttpStatusCode.OK,
 			message: "Orders fetched successfully",
 			data: {
