@@ -1,0 +1,8 @@
+import { z } from "zod";
+
+export const getCartValidationSchema = z.object({});
+
+export const addToCartValidationSchema = z.object({
+	variantId: z.string().uuid("Variant id must be a valid UUID"),
+	quantity: z.number().int().min(1).max(99).default(1),
+});
