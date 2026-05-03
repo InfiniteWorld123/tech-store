@@ -2,7 +2,7 @@ import { createMiddleware } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { auth } from "#/lib/auth-server";
 import type { CartOwnerType } from "./cart.types";
-import { getOrCreateGuestCartSessionId } from "./middlewares/getOrCreateGuestCartSessionId";
+import { getOrCreateGuestCartSessionId } from "./middlewares/get-or-create-guest-cart-session-id";
 
 export const resolveCartOwnerMiddleware = createMiddleware({
 	type: "function",
