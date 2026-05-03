@@ -10,3 +10,7 @@ export const addToCartValidationSchema = z.object({
 export const emptyCartValidationSchema = z.object({});
 
 export const updateCartItemQuantityValidationSchema = addToCartValidationSchema;
+
+export const removeCartItemValidationSchema = z.object({
+	cartItemId: z.string().uuid("Cart item id must be a valid UUID"),
+});

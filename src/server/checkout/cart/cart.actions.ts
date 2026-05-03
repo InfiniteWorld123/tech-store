@@ -3,12 +3,14 @@ import {
 	addToCartValidationSchema,
 	emptyCartValidationSchema,
 	getCartValidationSchema,
+	removeCartItemValidationSchema,
 	updateCartItemQuantityValidationSchema,
 } from "./cart.schemas";
 import { resolveCartOwnerMiddleware } from "./resolveCartOwnerMiddleware";
 import { addToCart } from "./services/add-to-cart.service";
 import { emptyCart } from "./services/empty-cart.service";
 import { getCart } from "./services/get-cart.service";
+import { removeCartItem } from "./services/remove-cart-item.service";
 import { updateCartItemQuantity } from "./services/update-cart-item-quantity.service";
 
 export const getCartAction = createServerFn({ method: "GET" })
@@ -40,6 +42,16 @@ export const updateCartItemQuantityAction = createServerFn({ method: "POST" })
 	.inputValidator(updateCartItemQuantityValidationSchema)
 	.handler(async ({ context, data }) => {
 		return updateCartItemQuantity({
+			...data,
+			...context.cartOwner,
+		});
+	});
+
+export const removeCartItemAction = createServerFn({ method: "POST" })
+	.middleware([resolveCartOwnerMiddleware])
+	.inputValidator(removeCartItemValidationSchema)
+	.handler(async ({ context, data }) => {
+		return removeCartItem({
 			...data,
 			...context.cartOwner,
 		});

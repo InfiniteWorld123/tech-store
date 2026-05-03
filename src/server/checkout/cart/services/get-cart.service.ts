@@ -254,3 +254,4 @@ export const getCart = async (
 		throw handleError(error);
 	}
 };
+ 

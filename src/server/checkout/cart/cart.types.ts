@@ -1,12 +1,17 @@
 import type z from "zod";
 import type {
 	addToCartValidationSchema,
+	removeCartItemValidationSchema,
 	updateCartItemQuantityValidationSchema,
 } from "./cart.schemas";
 
 export type AddToCartSchemaType = z.infer<typeof addToCartValidationSchema>;
 export type UpdateCartItemQuantitySchemaType = z.infer<
 	typeof updateCartItemQuantityValidationSchema
+>;
+
+export type RemoveCartItemSchemaType = z.infer<
+	typeof removeCartItemValidationSchema
 >;
 
 export type CartWarningType = {
@@ -108,6 +113,8 @@ export type EmptyCartInputType = CartOwnerType;
 export type UpdateCartItemQuantityInputType = UpdateCartItemQuantitySchemaType &
 	CartOwnerType;
 
+export type RemoveCartItemInputType = RemoveCartItemSchemaType & CartOwnerType;
+
 // using them for the cart services as return output
 export type CartOutputType = CartType;
 
@@ -117,52 +124,22 @@ export type EmptyCartOutputType = CartType;
 
 export type UpdateCartItemQuantityOutputType = CartType;
 
+export type RemoveCartItemOutputType = CartType;
+
+
 /*
-  updateCartItemQuantity flow
+	1. User is not logged in.
+	2. User adds iPhone to cart.
+	3. Cart belongs to guest sessionId cookie.
+	4. User logs in.
+	5. Now you want guest cart items to move into the user cart.
+*/
 
-  1. Read input:
-     - userId
-     - sessionId
-     - variantId
-     - quantity
-
-  2. Check cart owner:
-     - if no userId and no sessionId, throw unauthorizedError
-
-  3. Build cart owner condition:
-     - if userId exists, use cart.userId
-     - otherwise use cart.sessionId
-
-  4. Find the cart item that belongs to this owner:
-     - from cartItem
-     - innerJoin cart on cart.id = cartItem.cartId
-     - where cartItem.variantId = variantId
-     - and cart owner condition
-
-  5. If cart item does not exist:
-     - throw notFoundError("Cart item not found")
-
-  6. Fetch current variant stock and price:
-     - from variant
-     - where variant.id = variantId
-
-  7. If variant does not exist:
-     - throw notFoundError("Variant not found")
-
-  8. Check stock:
-     - if variant.stockQuantity <= 0, throw conflictError("Out of stock")
-     - if quantity > variant.stockQuantity, throw conflictError("Requested quantity exceeds available stock")
-
-  9. Update cart item:
-     - set quantity to the new quantity
-     - optionally update priceAtTime to current variant.price
-     - where cartItem.id = existingCartItem.id
-
-  10. Return updated cart:
-      - return getCart({ userId, sessionId })
-
-  Business meaning:
-  - addToCart increases quantity
-  - updateCartItemQuantity replaces quantity
-  - removeCartItem removes the item
+/*
+	- cart exists
+	- cart is not empty
+	- every product is still active
+	- every variant still exists
+	- every item has enough stock
+	- prices did not change, or customer accepted new prices
 */
