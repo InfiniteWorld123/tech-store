@@ -30,8 +30,12 @@ export const mergeCart = async (
 	try {
 		const { userId, sessionId } = data;
 
-		if (!userId || !sessionId) {
+		if (!userId) {
 			throw unauthorizedError("Cart owner is required");
+		}
+
+		if (!sessionId) {
+			return mergedCartResponse({ userId, sessionId: null });
 		}
 
 		const [existingGuestCart] = await db

@@ -5,12 +5,12 @@ import { db } from "#/db/drizzle";
 import { cart, cartItem } from "#/db/schema";
 import { unauthorizedError } from "#/errors/app-error";
 import { handleError } from "#/errors/error-handler";
-import type { EmptyCartInputType, EmptyCartOutputType } from "../cart.types";
+import type { ClearCartInputType, ClearCartOutputType } from "../cart.types";
 import { getCart } from "./get-cart.service";
 
-export const emptyCart = async (
-	data: EmptyCartInputType,
-): Promise<JsonOk<EmptyCartOutputType>> => {
+export const clearCart = async (
+	data: ClearCartInputType,
+): Promise<JsonOk<ClearCartOutputType>> => {
 	try {
 		const { userId, sessionId } = data;
 
@@ -42,7 +42,7 @@ export const emptyCart = async (
 		return {
 			...cartResponse,
 			status: HttpStatusCode.OK,
-			message: "Cart emptied successfully",
+			message: "Cart cleared successfully",
 		};
 	} catch (error) {
 		throw handleError(error);

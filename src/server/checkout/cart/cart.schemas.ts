@@ -7,7 +7,7 @@ export const addToCartValidationSchema = z.object({
 	quantity: z.number().int().min(1).max(99).default(1),
 });
 
-export const emptyCartValidationSchema = z.object({});
+export const clearCartValidationSchema = z.object({});
 
 export const updateCartItemQuantityValidationSchema = addToCartValidationSchema;
 
@@ -16,3 +16,4 @@ export const removeCartItemValidationSchema = z.object({
 });
 
 export const mergeCartValidationSchema = z.object({});
+export const validateCartValidationSchema = z.object({});

@@ -108,7 +108,7 @@ export type GetCartInputType = CartOwnerType;
 
 export type AddToCartInputType = AddToCartSchemaType & CartOwnerType;
 
-export type EmptyCartInputType = CartOwnerType;
+export type ClearCartInputType = CartOwnerType;
 
 export type UpdateCartItemQuantityInputType = UpdateCartItemQuantitySchemaType &
 	CartOwnerType;
@@ -117,15 +117,17 @@ export type RemoveCartItemInputType = RemoveCartItemSchemaType & CartOwnerType;
 
 export type MergeCartInputType = {
 	userId: string;
-	sessionId: string;
+	sessionId: string | null;
 };
+
+export type ValidateCartInputType = CartOwnerType;
 
 // using them for the cart services as return output
 export type CartOutputType = CartType;
 
 export type AddToCartOutputType = CartType;
 
-export type EmptyCartOutputType = CartType;
+export type ClearCartOutputType = CartType;
 
 export type UpdateCartItemQuantityOutputType = CartType;
 
@@ -133,13 +135,8 @@ export type RemoveCartItemOutputType = CartType;
 
 export type MergeCartOutputType = CartType;
 
-/*
-	1. Get cart
-	2. If cart has no items, invalid
-	3. If cart.summary.canCheckout is false, invalid
-	4. Blocking reasons:
-	- out_of_stock
-	- product_unavailable
-	- price_changed maybe
-	5. Return cart + reasons
-*/
+export type ValidateCartOutputType = {
+	isValid: boolean;
+	cart: CartType;
+	blockingWarnings: CartWarningType[];
+};

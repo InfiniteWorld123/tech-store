@@ -1,20 +1,22 @@
 import { createServerFn } from "@tanstack/react-start";
-import { ensureSession } from "#/server/auth/ensure-session.middleware";
 import {
 	addToCartValidationSchema,
-	emptyCartValidationSchema,
+	clearCartValidationSchema,
 	getCartValidationSchema,
 	mergeCartValidationSchema,
 	removeCartItemValidationSchema,
 	updateCartItemQuantityValidationSchema,
+	validateCartValidationSchema,
 } from "./cart.schemas";
-import { resolveCartOwnerMiddleware } from "./resolveCartOwnerMiddleware";
+import { resolveCartOwnerMiddleware } from "./middlewares/resolveCartOwnerMiddleware";
+import { resolveMergeCartOwnerMiddleware } from "./middlewares/resolveMergeCartOwnerMiddleware";
 import { addToCart } from "./services/add-to-cart.service";
-import { emptyCart } from "./services/empty-cart.service";
+import { clearCart } from "./services/clear-cart.service";
 import { getCart } from "./services/get-cart.service";
 import { mergeCart } from "./services/merge-cart.service";
 import { removeCartItem } from "./services/remove-cart-item.service";
 import { updateCartItemQuantity } from "./services/update-cart-item-quantity.service";
+import { validateCart } from "./services/validate-cart.service";
 
 export const getCartAction = createServerFn({ method: "GET" })
 	.middleware([resolveCartOwnerMiddleware])
@@ -35,9 +37,9 @@ export const addToCartAction = createServerFn({ method: "POST" })
 
 export const clearCartAction = createServerFn({ method: "POST" })
 	.middleware([resolveCartOwnerMiddleware])
-	.inputValidator(emptyCartValidationSchema)
+	.inputValidator(clearCartValidationSchema)
 	.handler(async ({ context }) => {
-		return emptyCart(context.cartOwner);
+		return clearCart(context.cartOwner);
 	});
 
 export const updateCartItemQuantityAction = createServerFn({ method: "POST" })
@@ -61,11 +63,15 @@ export const removeCartItemAction = createServerFn({ method: "POST" })
 	});
 
 export const mergeCartAction = createServerFn({ method: "POST" })
-	.middleware([ensureSession])
+	.middleware([resolveMergeCartOwnerMiddleware])
 	.inputValidator(mergeCartValidationSchema)
-	.handler(async () => {
-		return mergeCart({
-			userId: "",
-			sessionId: "",
-		});
+	.handler(async ({ context }) => {
+		return mergeCart(context.mergeCartOwner);
+	});
+
+export const validateCartAction = createServerFn({ method: "GET" })
+	.middleware([resolveCartOwnerMiddleware])
+	.inputValidator(validateCartValidationSchema)
+	.handler(async ({ context }) => {
+		return validateCart(context.cartOwner);
 	});
