@@ -1,8 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
+import { ensureSession } from "#/server/auth/ensure-session.middleware";
 import {
 	addToCartValidationSchema,
 	emptyCartValidationSchema,
 	getCartValidationSchema,
+	mergeCartValidationSchema,
 	removeCartItemValidationSchema,
 	updateCartItemQuantityValidationSchema,
 } from "./cart.schemas";
@@ -10,6 +12,7 @@ import { resolveCartOwnerMiddleware } from "./resolveCartOwnerMiddleware";
 import { addToCart } from "./services/add-to-cart.service";
 import { emptyCart } from "./services/empty-cart.service";
 import { getCart } from "./services/get-cart.service";
+import { mergeCart } from "./services/merge-cart.service";
 import { removeCartItem } from "./services/remove-cart-item.service";
 import { updateCartItemQuantity } from "./services/update-cart-item-quantity.service";
 
@@ -54,5 +57,15 @@ export const removeCartItemAction = createServerFn({ method: "POST" })
 		return removeCartItem({
 			...data,
 			...context.cartOwner,
+		});
+	});
+
+export const mergeCartAction = createServerFn({ method: "POST" })
+	.middleware([ensureSession])
+	.inputValidator(mergeCartValidationSchema)
+	.handler(async () => {
+		return mergeCart({
+			userId: "",
+			sessionId: "",
 		});
 	});

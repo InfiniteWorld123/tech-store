@@ -115,6 +115,11 @@ export type UpdateCartItemQuantityInputType = UpdateCartItemQuantitySchemaType &
 
 export type RemoveCartItemInputType = RemoveCartItemSchemaType & CartOwnerType;
 
+export type MergeCartInputType = {
+	userId: string;
+	sessionId: string;
+};
+
 // using them for the cart services as return output
 export type CartOutputType = CartType;
 
@@ -126,20 +131,15 @@ export type UpdateCartItemQuantityOutputType = CartType;
 
 export type RemoveCartItemOutputType = CartType;
 
+export type MergeCartOutputType = CartType;
 
 /*
-	1. User is not logged in.
-	2. User adds iPhone to cart.
-	3. Cart belongs to guest sessionId cookie.
-	4. User logs in.
-	5. Now you want guest cart items to move into the user cart.
-*/
-
-/*
-	- cart exists
-	- cart is not empty
-	- every product is still active
-	- every variant still exists
-	- every item has enough stock
-	- prices did not change, or customer accepted new prices
+	1. Get cart
+	2. If cart has no items, invalid
+	3. If cart.summary.canCheckout is false, invalid
+	4. Blocking reasons:
+	- out_of_stock
+	- product_unavailable
+	- price_changed maybe
+	5. Return cart + reasons
 */
