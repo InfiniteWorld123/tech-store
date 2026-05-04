@@ -9,21 +9,6 @@ import type {
 	updateProductValidationSchema,
 } from "./products.validation";
 
-export type GetProductInputType = z.infer<typeof getProductValidationSchema>;
-export type GetProductsInputType = z.infer<typeof getProductsValidationSchema>;
-export type CreateProductInputType = z.infer<
-	typeof createProductValidationSchema
->;
-export type UpdateProductInputType = z.infer<
-	typeof updateProductValidationSchema
->;
-export type DeleteProductInputType = z.infer<
-	typeof deleteProductValidationSchema
->;
-export type DeleteProductsInputType = z.infer<
-	typeof deleteProductsValidationSchema
->;
-
 export type AdminProductListItemType = {
 	id: string;
 	name: string;
@@ -68,6 +53,23 @@ export type AdminProductDetailsType = {
 	variants: AdminVariantType[];
 };
 
+// input types
+export type GetProductInputType = z.infer<typeof getProductValidationSchema>;
+export type GetProductsInputType = z.infer<typeof getProductsValidationSchema>;
+export type CreateProductInputType = z.infer<
+	typeof createProductValidationSchema
+>;
+export type UpdateProductInputType = z.infer<
+	typeof updateProductValidationSchema
+>;
+export type DeleteProductInputType = z.infer<
+	typeof deleteProductValidationSchema
+>;
+export type DeleteProductsInputType = z.infer<
+	typeof deleteProductsValidationSchema
+>;
+
+// output types
 export type GetProductsOutputType = {
 	items: AdminProductListItemType[];
 	query: {

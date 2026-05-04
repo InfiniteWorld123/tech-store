@@ -140,3 +140,14 @@ export type ValidateCartOutputType = {
 	cart: CartType;
 	blockingWarnings: CartWarningType[];
 };
+
+/*
+	user has a cart
+	cart is not empty
+	cart belongs to this user
+	address belongs to this user
+	products are active
+	variants are in stock
+	cart prices did not change
+	quantity is available
+*/
