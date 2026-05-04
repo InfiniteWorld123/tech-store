@@ -1,6 +1,6 @@
 import type { z } from "zod";
 import type { CartWarningType } from "../../cart/cart.types";
-import type { ShippingCarrierType, PaymentMethodType, ShippingMethodType } from "../admin/admin.types";
+import type { ShippingCarrierType, PaymentMethodType, ShippingMethodType, OrderStatusType, PaymentStatusType, ShippingStatusType } from "../admin/admin.types";
 import type { estimateOrderTotalValidationSchema, placeOrderFromCartValidationSchema } from "./customer.schemas";
 
 export type EstimateOrderTotalSchemaType = z.infer<
@@ -49,28 +49,32 @@ export type EstimateOrderTotalOutputType = {
 };
 
 export type PlaceOrderFromCartOutputType = {
-    order: {
-        id: string;
-        orderNumber: string;
-        status: "pending";
-        subtotal: number;
-        shippingFee: number;
-        taxAmount: number;
-        totalAmount: number;
-        placedAt: string;
-    };
-    payment: {
-        method: PaymentMethodType;
-        status: "pending";
-        amount: number;
-    };
-    shipping: {
-        method: ShippingMethodType;
-        carrier: ShippingCarrierType;
-        status: "pending";
-    };
-    items: EstimatedOrderItemType[];
-}
+	order: {
+		id: string;
+		orderNumber: string;
+		status: OrderStatusType;
+		subtotal: number;
+		shippingFee: number;
+		taxAmount: number;
+		totalAmount: number;
+		notes: string | null;
+		placedAt: string;
+	};
+	payment: {
+		method: PaymentMethodType;
+		status: PaymentStatusType;
+		amount: number;
+		paidAt: string | null;
+	};
+	shipping: {
+		method: ShippingMethodType;
+		carrier: ShippingCarrierType;
+		status: ShippingStatusType;
+		trackingNumber: string | null;
+	};
+	items: EstimatedOrderItemType[];
+	itemCount: number;
+};
 
 /*
     1. Get userId from middleware context.
