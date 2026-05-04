@@ -1,16 +1,10 @@
 import type { z } from "zod";
 import type { CartWarningType } from "../../cart/cart.types";
 import type { ShippingCarrierType, PaymentMethodType, ShippingMethodType, OrderStatusType, PaymentStatusType, ShippingStatusType } from "../admin/admin.types";
-import type { estimateOrderTotalValidationSchema, placeOrderFromCartValidationSchema } from "./customer.schemas";
+import type { estimateOrderTotalValidationSchema, getCustomerOrderDetailValidationSchema, placeOrderFromCartValidationSchema } from "./customer.schemas";
+import type { listCustomerOrdersValidationSchema } from "./customer.schemas";
 
-export type EstimateOrderTotalSchemaType = z.infer<
-    typeof estimateOrderTotalValidationSchema
->;
-
-export type PlaceOrderFromCartType = z.infer<
-    typeof placeOrderFromCartValidationSchema
->;
-
+// helper types
 export type EstimatedOrderItemType = {
     variantId: string;
     productId: string;
@@ -20,7 +14,84 @@ export type EstimatedOrderItemType = {
     quantity: number;
     unitPrice: number;
     totalPrice: number;
+    image?: string | null;
 };
+
+export type CustomerOrderListItemType = {
+    id: string;
+    orderNumber: string;
+    status: OrderStatusType;
+    totalAmount: number;
+    placedAt: string;
+    itemCount: number;
+    firstItemName: string | null;
+    firstItemImage: string | null;
+    payment: {
+        status: PaymentStatusType;
+    };
+    shipping: {
+        status: ShippingStatusType;
+        trackingNumber: string | null;
+    };
+    canCancel: boolean;
+    canTrack: boolean;
+};
+
+export type CustomerOrderDetailType = {
+    id: string;
+    orderNumber: string;
+    status: OrderStatusType;
+    subtotal: number;
+    shippingFee: number;
+    taxAmount: number;
+    totalAmount: number;
+    notes: string | null;
+    placedAt: string;
+    items: EstimatedOrderItemType[];
+    itemCount: number;
+    payment: {
+        method: PaymentMethodType;
+        amount: number;
+        status: PaymentStatusType;
+        paidAt: string | null;
+    };
+    shipping: {
+        carrier: ShippingCarrierType;
+        method: ShippingMethodType;
+        trackingNumber: string | null;
+        status: ShippingStatusType;
+        shippedAt: string | null;
+        deliveredAt: string | null;
+    };
+    address: {
+        fullName: string;
+        phone: string;
+        street: string;
+        postalCode: string;
+        city: string;
+        state: string | null;
+        country: string;
+    };
+    canCancel: boolean;
+    canTrack: boolean;
+};
+
+// inferring types
+export type EstimateOrderTotalSchemaType = z.infer<
+    typeof estimateOrderTotalValidationSchema
+>;
+
+export type PlaceOrderFromCartType = z.infer<
+    typeof placeOrderFromCartValidationSchema
+>;
+
+export type ListCustomerOrdersSchemaType = z.infer<
+    typeof listCustomerOrdersValidationSchema
+>;
+
+export type GetCustomerOrderDetailSchemaType = z.infer<
+    typeof getCustomerOrderDetailValidationSchema
+>;
 
 // input types
 export type EstimateOrderTotalInputType = EstimateOrderTotalSchemaType & {
@@ -30,6 +101,14 @@ export type EstimateOrderTotalInputType = EstimateOrderTotalSchemaType & {
 export type PlaceOrderFromCartInputType = PlaceOrderFromCartType & {
     userId: string
 }
+
+export type ListCustomerOrdersInputType = ListCustomerOrdersSchemaType & {
+    userId: string;
+};
+
+export type GetCustomerOrderDetailInputType = GetCustomerOrderDetailSchemaType & {
+    userId: string; // injected from session
+};
 
 // output types
 export type EstimateOrderTotalOutputType = {
@@ -49,44 +128,48 @@ export type EstimateOrderTotalOutputType = {
 };
 
 export type PlaceOrderFromCartOutputType = {
-	order: {
-		id: string;
-		orderNumber: string;
-		status: OrderStatusType;
-		subtotal: number;
-		shippingFee: number;
-		taxAmount: number;
-		totalAmount: number;
-		notes: string | null;
-		placedAt: string;
-	};
-	payment: {
-		method: PaymentMethodType;
-		status: PaymentStatusType;
-		amount: number;
-		paidAt: string | null;
-	};
-	shipping: {
-		method: ShippingMethodType;
-		carrier: ShippingCarrierType;
-		status: ShippingStatusType;
-		trackingNumber: string | null;
-	};
-	items: EstimatedOrderItemType[];
-	itemCount: number;
+    order: {
+        id: string;
+        orderNumber: string;
+        status: OrderStatusType;
+        subtotal: number;
+        shippingFee: number;
+        taxAmount: number;
+        totalAmount: number;
+        notes: string | null;
+        placedAt: string;
+    };
+    payment: {
+        method: PaymentMethodType;
+        status: PaymentStatusType;
+        amount: number;
+        paidAt: string | null;
+    };
+    shipping: {
+        method: ShippingMethodType;
+        carrier: ShippingCarrierType;
+        status: ShippingStatusType;
+        trackingNumber: string | null;
+    };
+    items: EstimatedOrderItemType[];
+    itemCount: number;
 };
 
-/*
-    1. Get userId from middleware context.
-    2. Validate cart using your existing validateCart service.
-    3. Check address belongs to user.
-    4. Calculate subtotal, shipping fee, tax, total.
-    5. Start database transaction.
-    6. Insert order row.
-    7. Insert order item rows.
-    8. Insert payment row.
-    9. Insert shipping row.
-    10. Decrease stock.
-    11. Delete cart items.
-    12. Return created order summary.
- */
+export type ListCustomerOrdersOutputType = {
+    items: CustomerOrderListItemType[];
+    query: {
+        status: "all" | "active" | "completed" | "cancelled";
+        year?: number;
+        searchOrderNumber?: string;
+    };
+    pagination: {
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+        hasNextPage: boolean;
+        hasPreviousPage: boolean;
+    };
+};
+
+export type GetCustomerOrderDetailOutputType = CustomerOrderDetailType;
