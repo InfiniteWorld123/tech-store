@@ -1,7 +1,7 @@
 import type { z } from "zod";
 import type { CartWarningType } from "../../cart/cart.types";
 import type { ShippingCarrierType, PaymentMethodType, ShippingMethodType, OrderStatusType, PaymentStatusType, ShippingStatusType } from "../admin/admin.types";
-import type { cancelOrderValidationSchema, estimateOrderTotalValidationSchema, getCustomerOrderDetailValidationSchema, placeOrderFromCartValidationSchema } from "./customer.schemas";
+import type { cancelOrderValidationSchema, estimateOrderTotalValidationSchema, getCustomerOrderDetailValidationSchema, getOrderTrackingValidationSchema, placeOrderFromCartValidationSchema } from "./customer.schemas";
 import type { listCustomerOrdersValidationSchema } from "./customer.schemas";
 
 // helper types
@@ -97,6 +97,10 @@ export type CancelOrderSchemaType = z.infer<
     typeof cancelOrderValidationSchema
 >
 
+export type GetOrderTrackingType = z.infer<
+    typeof getOrderTrackingValidationSchema
+>
+
 
 // input types
 export type EstimateOrderTotalInputType = EstimateOrderTotalSchemaType & {
@@ -115,10 +119,13 @@ export type GetCustomerOrderDetailInputType = GetCustomerOrderDetailSchemaType &
     userId: string;
 };
 
-export type CancelOrderInputType = CancelOrderSchemaType & { 
-    userId: string 
+export type CancelOrderInputType = CancelOrderSchemaType & {
+    userId: string
 }
 
+export type GetOrderTrackingInputType = GetOrderTrackingType & {
+    userId: string
+}
 
 // output types
 export type EstimateOrderTotalOutputType = {
@@ -185,3 +192,18 @@ export type ListCustomerOrdersOutputType = {
 export type GetCustomerOrderDetailOutputType = CustomerOrderDetailType;
 
 export type CancelOrderOutputType = CustomerOrderDetailType
+
+export type GetOrderTrackingOutputType = {
+    orderNumber: string
+    orderStatus: OrderStatusType
+    placedAt: string              // ← add this
+    shipping: {
+        carrier: ShippingCarrierType
+        method: ShippingMethodType
+        trackingNumber: string | null
+        status: ShippingStatusType
+        shippedAt: string | null
+        deliveredAt: string | null
+    }
+    canTrack: boolean
+}
