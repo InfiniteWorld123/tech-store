@@ -1,7 +1,7 @@
 import type { z } from "zod";
 import type { CartWarningType } from "../../cart/cart.types";
 import type { ShippingCarrierType, PaymentMethodType, ShippingMethodType, OrderStatusType, PaymentStatusType, ShippingStatusType } from "../admin/admin.types";
-import type { estimateOrderTotalValidationSchema, getCustomerOrderDetailValidationSchema, placeOrderFromCartValidationSchema } from "./customer.schemas";
+import type { cancelOrderValidationSchema, estimateOrderTotalValidationSchema, getCustomerOrderDetailValidationSchema, placeOrderFromCartValidationSchema } from "./customer.schemas";
 import type { listCustomerOrdersValidationSchema } from "./customer.schemas";
 
 // helper types
@@ -93,6 +93,11 @@ export type GetCustomerOrderDetailSchemaType = z.infer<
     typeof getCustomerOrderDetailValidationSchema
 >;
 
+export type CancelOrderSchemaType = z.infer<
+    typeof cancelOrderValidationSchema
+>
+
+
 // input types
 export type EstimateOrderTotalInputType = EstimateOrderTotalSchemaType & {
     userId: string;
@@ -107,8 +112,13 @@ export type ListCustomerOrdersInputType = ListCustomerOrdersSchemaType & {
 };
 
 export type GetCustomerOrderDetailInputType = GetCustomerOrderDetailSchemaType & {
-    userId: string; // injected from session
+    userId: string;
 };
+
+export type CancelOrderInputType = CancelOrderSchemaType & { 
+    userId: string 
+}
+
 
 // output types
 export type EstimateOrderTotalOutputType = {
@@ -173,3 +183,5 @@ export type ListCustomerOrdersOutputType = {
 };
 
 export type GetCustomerOrderDetailOutputType = CustomerOrderDetailType;
+
+export type CancelOrderOutputType = CustomerOrderDetailType

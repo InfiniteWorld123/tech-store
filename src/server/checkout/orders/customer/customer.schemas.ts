@@ -25,3 +25,11 @@ export const listCustomerOrdersValidationSchema = z.object({
 export const getCustomerOrderDetailValidationSchema = z.object({
     orderId: z.uuid("Order id must be a valid UUID"),
 });
+
+export const cancelOrderValidationSchema = z.object({
+    orderId: z.uuid("Order id must be a valid UUID"),
+});
+
+export const getOrderTrackingValidationSchema = z.object({
+    orderId: z.uuid("Order id must be a valid UUID"),
+});
