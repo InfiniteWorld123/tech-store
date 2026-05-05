@@ -1,7 +1,7 @@
 import type { z } from "zod";
 import type { CartWarningType } from "../../cart/cart.types";
 import type { ShippingCarrierType, PaymentMethodType, ShippingMethodType, OrderStatusType, PaymentStatusType, ShippingStatusType } from "../admin/admin.types";
-import type { cancelOrderValidationSchema, estimateOrderTotalValidationSchema, getCustomerOrderDetailValidationSchema, getOrderTrackingValidationSchema, placeOrderFromCartValidationSchema } from "./customer.schemas";
+import type { cancelOrderValidationSchema, estimateOrderTotalValidationSchema, getCustomerOrderDetailValidationSchema, getOrderTrackingValidationSchema, placeOrderFromCartValidationSchema, reorderOrderValidationSchema } from "./customer.schemas";
 import type { listCustomerOrdersValidationSchema } from "./customer.schemas";
 
 // helper types
@@ -101,6 +101,9 @@ export type GetOrderTrackingType = z.infer<
     typeof getOrderTrackingValidationSchema
 >
 
+export type reorderOrderType = z.infer<
+    typeof reorderOrderValidationSchema
+>
 
 // input types
 export type EstimateOrderTotalInputType = EstimateOrderTotalSchemaType & {
@@ -124,6 +127,10 @@ export type CancelOrderInputType = CancelOrderSchemaType & {
 }
 
 export type GetOrderTrackingInputType = GetOrderTrackingType & {
+    userId: string
+}
+
+export type reorderOrderInputType = reorderOrderType & {
     userId: string
 }
 
@@ -206,4 +213,10 @@ export type GetOrderTrackingOutputType = {
         deliveredAt: string | null
     }
     canTrack: boolean
+}
+
+export type ReorderOrderOutputType = {
+    addedCount: number
+    skippedCount: number
+    warnings: CartWarningType[]
 }

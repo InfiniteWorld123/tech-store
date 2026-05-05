@@ -1,12 +1,14 @@
 import { createServerFn } from "@tanstack/react-start";
 import { unauthorizedError } from "#/errors/app-error";
 import { ensureSession } from "#/server/auth/ensure-session.middleware";
-import { cancelOrderValidationSchema, estimateOrderTotalValidationSchema, getCustomerOrderDetailValidationSchema, listCustomerOrdersValidationSchema, placeOrderFromCartValidationSchema } from "./customer.schemas";
+import { cancelOrderValidationSchema, estimateOrderTotalValidationSchema, getCustomerOrderDetailValidationSchema, getOrderTrackingValidationSchema, listCustomerOrdersValidationSchema, placeOrderFromCartValidationSchema, reorderOrderValidationSchema } from "./customer.schemas";
 import { estimateOrderTotal } from "./services/estimate-order-total.service";
 import { placeOrderFromCart } from "./services/place-order-from-cart.service";
 import { listCustomerOrders } from "./services/list-customer-orders.service";
 import { getCustomerOrderDetail } from "./services/get-customer-order-detail.service";
 import { cancelOrder } from "./services/cancel-order.service";
+import { getOrderTracking } from "./services/get-order-tracking.service";
+import { reorderOrder } from "./services/reorder-order.service";
 
 export const estimateOrderTotalAction = createServerFn({ method: "GET" })
     .middleware([ensureSession])
@@ -57,6 +59,26 @@ export const cancelOrderAction = createServerFn({ method: "POST" })
     .inputValidator(cancelOrderValidationSchema)
     .handler(async ({ data, context }) => {
         return cancelOrder({
+            ...data,
+            userId: context.session?.user.id as string,
+        })
+    })
+
+export const getOrderTrackingAction = createServerFn({ method: "POST" })
+    .middleware([ensureSession])
+    .inputValidator(getOrderTrackingValidationSchema)
+    .handler(async ({ data, context }) => {
+        return getOrderTracking({
+            ...data,
+            userId: context.session?.user.id as string,
+        })
+    })
+
+export const reorderOrderAction = createServerFn({ method: "POST" })
+    .middleware([ensureSession])
+    .inputValidator(reorderOrderValidationSchema)
+    .handler(async ({ data, context }) => {
+        return reorderOrder({
             ...data,
             userId: context.session?.user.id as string,
         })
