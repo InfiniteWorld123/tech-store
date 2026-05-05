@@ -8,7 +8,7 @@ import { handleError } from "#/errors/error-handler";
 import type {
 	DeleteProductsInputType,
 	DeleteProductsOutputType,
-} from "../products.type";
+} from "../products.types";
 
 export const deleteProducts = async (
 	data: DeleteProductsInputType,

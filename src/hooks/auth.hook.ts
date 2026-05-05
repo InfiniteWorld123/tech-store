@@ -7,7 +7,7 @@ import {
 	signIn,
 	signUp,
 } from "#/lib/auth-client";
-import type { SignUpType } from "#/server/auth/auth.type";
+import type { SignUpType } from "#/server/auth/auth.types";
 
 type OtpType =
 	| "sign-in"

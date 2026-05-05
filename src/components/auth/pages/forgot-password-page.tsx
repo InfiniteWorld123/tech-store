@@ -7,7 +7,7 @@ import { AuthHeader } from "#/components/auth/sections/auth-header";
 import { SubmitButton } from "#/components/ui/buttons/submit-button";
 import { InputField } from "#/components/ui/fields/input-field";
 import { useRequestResetPassword } from "#/hooks/auth.hook";
-import { EmailSchema } from "#/server/auth/auth.validation";
+import { EmailSchema } from "#/server/auth/auth.schemas";
 
 export function ForgotPasswordPage() {
 	const { requestResetPasswordError, submitRequestResetPassword } =

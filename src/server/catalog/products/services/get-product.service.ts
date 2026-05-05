@@ -16,7 +16,7 @@ import { handleError } from "#/errors/error-handler";
 import type {
 	GetProductInputType,
 	GetProductOutputType,
-} from "../products.type";
+} from "../products.types";
 
 export const getProduct = async (
 	data: GetProductInputType,

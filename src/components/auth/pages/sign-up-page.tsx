@@ -10,7 +10,7 @@ import { SocialProviders } from "#/components/auth/sections/social-providers";
 import { SubmitButton } from "#/components/ui/buttons/submit-button";
 import { InputField } from "#/components/ui/fields/input-field";
 import { useSendOtp, useSignUp } from "#/hooks/auth.hook";
-import { SignUpSchema } from "#/server/auth/auth.validation";
+import { SignUpSchema } from "#/server/auth/auth.schemas";
 
 export function SignUpPage() {
 	const navigate = useNavigate();

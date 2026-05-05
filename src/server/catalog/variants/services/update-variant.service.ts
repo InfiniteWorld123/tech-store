@@ -19,7 +19,7 @@ import { handleError } from "#/errors/error-handler";
 import type {
 	UpdateVariantInputType,
 	UpdateVariantOutputType,
-} from "../variants.type";
+} from "../variants.types";
 
 const ensureCompareAtPrice = (
 	price: number,

@@ -8,7 +8,7 @@ import { handleError } from "#/errors/error-handler";
 import type {
 	DeleteVariantInputType,
 	DeleteVariantOutputType,
-} from "../variants.type";
+} from "../variants.types";
 
 export const deleteVariant = async (
 	data: DeleteVariantInputType,

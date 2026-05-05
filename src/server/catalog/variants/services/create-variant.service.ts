@@ -20,7 +20,7 @@ import { handleError } from "#/errors/error-handler";
 import type {
 	CreateVariantInputType,
 	CreateVariantOutputType,
-} from "../variants.type";
+} from "../variants.types";
 
 const ensureCompareAtPrice = (
 	price: number,

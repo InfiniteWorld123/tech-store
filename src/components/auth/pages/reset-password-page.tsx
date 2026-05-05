@@ -8,7 +8,7 @@ import { AuthHeader } from "#/components/auth/sections/auth-header";
 import { SubmitButton } from "#/components/ui/buttons/submit-button";
 import { InputField } from "#/components/ui/fields/input-field";
 import { useResetPassword } from "#/hooks/auth.hook";
-import { ResetPasswordSchema } from "#/server/auth/auth.validation";
+import { ResetPasswordSchema } from "#/server/auth/auth.schemas";
 
 type ResetPasswordPageProps = {
 	token: string | undefined;
