@@ -1,7 +1,11 @@
 import type { z } from "zod";
 import type {
+    getCartMetricsValidationSchema,
+    getCustomerMetricsValidationSchema,
     getOrderMetricsValidationSchema,
     getPaymentMetricsValidationSchema,
+    getProductMetricsValidationSchema,
+    getReviewMetricsValidationSchema,
     getShippingMetricsValidationSchema
 } from "./stats.schemas";
 
@@ -35,12 +39,28 @@ export type GetPaymentMetricsSchemaType = z.infer<typeof getPaymentMetricsValida
 
 export type GetShippingMetricsSchemaType = z.infer<typeof getShippingMetricsValidationSchema>
 
+export type GetProductMetricsSchemaType = z.infer<typeof getProductMetricsValidationSchema>
+
+export type GetCustomerMetricsSchemaType = z.infer<typeof getCustomerMetricsValidationSchema>
+
+export type GetReviewMetricsSchemaType = z.infer<typeof getReviewMetricsValidationSchema>
+
+export type GetCartMetricsSchemaType = z.infer<typeof getCartMetricsValidationSchema>
+
 // input types
 export type GetOrderMetricsInputType = GetOrderMetricsSchemaType
 
 export type GetPaymentMetricsInputType = GetPaymentMetricsSchemaType
 
 export type GetShippingMetricsInputType = GetShippingMetricsSchemaType
+
+export type GetProductMetricsInputType = GetProductMetricsSchemaType
+
+export type GetCustomerMetricsInputType = GetProductMetricsSchemaType
+
+export type GetReviewMetricsInputType = GetProductMetricsSchemaType
+
+export type GetCartMetricsInputType = GetProductMetricsSchemaType
 
 // output types
 export type GetOrderMetricsOutputType = {
@@ -99,3 +119,54 @@ export type GetShippingMetricsOutputType = {
     }
     averageDeliveryTime: number;
 }
+
+export type GetProductMetricsOutputType = {
+    totalProducts: number;
+    activeProducts: number;
+    inactiveProducts: number;
+    featuredProducts: number;
+    bestsellerProducts: number;
+    totalVariants: number;
+    outOfStockVariants: number;
+    lowStockVariants: number;
+    averageProductRating: number;
+    totalReviewsAcrossProducts: number;
+    productsWithNoReviews: number;
+    productsWithDiscount: number;
+};
+
+export type GetCustomerMetricsOutputType = {
+    totalCustomers: number;
+    verifiedCustomers: number;
+    unverifiedCustomers: number;
+    customersWithOrders: number;
+    customersWithoutOrders: number;
+    customersWithSavedAddresses: number;
+    customersWithReviews: number;
+};
+
+export type GetReviewMetricsOutputType = {
+    totalReviews: number;
+    averageRating: number;
+    highestRatedProduct: number;    // max ratingAvg across products
+    lowestRatedProduct: number;     // min ratingAvg across products
+    productsWithReviews: number;
+    byStar: {
+        one: number;
+        two: number;
+        three: number;
+        four: number;
+        five: number;
+    };
+};
+
+export type GetCartMetricsOutputType = {
+    totalCarts: number;
+    guestCarts: number;
+    userCarts: number;
+    emptyCarts: number;             // carts with no items
+    activeCarts: number;            // carts with at least 1 item
+    totalItemsInCarts: number;
+    averageItemsPerCart: number;
+    averageCartValue: number;
+};
