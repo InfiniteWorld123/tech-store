@@ -12,34 +12,43 @@ export const getCartMetrics = async (
 ): Promise<JsonOk<GetCartMetricsOutputType>> => {
     try {
 
-        const [cartMetrics] = await db
+        const [cartStats] = await db
             .select({
                 totalCarts: count(),
                 guestCarts: sql<number>`count(*) filter (where ${cart.sessionId} is not null)`,
                 userCarts: sql<number>`count(*) filter (where ${cart.userId} is not null)`,
-                emptyCarts: sql<number>
-                    `count(*) filter (where ${cart.id} not in (select cart_id from "cart_item"))`, 
-                    totalItemsInCarts: sql<number>`sum(${cartItem.quantity})`,
-                averageCartValue: sql<number>`avg(${cartItem.priceAtTime} * ${cartItem.quantity})`,
-                averageItemsPerCart: sql<number>`avg(item_count) from (select sum(${cartItem.quantity}) as item_count 
-                from ${cartItem} group by ${cartItem.cartId}) as sub --`,
-                activeCarts: sql<number>`count(distinct ${cartItem.cartId})`,
+                emptyCarts: sql<number>`count(*) filter (where ${cart.id} not in (select cart_id from ${cartItem}))`,
             })
             .from(cart)
 
+        const [itemStats] = await db
+            .select({
+                totalItemsInCarts: sql<number>`coalesce(sum(${cartItem.quantity}), 0)`,
+                averageCartValue: sql<number>`coalesce(avg(${cartItem.priceAtTime} * ${cartItem.quantity}), 0)`,
+                activeCarts: sql<number>`count(distinct ${cartItem.cartId})`,
+            })
+            .from(cartItem)
+
+        const [avgItemsResult] = await db
+            .select({
+                averageItemsPerCart: sql<number>`coalesce(avg(item_count), 0)`,
+            })
+            .from(
+                sql`(select sum(${cartItem.quantity}) as item_count from ${cartItem} group by ${cartItem.cartId}) as sub`
+            )
 
         return jsonOk({
             status: HttpStatusCode.OK,
-            message: "Cart metrics order successfully fetched",
+            message: "Cart metrics successfully fetched",
             data: {
-                totalCarts: cartMetrics.totalCarts,
-                guestCarts: cartMetrics.guestCarts,
-                userCarts: cartMetrics.userCarts,
-                emptyCarts: cartMetrics.emptyCarts,
-                activeCarts: cartMetrics.activeCarts,
-                totalItemsInCarts: cartMetrics.totalItemsInCarts,
-                averageItemsPerCart: cartMetrics.averageItemsPerCart,
-                averageCartValue: cartMetrics.averageCartValue,
+                totalCarts: cartStats.totalCarts,
+                guestCarts: cartStats.guestCarts,
+                userCarts: cartStats.userCarts,
+                emptyCarts: cartStats.emptyCarts,
+                activeCarts: itemStats.activeCarts,
+                totalItemsInCarts: Number(itemStats.totalItemsInCarts ?? 0),
+                averageItemsPerCart: Number(avgItemsResult.averageItemsPerCart ?? 0),
+                averageCartValue: Number(itemStats.averageCartValue ?? 0),
             }
         })
     } catch (error) {

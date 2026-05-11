@@ -56,11 +56,11 @@ export type GetShippingMetricsInputType = GetShippingMetricsSchemaType
 
 export type GetProductMetricsInputType = GetProductMetricsSchemaType
 
-export type GetCustomerMetricsInputType = GetProductMetricsSchemaType
+export type GetCustomerMetricsInputType = GetCustomerMetricsSchemaType
 
-export type GetReviewMetricsInputType = GetProductMetricsSchemaType
+export type GetReviewMetricsInputType = GetReviewMetricsSchemaType
 
-export type GetCartMetricsInputType = GetProductMetricsSchemaType
+export type GetCartMetricsInputType = GetCartMetricsSchemaType
 
 // output types
 export type GetOrderMetricsOutputType = {
