@@ -1,54 +1,78 @@
+import { and, eq, ne } from "drizzle-orm";
 import { HttpStatusCode } from "#/constants/http";
 import { jsonOk, type JsonOk } from "#/constants/json";
 import { db } from "#/db/drizzle";
 import { category } from "#/db/schema";
-import { badRequestError, notFoundError } from "#/errors/app-error";
+import {
+  badRequestError,
+  conflictError,
+  notFoundError,
+} from "#/errors/app-error";
 import { handleError } from "#/errors/error-handler";
-import { eq } from "drizzle-orm";
-import type { UpdateCategoryInputType, UpdateCategoryOutputType } from "../catalogs.types";
+import type {
+  UpdateCategoryInputType,
+  UpdateCategoryOutputType,
+} from "../catalogs.types";
 
+export async function updateCategory(
+  data: UpdateCategoryInputType,
+): Promise<JsonOk<UpdateCategoryOutputType>> {
+  try {
+    const { catalogId, name, slug, image } = data;
 
-export async function updateCategory(data: UpdateCategoryInputType)
-	: Promise<JsonOk<UpdateCategoryOutputType>> {
-	try {
-		const { catalogId, name, slug, image } = data;
+    const [existingCategory] = await db
+      .select({ id: category.id })
+      .from(category)
+      .where(eq(category.id, catalogId));
 
-		const [existingCategory] = await db
-			.select({ id: category.id })
-			.from(category)
-			.where(eq(category.id, catalogId));
+    if (!existingCategory) {
+      throw notFoundError("Category not found");
+    }
 
-		if (!existingCategory) {
-			throw notFoundError("Category is already deleted");
-		}
+    if (slug !== undefined) {
+      const [categoryWithSlug] = await db
+        .select({ id: category.id })
+        .from(category)
+        .where(and(eq(category.slug, slug), ne(category.id, catalogId)));
 
-		const [updatedCategory] = await db
-			.update(category)
-			.set({
-				name,
-				slug,
-				image
-			})
-			.where(eq(category.id, catalogId))
-			.returning()
+      if (categoryWithSlug) {
+        throw conflictError("Category slug already exists");
+      }
+    }
 
-		if (!updatedCategory) {
-			throw badRequestError('Category deletion failed')
-		}
+    const updateFields = {
+      ...(name !== undefined ? { name } : {}),
+      ...(slug !== undefined ? { slug } : {}),
+      ...(image !== undefined ? { image } : {}),
+    };
 
-		return jsonOk({
-			status: HttpStatusCode.OK,
-			message: "catalog is deleted successfully",
-			data: {
-				id: updatedCategory.id,
-				name: updatedCategory.name,
-				slug: updatedCategory.slug,
-				image: updatedCategory.image ?? null,
-				createdAt: updatedCategory.createdAt.toISOString(),
-				updatedAt: updatedCategory.updatedAt.toISOString(),
-			}
-		})
-	} catch (error) {
-		throw handleError(error)
-	}
+    if (Object.keys(updateFields).length === 0) {
+      throw badRequestError("At least one field must be provided");
+    }
+
+    const [updatedCategory] = await db
+      .update(category)
+      .set(updateFields)
+      .where(eq(category.id, catalogId))
+      .returning();
+
+    if (!updatedCategory) {
+      throw badRequestError("Category update failed");
+    }
+
+    return jsonOk({
+      status: HttpStatusCode.OK,
+      message: "Category updated successfully",
+      data: {
+        id: updatedCategory.id,
+        name: updatedCategory.name,
+        slug: updatedCategory.slug,
+        image: updatedCategory.image ?? null,
+        createdAt: updatedCategory.createdAt.toISOString(),
+        updatedAt: updatedCategory.updatedAt.toISOString(),
+      },
+    });
+  } catch (error) {
+    throw handleError(error);
+  }
 }
