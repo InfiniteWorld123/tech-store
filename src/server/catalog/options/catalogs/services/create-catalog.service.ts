@@ -5,15 +5,15 @@ import { category } from "#/db/schema";
 import { badRequestError, conflictError } from "#/errors/app-error";
 import { handleError } from "#/errors/error-handler";
 import { eq } from "drizzle-orm";
-import type { CreateCatalogInputType, CreateCatalogOutputType } from "../catalogs.types";
+import type { CreateCategoryInputType, CreateCategoryOutputType } from "../catalogs.types";
 
 
 
 
 
 
-export async function createCatalog(data: CreateCatalogInputType)
-	: Promise<JsonOk<CreateCatalogOutputType>> {
+export async function createCategory(data: CreateCategoryInputType)
+	: Promise<JsonOk<CreateCategoryOutputType>> {
 	try {
 		const { image, name, slug } = data;
 
@@ -23,7 +23,7 @@ export async function createCatalog(data: CreateCatalogInputType)
 			.where(eq(category.slug, slug));
 
 		if (existingCategory) {
-			throw conflictError("Catalog slug already exists");
+			throw conflictError("Category slug already exists");
 		}
 
 		const [createdCategory] = await db
@@ -36,7 +36,7 @@ export async function createCatalog(data: CreateCatalogInputType)
 			.returning()
 
 		if (!createdCategory) {
-			throw badRequestError('Catalog creation failed')
+			throw badRequestError('Category creation failed')
 		}
 
 		return jsonOk({
