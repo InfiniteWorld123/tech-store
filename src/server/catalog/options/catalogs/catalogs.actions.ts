@@ -1,9 +1,10 @@
 import { ensureSession } from "#/server/auth/ensure-session.middleware";
 import { createServerFn } from "@tanstack/react-start";
-import { createCategorySchema, deleteCategorySchema, updateCategorySchema } from "./catalogs.schemas";
+import { createCategorySchema, deleteCategorySchema, listCategorySchema, updateCategorySchema } from "./catalogs.schemas";
 import { createCategory } from "./services/create-catalog.service";
 import { deleteCategory } from "./services/delete-catalog.service";
 import { updateCategory } from "./services/update-catalog.service";
+import { listCategory } from "./services/list-catalogs.service";
 
 export const createCategoryAction = createServerFn({ method: "POST" })
   .middleware([ensureSession])
@@ -25,4 +26,11 @@ export const updateCategoryAction = createServerFn({ method: "POST" })
   .inputValidator(updateCategorySchema)
   .handler(async ({ data }) => {
     return updateCategory(data);
+  });
+
+export const listCategoryAction = createServerFn({ method: "POST" })
+  .middleware([ensureSession])
+  .inputValidator(listCategorySchema)
+  .handler(async ({ data }) => {
+    return listCategory(data);
   });
