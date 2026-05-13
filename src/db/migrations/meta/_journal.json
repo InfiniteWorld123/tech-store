@@ -64,6 +64,20 @@
       "when": 1777569558572,
       "tag": "0008_mute_warpath",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1778580681105,
+      "tag": "0009_zippy_donald_blake",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1778580876304,
+      "tag": "0010_rare_gressill",
+      "breakpoints": true
     }
   ]
 }

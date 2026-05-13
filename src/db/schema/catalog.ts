@@ -19,36 +19,67 @@ export const category = pgTable(
 		image: text("image"),
 		...timestamps,
 	},
-	(table) => [unique("category_slug_unique").on(table.slug)],
+	(table) => [
+		unique("category_name_unique").on(table.name),
+		unique("category_slug_unique").on(table.slug),
+	],
 );
 
-export const color = pgTable("color", {
-	id: uuidId(),
-	name: text("name").notNull(),
-	hexCode: text("hex_code"),
-	...timestamps,
-});
+export const color = pgTable(
+	"color",
+	{
+		id: uuidId(),
+		name: text("name").notNull(),
+		hexCode: text("hex_code"),
+		...timestamps,
+	},
+	(table) => [
+		unique("color_name_unique").on(table.name),
+		unique("color_hex_code_unique").on(table.hexCode),
+	],
+);
 
-export const storage = pgTable("storage", {
-	id: uuidId(),
-	name: text("name").notNull(),
-	valueGb: integer("value_gb").notNull(),
-	...timestamps,
-});
+export const storage = pgTable(
+	"storage",
+	{
+		id: uuidId(),
+		name: text("name").notNull(),
+		valueGb: integer("value_gb").notNull(),
+		...timestamps,
+	},
+	(table) => [
+		unique("storage_name_unique").on(table.name),
+		unique("storage_value_gb_unique").on(table.valueGb),
+	],
+);
 
-export const ram = pgTable("ram", {
-	id: uuidId(),
-	name: text("name").notNull(),
-	valueGb: integer("value_gb").notNull(),
-	...timestamps,
-});
+export const ram = pgTable(
+	"ram",
+	{
+		id: uuidId(),
+		name: text("name").notNull(),
+		valueGb: integer("value_gb").notNull(),
+		...timestamps,
+	},
+	(table) => [
+		unique("ram_name_unique").on(table.name),
+		unique("ram_value_gb_unique").on(table.valueGb),
+	],
+);
 
-export const screenSize = pgTable("screen_size", {
-	id: uuidId(),
-	name: text("name").notNull(),
-	valueInches: numeric("value_inches", { precision: 4, scale: 1 }).notNull(),
-	...timestamps,
-});
+export const screenSize = pgTable(
+	"screen_size",
+	{
+		id: uuidId(),
+		name: text("name").notNull(),
+		valueInches: numeric("value_inches", { precision: 4, scale: 1 }).notNull(),
+		...timestamps,
+	},
+	(table) => [
+		unique("screen_size_name_unique").on(table.name),
+		unique("screen_size_value_inches_unique").on(table.valueInches),
+	],
+);
 
 export const product = pgTable(
 	"product",
