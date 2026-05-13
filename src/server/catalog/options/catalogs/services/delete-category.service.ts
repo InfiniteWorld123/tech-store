@@ -5,7 +5,7 @@ import { category } from "#/db/schema";
 import { badRequestError, notFoundError } from "#/errors/app-error";
 import { handleError } from "#/errors/error-handler";
 import { eq } from "drizzle-orm";
-import type { DeleteCategoryInputType, DeleteCategoryOutputType } from "../catalogs.types";
+import type { DeleteCategoryInputType, DeleteCategoryOutputType } from "../category.types";
 
 
 export async function deleteCategory(data: DeleteCategoryInputType)

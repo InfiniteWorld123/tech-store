@@ -9,7 +9,7 @@ import { handleError } from "#/errors/error-handler";
 import type {
 	ListCategoryInputType,
 	ListCategoryOutputType,
-} from "../catalogs.types";
+} from "../category.types";
 
 export async function listCategory(
 	data: ListCategoryInputType,

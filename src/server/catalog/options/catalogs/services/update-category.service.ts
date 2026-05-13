@@ -12,7 +12,7 @@ import { handleError } from "#/errors/error-handler";
 import type {
   UpdateCategoryInputType,
   UpdateCategoryOutputType,
-} from "../catalogs.types";
+} from "../category.types";
 
 export async function updateCategory(
   data: UpdateCategoryInputType,

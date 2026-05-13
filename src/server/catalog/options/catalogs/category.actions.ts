@@ -1,10 +1,10 @@
 import { ensureSession } from "#/server/auth/ensure-session.middleware";
 import { createServerFn } from "@tanstack/react-start";
-import { createCategorySchema, deleteCategorySchema, listCategorySchema, updateCategorySchema } from "./catalogs.schemas";
-import { createCategory } from "./services/create-catalog.service";
-import { deleteCategory } from "./services/delete-catalog.service";
-import { updateCategory } from "./services/update-catalog.service";
-import { listCategory } from "./services/list-catalogs.service";
+import { createCategorySchema, deleteCategorySchema, listCategorySchema, updateCategorySchema } from "./category.schemas";
+import { createCategory } from "./services/create-category.service";
+import { deleteCategory } from "./services/delete-category.service";
+import { updateCategory } from "./services/update-category.service";
+import { listCategory } from "./services/list-category.service";
 
 export const createCategoryAction = createServerFn({ method: "POST" })
   .middleware([ensureSession])

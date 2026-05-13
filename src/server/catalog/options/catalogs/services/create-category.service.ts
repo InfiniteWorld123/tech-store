@@ -8,7 +8,7 @@ import { handleError } from "#/errors/error-handler";
 import type {
 	CreateCategoryInputType,
 	CreateCategoryOutputType,
-} from "../catalogs.types";
+} from "../category.types";
 
 export async function createCategory(
 	data: CreateCategoryInputType,

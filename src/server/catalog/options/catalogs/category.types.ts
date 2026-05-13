@@ -1,5 +1,5 @@
 import type z from "zod";
-import type { createCategorySchema, deleteCategorySchema, listCategorySchema, updateCategorySchema } from "./catalogs.schemas";
+import type { createCategorySchema, deleteCategorySchema, listCategorySchema, updateCategorySchema } from "./category.schemas";
 
 // helper types
 export type Category = {

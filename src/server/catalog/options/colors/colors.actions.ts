@@ -5,11 +5,13 @@ import {
 	deleteColorSchema,
 	deleteColorsSchema,
 	listColorsSchema,
+	updateColorSchema,
 } from "./colors.schemas";
 import { createColor } from "./services/create-color.service";
 import { deleteColor } from "./services/delete-color.service";
 import { deleteColors } from "./services/delete-colors.service";
 import { listColors } from "./services/list-colors.service";
+import { updateColor } from "./services/update-color.service";
 
 export const createColorAction = createServerFn({ method: "POST" })
 	.middleware([ensureSession])
@@ -37,4 +39,11 @@ export const listColorsAction = createServerFn({ method: "POST" })
 	.inputValidator(listColorsSchema)
 	.handler(async ({ data }) => {
 		return listColors(data);
+	});
+
+export const updateColorAction = createServerFn({ method: "POST" })
+	.middleware([ensureSession])
+	.inputValidator(updateColorSchema)
+	.handler(async ({ data }) => {
+		return updateColor(data);
 	});
