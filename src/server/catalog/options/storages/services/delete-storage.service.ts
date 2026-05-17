@@ -1,3 +1,51 @@
-export async function deleteStorage() {
-	throw new Error("Not implemented");
+import { eq } from "drizzle-orm";
+import { HttpStatusCode } from "#/constants/http";
+import { type JsonOk, jsonOk } from "#/constants/json";
+import { db } from "#/db/drizzle";
+import { storage } from "#/db/schema";
+import { badRequestError, notFoundError } from "#/errors/app-error";
+import { handleError } from "#/errors/error-handler";
+import type {
+	DeleteStorageInputType,
+	DeleteStorageOutputType,
+} from "../storages.types";
+
+export async function deleteStorage(
+	data: DeleteStorageInputType,
+): Promise<JsonOk<DeleteStorageOutputType>> {
+	try {
+		const { storageId } = data;
+
+		const [existingStorage] = await db
+			.select({ id: storage.id })
+			.from(storage)
+			.where(eq(storage.id, storageId));
+
+		if (!existingStorage) {
+			throw notFoundError("Storage not found");
+		}
+
+		const [deletedStorage] = await db
+			.delete(storage)
+			.where(eq(storage.id, storageId))
+			.returning();
+
+		if (!deletedStorage) {
+			throw badRequestError("Storage deletion failed");
+		}
+
+		return jsonOk({
+			status: HttpStatusCode.OK,
+			message: "Storage deleted successfully",
+			data: {
+				id: deletedStorage.id,
+				name: deletedStorage.name,
+				valueGb: deletedStorage.valueGb,
+				createdAt: deletedStorage.createdAt.toISOString(),
+				updatedAt: deletedStorage.updatedAt.toISOString(),
+			},
+		});
+	} catch (error) {
+		throw handleError(error);
+	}
 }
