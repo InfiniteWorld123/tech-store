@@ -143,3 +143,26 @@ export const shipping = pgTable(
 	},
 	(table) => [unique("shipping_order_id_unique").on(table.orderId)],
 );
+
+export const stripePayment = pgTable(
+	"stripe_payment",
+	{
+		id: uuidId(),
+		paymentId: uuid("payment_id")
+			.notNull()
+			.references(() => payment.id, { onDelete: "cascade" }),
+		checkoutSessionId: text("checkout_session_id").notNull(),
+		paymentIntentId: text("payment_intent_id"),
+		customerId: text("customer_id"),
+		currency: text("currency").notNull(),
+		checkoutUrl: text("checkout_url"),
+		status: text("status").notNull(),
+		...timestamps,
+	},
+	(table) => [
+		unique("stripe_payment_payment_id_unique").on(table.paymentId),
+		unique("stripe_payment_checkout_session_id_unique").on(
+			table.checkoutSessionId,
+		),
+	],
+);

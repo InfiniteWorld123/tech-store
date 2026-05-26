@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-export const paymentStatusSchema = z.enum([
-	"pending",
-	"paid",
-	"failed",
-	"refunded",
-]);
-
-export const updatePaymentStatusSchema = z.object({
+export const createStripeCheckoutSessionSchema = z.object({
 	orderId: z.uuid("Order id must be a valid UUID"),
-	paymentStatus: paymentStatusSchema,
+});
+
+export const getPaymentSchema = z.object({
+	orderId: z.uuid("Order id must be a valid UUID"),
+});
+
+export const refundPaymentSchema = z.object({
+	orderId: z.uuid("Order id must be a valid UUID"),
 });

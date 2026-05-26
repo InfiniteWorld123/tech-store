@@ -18,9 +18,11 @@ export const env = {
 	BASE_URL: getEnvVar("BASE_URL"),
 	DATABASE_URL: getEnvVar("DATABASE_URL"),
 	RESEND: getEnvVar("RESEND"),
+	STRIPE_SECRET_KEY: getEnvVar("STRIPE_SECRET_KEY"),
+	STRIPE_WEBHOOK_SECRET: getEnvVar("STRIPE_WEBHOOK_SECRET"),
+	STRIPE_CURRENCY: getOptionalEnvVar("STRIPE_CURRENCY") ?? "eur",
 	EMAIL_FROM:
 		getOptionalEnvVar("EMAIL_FROM") ?? "Tech Store <no-reply@yamanwarda.dev>",
-	// UPLOADTHING_TOKEN: getOptionalEnvVar("UPLOADTHING_TOKEN"),
 } as const;
 
 export type EnvVariables = typeof env;

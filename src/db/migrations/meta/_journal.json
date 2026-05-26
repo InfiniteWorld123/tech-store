@@ -78,6 +78,13 @@
       "when": 1778580876304,
       "tag": "0010_rare_gressill",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1779820738255,
+      "tag": "0011_numerous_energizer",
+      "breakpoints": true
     }
   ]
 }
