@@ -14,9 +14,9 @@ import type {
 	UpdateScreenOutputType,
 } from "../screens.types";
 
-export async function updateScreen(
+export const updateScreen = async (
 	data: UpdateScreenInputType,
-): Promise<JsonOk<UpdateScreenOutputType>> {
+): Promise<JsonOk<UpdateScreenOutputType>> => {
 	try {
 		const { screenId, name, valueInches } = data;
 
@@ -81,14 +81,16 @@ export async function updateScreen(
 			status: HttpStatusCode.OK,
 			message: "Screen size updated successfully",
 			data: {
-				id: updatedScreen.id,
-				name: updatedScreen.name,
-				valueInches: Number(updatedScreen.valueInches),
-				createdAt: updatedScreen.createdAt.toISOString(),
-				updatedAt: updatedScreen.updatedAt.toISOString(),
+				screen: {
+					id: updatedScreen.id,
+					name: updatedScreen.name,
+					valueInches: Number(updatedScreen.valueInches),
+					createdAt: updatedScreen.createdAt.toISOString(),
+					updatedAt: updatedScreen.updatedAt.toISOString(),
+				},
 			},
 		});
 	} catch (error) {
 		throw handleError(error);
 	}
-}
+};

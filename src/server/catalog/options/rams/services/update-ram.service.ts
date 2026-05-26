@@ -1,42 +1,42 @@
-import { HttpStatusCode } from "#/constants/http"
-import { jsonOk, type JsonOk } from "#/constants/json"
-import { db } from "#/db/drizzle"
-import { ram } from "#/db/schema"
-import { handleError } from "#/errors/error-handler"
-import { and, eq, ne } from "drizzle-orm"
-import type { UpdateRamInputType, UpdateRamOutputType } from "../rams.types"
-import { badRequestError, conflictError, notFoundError } from "#/errors/app-error"
+import { and, eq, ne } from "drizzle-orm";
+import { HttpStatusCode } from "#/constants/http";
+import { type JsonOk, jsonOk } from "#/constants/json";
+import { db } from "#/db/drizzle";
+import { ram } from "#/db/schema";
+import {
+	badRequestError,
+	conflictError,
+	notFoundError,
+} from "#/errors/app-error";
+import { handleError } from "#/errors/error-handler";
+import type { UpdateRamInputType, UpdateRamOutputType } from "../rams.types";
 
-
-
-
-
-export async function updateRam(
-	data: UpdateRamInputType
-): Promise<JsonOk<UpdateRamOutputType>> {
+export const updateRam = async (
+	data: UpdateRamInputType,
+): Promise<JsonOk<UpdateRamOutputType>> => {
 	try {
-		const { ramId, name, valueGb } = data
+		const { ramId, name, valueGb } = data;
 
 		const [existingRam] = await db
 			.select({
 				name: ram.name,
-				valueGb: ram.valueGb
+				valueGb: ram.valueGb,
 			})
 			.from(ram)
-			.where(eq(ram.id, ramId))
+			.where(eq(ram.id, ramId));
 
 		if (!existingRam) {
-			throw notFoundError(`Ram with id: ${ramId} is not found`)
+			throw notFoundError(`Ram with id: ${ramId} is not found`);
 		}
 
 		if (name !== undefined) {
 			const [ramWithName] = await db
 				.select({ id: ram.id })
 				.from(ram)
-				.where(and(eq(ram.name, name), ne(ram.id, ramId)))
+				.where(and(eq(ram.name, name), ne(ram.id, ramId)));
 
 			if (ramWithName) {
-				throw conflictError(`Ram name already exists`)
+				throw conflictError(`Ram name already exists`);
 			}
 		}
 
@@ -44,10 +44,10 @@ export async function updateRam(
 			const [ramWithValueGb] = await db
 				.select({ id: ram.id })
 				.from(ram)
-				.where(and(eq(ram.valueGb, valueGb), ne(ram.id, ramId)))
+				.where(and(eq(ram.valueGb, valueGb), ne(ram.id, ramId)));
 
 			if (ramWithValueGb) {
-				throw conflictError(`Ram value already exists`)
+				throw conflictError(`Ram value already exists`);
 			}
 		}
 
@@ -72,31 +72,18 @@ export async function updateRam(
 
 		return jsonOk({
 			status: HttpStatusCode.OK,
-			message: `Ram with id: ${ramId} is updated successfully`,
+			message: "RAM updated successfully",
 			data: {
-				id: updatedRam.id,
-				name: updatedRam.name,
-				valueGb: updatedRam.valueGb,
-				createdAt: updatedRam.createdAt.toISOString(),
-				updatedAt: updatedRam.updatedAt.toISOString(),
+				ram: {
+					id: updatedRam.id,
+					name: updatedRam.name,
+					valueGb: updatedRam.valueGb,
+					createdAt: updatedRam.createdAt.toISOString(),
+					updatedAt: updatedRam.updatedAt.toISOString(),
+				},
 			},
-		})
+		});
 	} catch (error) {
-		throw handleError(error)
+		throw handleError(error);
 	}
-}
-
-
-// export async function deleteRam(
-// 	data: DeleteRamInputType
-// ): Promise<JsonOk<DeleteRamsOutputType>> {
-// 	try {
-// 		return jsonOk({
-// 			status: HttpStatusCode.OK,
-// 			message: ``,
-// 			data: {}
-// 		})
-// 	} catch (error) {
-// 		throw handleError(error)
-// 	}
-// }
+};

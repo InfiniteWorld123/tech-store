@@ -1,18 +1,9 @@
 import type z from "zod";
 import type {
-	addToCartValidationSchema,
-	removeCartItemValidationSchema,
-	updateCartItemQuantityValidationSchema,
+	addToCartSchema,
+	removeCartItemSchema,
+	updateCartItemQuantitySchema,
 } from "./cart.schemas";
-
-export type AddToCartSchemaType = z.infer<typeof addToCartValidationSchema>;
-export type UpdateCartItemQuantitySchemaType = z.infer<
-	typeof updateCartItemQuantityValidationSchema
->;
-
-export type RemoveCartItemSchemaType = z.infer<
-	typeof removeCartItemValidationSchema
->;
 
 export type CartWarningType = {
 	type: "price_changed" | "out_of_stock" | "low_stock" | "product_unavailable";
@@ -106,14 +97,18 @@ export type CartOwnerType = {
 // using them for the cart services as return input
 export type GetCartInputType = CartOwnerType;
 
-export type AddToCartInputType = AddToCartSchemaType & CartOwnerType;
+export type AddToCartInputType = z.infer<typeof addToCartSchema> &
+	CartOwnerType;
 
 export type ClearCartInputType = CartOwnerType;
 
-export type UpdateCartItemQuantityInputType = UpdateCartItemQuantitySchemaType &
+export type UpdateCartItemQuantityInputType = z.infer<
+	typeof updateCartItemQuantitySchema
+> &
 	CartOwnerType;
 
-export type RemoveCartItemInputType = RemoveCartItemSchemaType & CartOwnerType;
+export type RemoveCartItemInputType = z.infer<typeof removeCartItemSchema> &
+	CartOwnerType;
 
 export type MergeCartInputType = {
 	userId: string;
@@ -123,17 +118,19 @@ export type MergeCartInputType = {
 export type ValidateCartInputType = CartOwnerType;
 
 // using them for the cart services as return output
-export type CartOutputType = CartType;
+export type CartOutputType = {
+	cart: CartType;
+};
 
-export type AddToCartOutputType = CartType;
+export type AddToCartOutputType = CartOutputType;
 
-export type ClearCartOutputType = CartType;
+export type ClearCartOutputType = CartOutputType;
 
-export type UpdateCartItemQuantityOutputType = CartType;
+export type UpdateCartItemQuantityOutputType = CartOutputType;
 
-export type RemoveCartItemOutputType = CartType;
+export type RemoveCartItemOutputType = CartOutputType;
 
-export type MergeCartOutputType = CartType;
+export type MergeCartOutputType = CartOutputType;
 
 export type ValidateCartOutputType = {
 	isValid: boolean;

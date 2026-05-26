@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { HttpStatusCode } from "#/constants/http";
-import type { JsonOk } from "#/constants/json";
+import { type JsonOk, jsonOk } from "#/constants/json";
 import { db } from "#/db/drizzle";
 import { cart, cartItem, product, variant } from "#/db/schema";
 import {
@@ -108,11 +108,11 @@ export const addToCart = async (
 
 		const cartResponse = await getCart({ userId, sessionId });
 
-		return {
-			...cartResponse,
+		return jsonOk<AddToCartOutputType>({
 			status: HttpStatusCode.CREATED,
-			message: "Item is added to cart successfully",
-		};
+			message: "Item added to cart successfully",
+			data: cartResponse.data,
+		});
 	} catch (error) {
 		throw handleError(error);
 	}

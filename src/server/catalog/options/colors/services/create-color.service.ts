@@ -10,9 +10,9 @@ import type {
 	CreateColorOutputType,
 } from "../colors.types";
 
-export async function createColor(
+export const createColor = async (
 	data: CreateColorInputType,
-): Promise<JsonOk<CreateColorOutputType>> {
+): Promise<JsonOk<CreateColorOutputType>> => {
 	try {
 		const { name, hexCode } = data;
 
@@ -55,11 +55,13 @@ export async function createColor(
 
 		return jsonOk({
 			data: {
-				id: createdColor.id,
-				name: createdColor.name,
-				hexCode: createdColor.hexCode,
-				createdAt: createdColor.createdAt.toISOString(),
-				updatedAt: createdColor.updatedAt.toISOString(),
+				color: {
+					id: createdColor.id,
+					name: createdColor.name,
+					hexCode: createdColor.hexCode,
+					createdAt: createdColor.createdAt.toISOString(),
+					updatedAt: createdColor.updatedAt.toISOString(),
+				},
 			},
 			status: HttpStatusCode.CREATED,
 			message: "Color created successfully",
@@ -67,4 +69,4 @@ export async function createColor(
 	} catch (error) {
 		throw handleError(error);
 	}
-}
+};

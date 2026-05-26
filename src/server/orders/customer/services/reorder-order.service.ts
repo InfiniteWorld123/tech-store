@@ -14,12 +14,12 @@ import { notFoundError } from "#/errors/app-error";
 import { handleError } from "#/errors/error-handler";
 import type { CartWarningType } from "#/server/cart/cart.types";
 import type {
+	ReorderOrderInputType,
 	ReorderOrderOutputType,
-	reorderOrderInputType,
 } from "../customer.types";
 
 export const reorderOrder = async (
-	data: reorderOrderInputType,
+	data: ReorderOrderInputType,
 ): Promise<JsonOk<ReorderOrderOutputType>> => {
 	try {
 		const { userId, orderId } = data;

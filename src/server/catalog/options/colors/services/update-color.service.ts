@@ -1,16 +1,24 @@
+import { and, eq, ne } from "drizzle-orm";
 import { HttpStatusCode } from "#/constants/http";
-import { jsonOk, type JsonOk } from "#/constants/json";
+import { type JsonOk, jsonOk } from "#/constants/json";
 import { db } from "#/db/drizzle";
 import { color } from "#/db/schema";
+import {
+	badRequestError,
+	conflictError,
+	notFoundError,
+} from "#/errors/app-error";
 import { handleError } from "#/errors/error-handler";
-import { and, eq, ne } from "drizzle-orm";
-import type { UpdateColorInputType, UpdateColorOutputType } from "../colors.types";
-import { badRequestError, conflictError, notFoundError } from "#/errors/app-error";
+import type {
+	UpdateColorInputType,
+	UpdateColorOutputType,
+} from "../colors.types";
 
-export async function updateColor(data: UpdateColorInputType)
-	: Promise<JsonOk<UpdateColorOutputType>> {
+export const updateColor = async (
+	data: UpdateColorInputType,
+): Promise<JsonOk<UpdateColorOutputType>> => {
 	try {
-		const { colorId, name, hexCode } = data
+		const { colorId, name, hexCode } = data;
 
 		const [existingColor] = await db
 			.select({ id: color.id })
@@ -66,15 +74,16 @@ export async function updateColor(data: UpdateColorInputType)
 			status: HttpStatusCode.OK,
 			message: "Color updated successfully",
 			data: {
-				id: updatedColor.id,
-				name: updatedColor.name,
-				hexCode: updatedColor.hexCode ?? null,
-				createdAt: updatedColor.createdAt.toISOString(),
-				updatedAt: updatedColor.updatedAt.toISOString(),
+				color: {
+					id: updatedColor.id,
+					name: updatedColor.name,
+					hexCode: updatedColor.hexCode ?? null,
+					createdAt: updatedColor.createdAt.toISOString(),
+					updatedAt: updatedColor.updatedAt.toISOString(),
+				},
 			},
 		});
-
 	} catch (error) {
-		throw handleError(error)
+		throw handleError(error);
 	}
-}
+};

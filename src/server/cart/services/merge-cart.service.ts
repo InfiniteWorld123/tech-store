@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { HttpStatusCode } from "#/constants/http";
-import type { JsonOk } from "#/constants/json";
+import { type JsonOk, jsonOk } from "#/constants/json";
 import { db } from "#/db/drizzle";
 import { cart, cartItem } from "#/db/schema";
 import { unauthorizedError } from "#/errors/app-error";
@@ -17,11 +17,11 @@ const mergedCartResponse = async ({
 }): Promise<JsonOk<MergeCartOutputType>> => {
 	const cartResponse = await getCart({ userId, sessionId });
 
-	return {
-		...cartResponse,
+	return jsonOk<MergeCartOutputType>({
 		status: HttpStatusCode.OK,
 		message: "Cart merged successfully",
-	};
+		data: cartResponse.data,
+	});
 };
 
 export const mergeCart = async (

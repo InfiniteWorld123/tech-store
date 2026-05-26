@@ -1,26 +1,25 @@
+import { eq, or } from "drizzle-orm";
 import { HttpStatusCode } from "#/constants/http";
-import { jsonOk, type JsonOk } from "#/constants/json";
+import { type JsonOk, jsonOk } from "#/constants/json";
 import { db } from "#/db/drizzle";
 import { ram } from "#/db/schema";
-import { handleError } from "#/errors/error-handler";
-import { eq, or } from "drizzle-orm";
-import type { CreateRamInputType, CreateRamOutputType } from "../rams.types";
 import { badRequestError, conflictError } from "#/errors/app-error";
+import { handleError } from "#/errors/error-handler";
+import type { CreateRamInputType, CreateRamOutputType } from "../rams.types";
 
-export async function createRam(
-	data: CreateRamInputType
-): Promise<JsonOk<CreateRamOutputType>> {
+export const createRam = async (
+	data: CreateRamInputType,
+): Promise<JsonOk<CreateRamOutputType>> => {
 	try {
-
-		const { name, valueGb } = data
+		const { name, valueGb } = data;
 
 		const existingRams = await db
 			.select({
 				name: ram.name,
-				valueGb: ram.valueGb
+				valueGb: ram.valueGb,
 			})
 			.from(ram)
-			.where(or(eq(ram.name, name), eq(ram.valueGb, valueGb)))
+			.where(or(eq(ram.name, name), eq(ram.valueGb, valueGb)));
 
 		if (existingRams.some((item) => item.name === name)) {
 			throw conflictError("RAM name already exists");
@@ -34,26 +33,28 @@ export async function createRam(
 			.insert(ram)
 			.values({
 				name,
-				valueGb
+				valueGb,
 			})
-			.returning()
+			.returning();
 
 		if (!createdRam) {
-			throw badRequestError("Ram is not created")
+			throw badRequestError("Ram is not created");
 		}
 
 		return jsonOk({
 			status: HttpStatusCode.CREATED,
-			message: `RAM name: ${name} with value: ${valueGb} is created successfully`,
+			message: "RAM created successfully",
 			data: {
-				id: createdRam.id,
-				name: createdRam.name,
-				valueGb: createdRam.valueGb,
-				createdAt: createdRam.createdAt.toISOString(),
-				updatedAt: createdRam.updatedAt.toISOString(),
-			}
-		})
+				ram: {
+					id: createdRam.id,
+					name: createdRam.name,
+					valueGb: createdRam.valueGb,
+					createdAt: createdRam.createdAt.toISOString(),
+					updatedAt: createdRam.updatedAt.toISOString(),
+				},
+			},
+		});
 	} catch (error) {
-		throw handleError(error)
+		throw handleError(error);
 	}
-}
+};

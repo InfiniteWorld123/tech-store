@@ -34,7 +34,7 @@ export const deleteColorsAction = createServerFn({ method: "POST" })
 		return deleteColors(data);
 	});
 
-export const listColorsAction = createServerFn({ method: "POST" })
+export const listColorsAction = createServerFn({ method: "GET" })
 	.middleware([ensureSession])
 	.inputValidator(listColorsSchema)
 	.handler(async ({ data }) => {

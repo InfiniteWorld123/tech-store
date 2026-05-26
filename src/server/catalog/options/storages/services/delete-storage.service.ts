@@ -10,9 +10,9 @@ import type {
 	DeleteStorageOutputType,
 } from "../storages.types";
 
-export async function deleteStorage(
+export const deleteStorage = async (
 	data: DeleteStorageInputType,
-): Promise<JsonOk<DeleteStorageOutputType>> {
+): Promise<JsonOk<DeleteStorageOutputType>> => {
 	try {
 		const { storageId } = data;
 
@@ -38,14 +38,10 @@ export async function deleteStorage(
 			status: HttpStatusCode.OK,
 			message: "Storage deleted successfully",
 			data: {
-				id: deletedStorage.id,
-				name: deletedStorage.name,
-				valueGb: deletedStorage.valueGb,
-				createdAt: deletedStorage.createdAt.toISOString(),
-				updatedAt: deletedStorage.updatedAt.toISOString(),
+				storageId: deletedStorage.id,
 			},
 		});
 	} catch (error) {
 		throw handleError(error);
 	}
-}
+};

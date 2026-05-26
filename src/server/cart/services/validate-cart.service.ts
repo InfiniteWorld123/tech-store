@@ -19,15 +19,16 @@ export const validateCart = async (
 
 		const cartResponse = await getCart({ userId, sessionId });
 
-		const blockingWarnings = cartResponse.data.warnings.filter((warning) =>
+		const cart = cartResponse.data.cart;
+		const blockingWarnings = cart.warnings.filter((warning) =>
 			["out_of_stock", "product_unavailable", "price_changed"].includes(
 				warning.type,
 			),
 		);
 
 		const isValid =
-			cartResponse.data.items.length > 0 &&
-			cartResponse.data.summary.canCheckout &&
+			cart.items.length > 0 &&
+			cart.summary.canCheckout &&
 			blockingWarnings.length === 0;
 
 		return jsonOk<ValidateCartOutputType>({
@@ -35,7 +36,7 @@ export const validateCart = async (
 			message: isValid ? "Cart is valid" : "Cart needs attention",
 			data: {
 				isValid,
-				cart: cartResponse.data,
+				cart,
 				blockingWarnings,
 			},
 		});

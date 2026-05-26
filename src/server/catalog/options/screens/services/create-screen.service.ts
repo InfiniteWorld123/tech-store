@@ -10,9 +10,9 @@ import type {
 	CreateScreenOutputType,
 } from "../screens.types";
 
-export async function createScreen(
+export const createScreen = async (
 	data: CreateScreenInputType,
-): Promise<JsonOk<CreateScreenOutputType>> {
+): Promise<JsonOk<CreateScreenOutputType>> => {
 	try {
 		const { name, valueInches } = data;
 
@@ -58,16 +58,18 @@ export async function createScreen(
 
 		return jsonOk({
 			status: HttpStatusCode.CREATED,
-			message: "the screed size is created successfully",
+			message: "Screen size created successfully",
 			data: {
-				id: createdScreenSize.id,
-				name: createdScreenSize.name,
-				valueInches: Number(createdScreenSize.valueInches),
-				createdAt: createdScreenSize.createdAt.toISOString(),
-				updatedAt: createdScreenSize.updatedAt.toISOString(),
+				screen: {
+					id: createdScreenSize.id,
+					name: createdScreenSize.name,
+					valueInches: Number(createdScreenSize.valueInches),
+					createdAt: createdScreenSize.createdAt.toISOString(),
+					updatedAt: createdScreenSize.updatedAt.toISOString(),
+				},
 			},
 		});
 	} catch (error) {
 		throw handleError(error);
 	}
-}
+};

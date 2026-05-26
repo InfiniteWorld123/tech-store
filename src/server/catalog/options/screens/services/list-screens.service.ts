@@ -9,9 +9,9 @@ import type {
 	ListScreensOutputType,
 } from "../screens.types";
 
-export async function listScreens(
+export const listScreens = async (
 	data: ListScreensInputType,
-): Promise<JsonOk<ListScreensOutputType>> {
+): Promise<JsonOk<ListScreensOutputType>> => {
 	try {
 		const { searching } = data;
 		const search = searching?.search;
@@ -47,9 +47,9 @@ export async function listScreens(
 
 		return jsonOk({
 			status: HttpStatusCode.OK,
-			message: "Screen sizes listed successfully",
+			message: "Screen sizes fetched successfully",
 			data: {
-				screens: items,
+				items,
 				query: {
 					searching,
 				},
@@ -58,4 +58,4 @@ export async function listScreens(
 	} catch (error) {
 		throw handleError(error);
 	}
-}
+};

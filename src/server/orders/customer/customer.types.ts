@@ -7,15 +7,15 @@ import type {
 	ShippingCarrierType,
 	ShippingMethodType,
 	ShippingStatusType,
-} from "../admin/operational/operational.types";
+} from "../admin/admin.types";
 import type {
-	cancelOrderValidationSchema,
-	estimateOrderTotalValidationSchema,
-	getCustomerOrderDetailValidationSchema,
-	getOrderTrackingValidationSchema,
-	listCustomerOrdersValidationSchema,
-	placeOrderFromCartValidationSchema,
-	reorderOrderValidationSchema,
+	cancelOrderSchema,
+	estimateOrderTotalSchema,
+	getCustomerOrderDetailSchema,
+	getOrderTrackingSchema,
+	listCustomerOrdersSchema,
+	placeOrderFromCartSchema,
+	reorderOrderSchema,
 } from "./customer.schemas";
 
 // helper types
@@ -90,58 +90,42 @@ export type CustomerOrderDetailType = {
 	canTrack: boolean;
 };
 
-// inferring types
-export type EstimateOrderTotalSchemaType = z.infer<
-	typeof estimateOrderTotalValidationSchema
->;
-
-export type PlaceOrderFromCartType = z.infer<
-	typeof placeOrderFromCartValidationSchema
->;
-
-export type ListCustomerOrdersSchemaType = z.infer<
-	typeof listCustomerOrdersValidationSchema
->;
-
-export type GetCustomerOrderDetailSchemaType = z.infer<
-	typeof getCustomerOrderDetailValidationSchema
->;
-
-export type CancelOrderSchemaType = z.infer<typeof cancelOrderValidationSchema>;
-
-export type GetOrderTrackingType = z.infer<
-	typeof getOrderTrackingValidationSchema
->;
-
-export type reorderOrderType = z.infer<typeof reorderOrderValidationSchema>;
-
 // input types
-export type EstimateOrderTotalInputType = EstimateOrderTotalSchemaType & {
+export type EstimateOrderTotalInputType = z.infer<
+	typeof estimateOrderTotalSchema
+> & {
 	userId: string;
 };
 
-export type PlaceOrderFromCartInputType = PlaceOrderFromCartType & {
+export type PlaceOrderFromCartInputType = z.infer<
+	typeof placeOrderFromCartSchema
+> & {
 	userId: string;
 };
 
-export type ListCustomerOrdersInputType = ListCustomerOrdersSchemaType & {
+export type ListCustomerOrdersInputType = z.infer<
+	typeof listCustomerOrdersSchema
+> & {
 	userId: string;
 };
 
-export type GetCustomerOrderDetailInputType =
-	GetCustomerOrderDetailSchemaType & {
-		userId: string;
-	};
-
-export type CancelOrderInputType = CancelOrderSchemaType & {
+export type GetCustomerOrderDetailInputType = z.infer<
+	typeof getCustomerOrderDetailSchema
+> & {
 	userId: string;
 };
 
-export type GetOrderTrackingInputType = GetOrderTrackingType & {
+export type CancelOrderInputType = z.infer<typeof cancelOrderSchema> & {
 	userId: string;
 };
 
-export type reorderOrderInputType = reorderOrderType & {
+export type GetOrderTrackingInputType = z.infer<
+	typeof getOrderTrackingSchema
+> & {
+	userId: string;
+};
+
+export type ReorderOrderInputType = z.infer<typeof reorderOrderSchema> & {
 	userId: string;
 };
 
@@ -207,9 +191,11 @@ export type ListCustomerOrdersOutputType = {
 	};
 };
 
-export type GetCustomerOrderDetailOutputType = CustomerOrderDetailType;
+export type GetCustomerOrderDetailOutputType = {
+	order: CustomerOrderDetailType;
+};
 
-export type CancelOrderOutputType = CustomerOrderDetailType;
+export type CancelOrderOutputType = GetCustomerOrderDetailOutputType;
 
 export type GetOrderTrackingOutputType = {
 	orderNumber: string;

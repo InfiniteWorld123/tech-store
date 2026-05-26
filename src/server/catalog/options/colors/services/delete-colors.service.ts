@@ -25,19 +25,11 @@ export const deleteColors = async (
 			throw badRequestError("Colors deletion failed");
 		}
 
-		const items = deletedColors.map((item) => ({
-			id: item.id,
-			name: item.name,
-			hexCode: item.hexCode ?? null,
-			createdAt: item.createdAt.toISOString(),
-			updatedAt: item.updatedAt.toISOString(),
-		}));
-
-		return jsonOk({
+		return jsonOk<DeleteColorsOutputType>({
 			status: HttpStatusCode.OK,
 			message: "Colors deleted successfully",
 			data: {
-				deletedColors: items,
+				colorIds: deletedColors.map((item) => item.id),
 			},
 		});
 	} catch (error) {

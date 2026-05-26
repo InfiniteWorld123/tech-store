@@ -1,14 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
-import { unauthorizedError } from "#/errors/app-error";
 import { ensureSession } from "#/server/auth/ensure-session.middleware";
 import {
-	cancelOrderValidationSchema,
-	estimateOrderTotalValidationSchema,
-	getCustomerOrderDetailValidationSchema,
-	getOrderTrackingValidationSchema,
-	listCustomerOrdersValidationSchema,
-	placeOrderFromCartValidationSchema,
-	reorderOrderValidationSchema,
+	cancelOrderSchema,
+	estimateOrderTotalSchema,
+	getCustomerOrderDetailSchema,
+	getOrderTrackingSchema,
+	listCustomerOrdersSchema,
+	placeOrderFromCartSchema,
+	reorderOrderSchema,
 } from "./customer.schemas";
 import { cancelOrder } from "./services/cancel-order.service";
 import { estimateOrderTotal } from "./services/estimate-order-total.service";
@@ -20,12 +19,8 @@ import { reorderOrder } from "./services/reorder-order.service";
 
 export const estimateOrderTotalAction = createServerFn({ method: "GET" })
 	.middleware([ensureSession])
-	.inputValidator(estimateOrderTotalValidationSchema)
+	.inputValidator(estimateOrderTotalSchema)
 	.handler(async ({ data, context }) => {
-		if (!context.session) {
-			throw unauthorizedError("user is unauthorized");
-		}
-
 		return estimateOrderTotal({
 			...data,
 			userId: context.session.user.id,
@@ -34,60 +29,60 @@ export const estimateOrderTotalAction = createServerFn({ method: "GET" })
 
 export const placeOrderFromCartAction = createServerFn({ method: "POST" })
 	.middleware([ensureSession])
-	.inputValidator(placeOrderFromCartValidationSchema)
+	.inputValidator(placeOrderFromCartSchema)
 	.handler(async ({ data, context }) => {
 		return placeOrderFromCart({
 			...data,
-			userId: context.session?.user.id as string,
+			userId: context.session.user.id,
 		});
 	});
 
-export const listCustomerOrdersAction = createServerFn({ method: "POST" })
+export const listCustomerOrdersAction = createServerFn({ method: "GET" })
 	.middleware([ensureSession])
-	.inputValidator(listCustomerOrdersValidationSchema)
+	.inputValidator(listCustomerOrdersSchema)
 	.handler(async ({ data, context }) => {
 		return listCustomerOrders({
 			...data,
-			userId: context.session?.user.id as string,
+			userId: context.session.user.id,
 		});
 	});
 
 export const getCustomerOrderDetailAction = createServerFn({ method: "GET" })
 	.middleware([ensureSession])
-	.inputValidator(getCustomerOrderDetailValidationSchema)
+	.inputValidator(getCustomerOrderDetailSchema)
 	.handler(async ({ data, context }) => {
 		return getCustomerOrderDetail({
 			...data,
-			userId: context.session?.user.id as string,
+			userId: context.session.user.id,
 		});
 	});
 
 export const cancelOrderAction = createServerFn({ method: "POST" })
 	.middleware([ensureSession])
-	.inputValidator(cancelOrderValidationSchema)
+	.inputValidator(cancelOrderSchema)
 	.handler(async ({ data, context }) => {
 		return cancelOrder({
 			...data,
-			userId: context.session?.user.id as string,
+			userId: context.session.user.id,
 		});
 	});
 
-export const getOrderTrackingAction = createServerFn({ method: "POST" })
+export const getOrderTrackingAction = createServerFn({ method: "GET" })
 	.middleware([ensureSession])
-	.inputValidator(getOrderTrackingValidationSchema)
+	.inputValidator(getOrderTrackingSchema)
 	.handler(async ({ data, context }) => {
 		return getOrderTracking({
 			...data,
-			userId: context.session?.user.id as string,
+			userId: context.session.user.id,
 		});
 	});
 
 export const reorderOrderAction = createServerFn({ method: "POST" })
 	.middleware([ensureSession])
-	.inputValidator(reorderOrderValidationSchema)
+	.inputValidator(reorderOrderSchema)
 	.handler(async ({ data, context }) => {
 		return reorderOrder({
 			...data,
-			userId: context.session?.user.id as string,
+			userId: context.session.user.id,
 		});
 	});

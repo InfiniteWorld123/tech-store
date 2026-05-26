@@ -34,7 +34,7 @@ export const deleteStoragesAction = createServerFn({ method: "POST" })
 		return deleteStorages(data);
 	});
 
-export const listStoragesAction = createServerFn({ method: "POST" })
+export const listStoragesAction = createServerFn({ method: "GET" })
 	.middleware([ensureSession])
 	.inputValidator(listStoragesSchema)
 	.handler(async ({ data }) => {

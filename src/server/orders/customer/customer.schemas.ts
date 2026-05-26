@@ -3,14 +3,14 @@ import {
 	paymentMethodSchema,
 	shippingCarrierSchema,
 	shippingMethodSchema,
-} from "../admin/operational/operational.schemas";
+} from "../admin/admin.schemas";
 
-export const estimateOrderTotalValidationSchema = z.object({
+export const estimateOrderTotalSchema = z.object({
 	addressId: z.uuid("Address id must be a valid UUID"),
 	shippingMethod: shippingMethodSchema.default("standard"),
 });
 
-export const placeOrderFromCartValidationSchema = z.object({
+export const placeOrderFromCartSchema = z.object({
 	addressId: z.uuid("Address id must be a valid UUID"),
 	paymentMethod: paymentMethodSchema.default("card"),
 	shippingMethod: shippingMethodSchema.default("standard"),
@@ -18,7 +18,7 @@ export const placeOrderFromCartValidationSchema = z.object({
 	notes: z.string().min(1, "notes at least should be one character").optional(),
 });
 
-export const listCustomerOrdersValidationSchema = z.object({
+export const listCustomerOrdersSchema = z.object({
 	page: z.number().int().min(1).default(1),
 	limit: z.number().int().min(1).max(20).default(10),
 	status: z.enum(["all", "active", "completed", "cancelled"]).default("all"),
@@ -26,18 +26,18 @@ export const listCustomerOrdersValidationSchema = z.object({
 	searchOrderNumber: z.string().trim().min(1).max(100).optional(),
 });
 
-export const getCustomerOrderDetailValidationSchema = z.object({
+export const getCustomerOrderDetailSchema = z.object({
 	orderId: z.uuid("Order id must be a valid UUID"),
 });
 
-export const cancelOrderValidationSchema = z.object({
+export const cancelOrderSchema = z.object({
 	orderId: z.uuid("Order id must be a valid UUID"),
 });
 
-export const getOrderTrackingValidationSchema = z.object({
+export const getOrderTrackingSchema = z.object({
 	orderId: z.uuid("Order id must be a valid UUID"),
 });
 
-export const reorderOrderValidationSchema = z.object({
+export const reorderOrderSchema = z.object({
 	orderId: z.uuid("Order id must be a valid UUID"),
 });

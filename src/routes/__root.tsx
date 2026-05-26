@@ -1,3 +1,4 @@
+import { Toast } from "@heroui/react";
 import type { QueryClient } from "@tanstack/react-query";
 import {
 	createRootRouteWithContext,
@@ -5,7 +6,6 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import appCss from "../styles.css?url";
-import { Toast } from "@heroui/react";
 
 interface MyRouterContext {
 	queryClient: QueryClient;

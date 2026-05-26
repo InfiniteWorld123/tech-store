@@ -14,9 +14,9 @@ import type {
 	UpdateStorageOutputType,
 } from "../storages.types";
 
-export async function updateStorage(
+export const updateStorage = async (
 	data: UpdateStorageInputType,
-): Promise<JsonOk<UpdateStorageOutputType>> {
+): Promise<JsonOk<UpdateStorageOutputType>> => {
 	try {
 		const { storageId, name, valueGb } = data;
 
@@ -74,14 +74,16 @@ export async function updateStorage(
 			status: HttpStatusCode.OK,
 			message: "Storage updated successfully",
 			data: {
-				id: updatedStorage.id,
-				name: updatedStorage.name,
-				valueGb: updatedStorage.valueGb,
-				createdAt: updatedStorage.createdAt.toISOString(),
-				updatedAt: updatedStorage.updatedAt.toISOString(),
+				storage: {
+					id: updatedStorage.id,
+					name: updatedStorage.name,
+					valueGb: updatedStorage.valueGb,
+					createdAt: updatedStorage.createdAt.toISOString(),
+					updatedAt: updatedStorage.updatedAt.toISOString(),
+				},
 			},
 		});
 	} catch (error) {
 		throw handleError(error);
 	}
-}
+};

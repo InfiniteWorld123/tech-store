@@ -28,19 +28,25 @@ export type ListStoragesInputType = z.infer<typeof listStoragesSchema>;
 export type UpdateStorageInputType = z.infer<typeof updateStorageSchema>;
 
 // output types
-export type CreateStorageOutputType = Storage;
+export type CreateStorageOutputType = {
+	storage: Storage;
+};
 
-export type DeleteStorageOutputType = Storage;
+export type DeleteStorageOutputType = {
+	storageId: DeleteStorageInputType["storageId"];
+};
 
 export type DeleteStoragesOutputType = {
-	storages: Storage[];
+	storageIds: DeleteStoragesInputType["storageIds"];
 };
 
 export type ListStoragesOutputType = {
-	storages: Storage[];
+	items: Storage[];
 	query: {
 		searching?: ListStoragesInputType["searching"];
 	};
 };
 
-export type UpdateStorageOutputType = Storage;
+export type UpdateStorageOutputType = {
+	storage: Storage;
+};

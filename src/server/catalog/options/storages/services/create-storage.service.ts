@@ -10,9 +10,9 @@ import type {
 	CreateStorageOutputType,
 } from "../storages.types";
 
-export async function createStorage(
+export const createStorage = async (
 	data: CreateStorageInputType,
-): Promise<JsonOk<CreateStorageOutputType>> {
+): Promise<JsonOk<CreateStorageOutputType>> => {
 	try {
 		const { name, valueGb } = data;
 
@@ -48,14 +48,16 @@ export async function createStorage(
 			status: HttpStatusCode.CREATED,
 			message: "Storage created successfully",
 			data: {
-				id: createdStorage.id,
-				name: createdStorage.name,
-				valueGb: createdStorage.valueGb,
-				createdAt: createdStorage.createdAt.toISOString(),
-				updatedAt: createdStorage.updatedAt.toISOString(),
+				storage: {
+					id: createdStorage.id,
+					name: createdStorage.name,
+					valueGb: createdStorage.valueGb,
+					createdAt: createdStorage.createdAt.toISOString(),
+					updatedAt: createdStorage.updatedAt.toISOString(),
+				},
 			},
 		});
 	} catch (error) {
 		throw handleError(error);
 	}
-}
+};

@@ -10,9 +10,9 @@ import type {
 	DeleteScreenOutputType,
 } from "../screens.types";
 
-export async function deleteScreen(
+export const deleteScreen = async (
 	data: DeleteScreenInputType,
-): Promise<JsonOk<DeleteScreenOutputType>> {
+): Promise<JsonOk<DeleteScreenOutputType>> => {
 	try {
 		const { screenId } = data;
 
@@ -39,14 +39,10 @@ export async function deleteScreen(
 			status: HttpStatusCode.OK,
 			message: "Screen size deleted successfully",
 			data: {
-				id: deletedScreenSize.id,
-				name: deletedScreenSize.name,
-				valueInches: Number(deletedScreenSize.valueInches),
-				createdAt: deletedScreenSize.createdAt.toISOString(),
-				updatedAt: deletedScreenSize.updatedAt.toISOString(),
+				screenId: deletedScreenSize.id,
 			},
 		});
 	} catch (error) {
 		throw handleError(error);
 	}
-}
+};

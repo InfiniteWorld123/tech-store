@@ -15,6 +15,8 @@
 			"**/drizzle.config.ts",
 			"**/tsconfig.json",
 			"**/biome.json",
+			"!**/.claude/**",
+			"!**/src/db/migrations/meta/**",
 			"!**/src/routeTree.gen.ts",
 			"!**/src/styles.css"
 		]

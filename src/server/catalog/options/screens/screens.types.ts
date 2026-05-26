@@ -28,19 +28,25 @@ export type ListScreensInputType = z.infer<typeof listScreensSchema>;
 export type UpdateScreenInputType = z.infer<typeof updateScreenSchema>;
 
 // output types
-export type CreateScreenOutputType = Screen;
+export type CreateScreenOutputType = {
+	screen: Screen;
+};
 
-export type DeleteScreenOutputType = Screen;
+export type DeleteScreenOutputType = {
+	screenId: DeleteScreenInputType["screenId"];
+};
 
 export type DeleteScreensOutputType = {
-	screens: Screen[];
+	screenIds: DeleteScreensInputType["screenIds"];
 };
 
 export type ListScreensOutputType = {
-	screens: Screen[];
+	items: Screen[];
 	query: {
 		searching?: ListScreensInputType["searching"];
 	};
 };
 
-export type UpdateScreenOutputType = Screen;
+export type UpdateScreenOutputType = {
+	screen: Screen;
+};

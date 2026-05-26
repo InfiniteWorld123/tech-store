@@ -1,19 +1,19 @@
 import type z from "zod";
 import type {
-    createColorSchema,
-    deleteColorSchema,
-    deleteColorsSchema,
-    listColorsSchema,
-    updateColorSchema,
+	createColorSchema,
+	deleteColorSchema,
+	deleteColorsSchema,
+	listColorsSchema,
+	updateColorSchema,
 } from "./colors.schemas";
 
 // type helpers
 export type Color = {
-    id: string;
-    name: string;
-    hexCode: string | null;
-    createdAt: string;
-    updatedAt: string;
+	id: string;
+	name: string;
+	hexCode: string | null;
+	createdAt: string;
+	updatedAt: string;
 };
 
 // input types
@@ -28,12 +28,25 @@ export type ListColorsInputType = z.infer<typeof listColorsSchema>;
 export type UpdateColorInputType = z.infer<typeof updateColorSchema>;
 
 // output types
-export type CreateColorOutputType = Color;
+export type CreateColorOutputType = {
+	color: Color;
+};
 
-export type DeleteColorOutputType = Color;
+export type DeleteColorOutputType = {
+	colorId: DeleteColorInputType["colorId"];
+};
 
-export type DeleteColorsOutputType = { deletedColors: Color[] };
+export type DeleteColorsOutputType = {
+	colorIds: DeleteColorsInputType["colorIds"];
+};
 
-export type ListColorsOutputType = { colors: Color[] };
+export type ListColorsOutputType = {
+	items: Color[];
+	query: {
+		searching?: ListColorsInputType["searching"];
+	};
+};
 
-export type UpdateColorOutputType = Color;
+export type UpdateColorOutputType = {
+	color: Color;
+};

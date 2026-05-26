@@ -34,7 +34,7 @@ export const deleteScreensAction = createServerFn({ method: "POST" })
 		return deleteScreens(data);
 	});
 
-export const listScreensAction = createServerFn({ method: "POST" })
+export const listScreensAction = createServerFn({ method: "GET" })
 	.middleware([ensureSession])
 	.inputValidator(listScreensSchema)
 	.handler(async ({ data }) => {

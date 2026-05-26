@@ -36,15 +36,11 @@ export const deleteColor = async (
 			throw badRequestError("Color deletion failed");
 		}
 
-		return jsonOk({
+		return jsonOk<DeleteColorOutputType>({
 			status: HttpStatusCode.OK,
 			message: "Color deleted successfully",
 			data: {
-				id: deletedColor.id,
-				name: deletedColor.name,
-				hexCode: deletedColor.hexCode ?? null,
-				createdAt: deletedColor.createdAt.toISOString(),
-				updatedAt: deletedColor.updatedAt.toISOString(),
+				colorId: deletedColor.id,
 			},
 		});
 	} catch (error) {

@@ -18,7 +18,8 @@ export const env = {
 	BASE_URL: getEnvVar("BASE_URL"),
 	DATABASE_URL: getEnvVar("DATABASE_URL"),
 	RESEND: getEnvVar("RESEND"),
-	EMAIL_FROM: getOptionalEnvVar("EMAIL_FROM") ?? "Tech Store <no-reply@yamanwarda.dev>",
+	EMAIL_FROM:
+		getOptionalEnvVar("EMAIL_FROM") ?? "Tech Store <no-reply@yamanwarda.dev>",
 	// UPLOADTHING_TOKEN: getOptionalEnvVar("UPLOADTHING_TOKEN"),
 } as const;
 

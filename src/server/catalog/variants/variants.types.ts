@@ -1,19 +1,13 @@
 import type { z } from "zod";
 import type {
-	createVariantValidationSchema,
-	deleteVariantValidationSchema,
-	updateVariantValidationSchema,
+	createVariantSchema,
+	deleteVariantSchema,
+	updateVariantSchema,
 } from "./variants.schemas";
 
-export type CreateVariantInputType = z.infer<
-	typeof createVariantValidationSchema
->;
-export type UpdateVariantInputType = z.infer<
-	typeof updateVariantValidationSchema
->;
-export type DeleteVariantInputType = z.infer<
-	typeof deleteVariantValidationSchema
->;
+export type CreateVariantInputType = z.infer<typeof createVariantSchema>;
+export type UpdateVariantInputType = z.infer<typeof updateVariantSchema>;
+export type DeleteVariantInputType = z.infer<typeof deleteVariantSchema>;
 
 export type AdminVariantType = {
 	id: string;

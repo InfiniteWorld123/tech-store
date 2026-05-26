@@ -1,12 +1,12 @@
 import type { z } from "zod";
 import type { AdminVariantType } from "../variants/variants.types";
 import type {
-	createProductValidationSchema,
-	deleteProductsValidationSchema,
-	deleteProductValidationSchema,
-	getProductsValidationSchema,
-	getProductValidationSchema,
-	updateProductValidationSchema,
+	createProductSchema,
+	deleteProductSchema,
+	deleteProductsSchema,
+	getProductSchema,
+	getProductsSchema,
+	updateProductSchema,
 } from "./products.schemas";
 
 export type AdminProductListItemType = {
@@ -54,20 +54,12 @@ export type AdminProductDetailsType = {
 };
 
 // input types
-export type GetProductInputType = z.infer<typeof getProductValidationSchema>;
-export type GetProductsInputType = z.infer<typeof getProductsValidationSchema>;
-export type CreateProductInputType = z.infer<
-	typeof createProductValidationSchema
->;
-export type UpdateProductInputType = z.infer<
-	typeof updateProductValidationSchema
->;
-export type DeleteProductInputType = z.infer<
-	typeof deleteProductValidationSchema
->;
-export type DeleteProductsInputType = z.infer<
-	typeof deleteProductsValidationSchema
->;
+export type GetProductInputType = z.infer<typeof getProductSchema>;
+export type GetProductsInputType = z.infer<typeof getProductsSchema>;
+export type CreateProductInputType = z.infer<typeof createProductSchema>;
+export type UpdateProductInputType = z.infer<typeof updateProductSchema>;
+export type DeleteProductInputType = z.infer<typeof deleteProductSchema>;
+export type DeleteProductsInputType = z.infer<typeof deleteProductsSchema>;
 
 // output types
 export type GetProductsOutputType = {

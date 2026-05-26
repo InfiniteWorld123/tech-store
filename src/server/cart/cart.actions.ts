@@ -1,12 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 import {
-	addToCartValidationSchema,
-	clearCartValidationSchema,
-	getCartValidationSchema,
-	mergeCartValidationSchema,
-	removeCartItemValidationSchema,
-	updateCartItemQuantityValidationSchema,
-	validateCartValidationSchema,
+	addToCartSchema,
+	clearCartSchema,
+	getCartSchema,
+	mergeCartSchema,
+	removeCartItemSchema,
+	updateCartItemQuantitySchema,
+	validateCartSchema,
 } from "./cart.schemas";
 import { resolveCartOwnerMiddleware } from "./middlewares/resolveCartOwnerMiddleware";
 import { resolveMergeCartOwnerMiddleware } from "./middlewares/resolveMergeCartOwnerMiddleware";
@@ -20,14 +20,14 @@ import { validateCart } from "./services/validate-cart.service";
 
 export const getCartAction = createServerFn({ method: "GET" })
 	.middleware([resolveCartOwnerMiddleware])
-	.inputValidator(getCartValidationSchema)
+	.inputValidator(getCartSchema)
 	.handler(async ({ context }) => {
 		return getCart(context.cartOwner);
 	});
 
 export const addToCartAction = createServerFn({ method: "POST" })
 	.middleware([resolveCartOwnerMiddleware])
-	.inputValidator(addToCartValidationSchema)
+	.inputValidator(addToCartSchema)
 	.handler(async ({ data, context }) => {
 		return addToCart({
 			...data,
@@ -37,14 +37,14 @@ export const addToCartAction = createServerFn({ method: "POST" })
 
 export const clearCartAction = createServerFn({ method: "POST" })
 	.middleware([resolveCartOwnerMiddleware])
-	.inputValidator(clearCartValidationSchema)
+	.inputValidator(clearCartSchema)
 	.handler(async ({ context }) => {
 		return clearCart(context.cartOwner);
 	});
 
 export const updateCartItemQuantityAction = createServerFn({ method: "POST" })
 	.middleware([resolveCartOwnerMiddleware])
-	.inputValidator(updateCartItemQuantityValidationSchema)
+	.inputValidator(updateCartItemQuantitySchema)
 	.handler(async ({ context, data }) => {
 		return updateCartItemQuantity({
 			...data,
@@ -54,7 +54,7 @@ export const updateCartItemQuantityAction = createServerFn({ method: "POST" })
 
 export const removeCartItemAction = createServerFn({ method: "POST" })
 	.middleware([resolveCartOwnerMiddleware])
-	.inputValidator(removeCartItemValidationSchema)
+	.inputValidator(removeCartItemSchema)
 	.handler(async ({ context, data }) => {
 		return removeCartItem({
 			...data,
@@ -64,14 +64,14 @@ export const removeCartItemAction = createServerFn({ method: "POST" })
 
 export const mergeCartAction = createServerFn({ method: "POST" })
 	.middleware([resolveMergeCartOwnerMiddleware])
-	.inputValidator(mergeCartValidationSchema)
+	.inputValidator(mergeCartSchema)
 	.handler(async ({ context }) => {
 		return mergeCart(context.mergeCartOwner);
 	});
 
 export const validateCartAction = createServerFn({ method: "GET" })
 	.middleware([resolveCartOwnerMiddleware])
-	.inputValidator(validateCartValidationSchema)
+	.inputValidator(validateCartSchema)
 	.handler(async ({ context }) => {
 		return validateCart(context.cartOwner);
 	});

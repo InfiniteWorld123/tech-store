@@ -12,11 +12,11 @@ const productSortBySchema = z.enum([
 
 const productSortOrderSchema = z.enum(["asc", "desc"]);
 
-export const getProductValidationSchema = z.object({
+export const getProductSchema = z.object({
 	productId: z.string().min(1, "Product id is required"),
 });
 
-export const getProductsValidationSchema = z.object({
+export const getProductsSchema = z.object({
 	searching: z
 		.object({
 			search: z.string().trim().min(1, "Search term is required").optional(),
@@ -135,11 +135,11 @@ const productBaseSchema = z.object({
 	isActive: z.boolean().default(true),
 });
 
-export const createProductValidationSchema = productBaseSchema.merge(
+export const createProductSchema = productBaseSchema.merge(
 	productCategorySchema,
 );
 
-export const updateProductValidationSchema = z.object({
+export const updateProductSchema = z.object({
 	productId: z.string().min(1, "Product id is required"),
 	categoryId: z.string().uuid("Category id must be a valid UUID").optional(),
 	name: z.string().trim().min(2).optional(),
@@ -154,11 +154,11 @@ export const updateProductValidationSchema = z.object({
 	isActive: z.boolean().optional(),
 });
 
-export const deleteProductValidationSchema = z.object({
+export const deleteProductSchema = z.object({
 	productId: z.string().min(1, "Product id is required"),
 });
 
-export const deleteProductsValidationSchema = z.object({
+export const deleteProductsSchema = z.object({
 	productIds: z
 		.array(z.string().min(1))
 		.min(1, "At least one product id is required"),

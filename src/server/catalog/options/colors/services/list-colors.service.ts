@@ -43,9 +43,12 @@ export const listColors = async (
 
 		return jsonOk({
 			status: HttpStatusCode.OK,
-			message: "Colors listed successfully",
+			message: "Colors fetched successfully",
 			data: {
-				colors: items,
+				items,
+				query: {
+					searching,
+				},
 			},
 		});
 	} catch (error) {

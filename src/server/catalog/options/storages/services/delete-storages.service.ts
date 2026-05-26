@@ -10,9 +10,9 @@ import type {
 	DeleteStoragesOutputType,
 } from "../storages.types";
 
-export async function deleteStorages(
+export const deleteStorages = async (
 	data: DeleteStoragesInputType,
-): Promise<JsonOk<DeleteStoragesOutputType>> {
+): Promise<JsonOk<DeleteStoragesOutputType>> => {
 	try {
 		const { storageIds } = data;
 
@@ -25,22 +25,14 @@ export async function deleteStorages(
 			throw badRequestError("Storages deletion failed");
 		}
 
-		const items = deletedStorages.map((item) => ({
-			id: item.id,
-			name: item.name,
-			valueGb: item.valueGb,
-			createdAt: item.createdAt.toISOString(),
-			updatedAt: item.updatedAt.toISOString(),
-		}));
-
 		return jsonOk({
 			status: HttpStatusCode.OK,
 			message: "Storages deleted successfully",
 			data: {
-				storages: items,
+				storageIds: deletedStorages.map((item) => item.id),
 			},
 		});
 	} catch (error) {
 		throw handleError(error);
 	}
-}
+};

@@ -9,7 +9,7 @@ export const ensureSession = createMiddleware({ type: "function" }).server(
 		const session = await auth.api.getSession({ headers });
 
 		if (!session) {
-			unauthorizedError("user is unauthorized");
+			throw unauthorizedError("User is unauthorized");
 		}
 
 		return next({

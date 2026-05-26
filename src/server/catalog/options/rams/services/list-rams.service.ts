@@ -1,18 +1,18 @@
-import { jsonOk, type JsonOk } from "#/constants/json";
-import { handleError } from "#/errors/error-handler";
 import { eq, type SQL } from "drizzle-orm";
-import type { ListRamsInputType, ListRamsOutputType } from "../rams.types";
-import { ram } from "#/db/schema";
-import { db } from "#/db/drizzle";
 import { HttpStatusCode } from "#/constants/http";
+import { type JsonOk, jsonOk } from "#/constants/json";
+import { db } from "#/db/drizzle";
+import { ram } from "#/db/schema";
+import { handleError } from "#/errors/error-handler";
+import type { ListRamsInputType, ListRamsOutputType } from "../rams.types";
 
-export async function listRams(
-	data: ListRamsInputType
-): Promise<JsonOk<ListRamsOutputType>> {
+export const listRams = async (
+	data: ListRamsInputType,
+): Promise<JsonOk<ListRamsOutputType>> => {
 	try {
 		const { searching } = data;
-		const search = searching?.search
-		const searchType = searching?.searchType ?? "name"
+		const search = searching?.search;
+		const searchType = searching?.searchType ?? "name";
 
 		let searchCondition: SQL | undefined;
 
@@ -23,11 +23,11 @@ export async function listRams(
 
 			if (searchType === "valueGb") {
 				const valueGb = Number(search);
-			
+
 				if (!Number.isNaN(valueGb)) {
-				  searchCondition = eq(ram.valueGb, valueGb);
+					searchCondition = eq(ram.valueGb, valueGb);
 				}
-			  }
+			}
 		}
 		const existingRams = searchCondition
 			? await db.select().from(ram).where(searchCondition)
@@ -43,15 +43,15 @@ export async function listRams(
 
 		return jsonOk({
 			status: HttpStatusCode.OK,
-			message: "RAMs listed successfully",
+			message: "RAMs fetched successfully",
 			data: {
-				rams: items,
+				items,
 				query: {
-					searching
-				}
+					searching,
+				},
 			},
 		});
 	} catch (error) {
-		throw handleError(error)
+		throw handleError(error);
 	}
-}
+};

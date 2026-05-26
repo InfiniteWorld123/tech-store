@@ -1,5 +1,6 @@
 import { and, eq } from "drizzle-orm";
-import type { JsonOk } from "#/constants/json";
+import { HttpStatusCode } from "#/constants/http";
+import { type JsonOk, jsonOk } from "#/constants/json";
 import { db } from "#/db/drizzle";
 import { order } from "#/db/schema";
 import { badRequestError, notFoundError } from "#/errors/app-error";
@@ -42,10 +43,13 @@ export const cancelOrder = async (
 			.set({ status: "cancelled" })
 			.where(eq(order.id, orderId));
 
-		return {
-			...(await getCustomerOrderDetail({ orderId, userId })),
-			message: "Order is cancelled successfully",
-		};
+		const orderResponse = await getCustomerOrderDetail({ orderId, userId });
+
+		return jsonOk<CancelOrderOutputType>({
+			status: HttpStatusCode.OK,
+			message: "Order cancelled successfully",
+			data: orderResponse.data,
+		});
 	} catch (error) {
 		throw handleError(error);
 	}

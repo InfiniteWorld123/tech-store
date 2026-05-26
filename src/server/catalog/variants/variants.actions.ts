@@ -4,28 +4,28 @@ import { createVariant } from "./services/create-variant.service";
 import { deleteVariant } from "./services/delete-variant.service";
 import { updateVariant } from "./services/update-variant.service";
 import {
-	createVariantValidationSchema,
-	deleteVariantValidationSchema,
-	updateVariantValidationSchema,
+	createVariantSchema,
+	deleteVariantSchema,
+	updateVariantSchema,
 } from "./variants.schemas";
 
 export const createVariantAction = createServerFn({ method: "POST" })
 	.middleware([ensureSession])
-	.inputValidator(createVariantValidationSchema)
+	.inputValidator(createVariantSchema)
 	.handler(async ({ data }) => {
 		return createVariant(data);
 	});
 
 export const updateVariantAction = createServerFn({ method: "POST" })
 	.middleware([ensureSession])
-	.inputValidator(updateVariantValidationSchema)
+	.inputValidator(updateVariantSchema)
 	.handler(async ({ data }) => {
 		return updateVariant(data);
 	});
 
 export const deleteVariantAction = createServerFn({ method: "POST" })
 	.middleware([ensureSession])
-	.inputValidator(deleteVariantValidationSchema)
+	.inputValidator(deleteVariantSchema)
 	.handler(async ({ data }) => {
 		return deleteVariant(data);
 	});

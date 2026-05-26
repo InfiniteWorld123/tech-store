@@ -46,11 +46,11 @@ const variantBaseSchema = z
 		},
 	);
 
-export const createVariantValidationSchema = variantBaseSchema.extend({
+export const createVariantSchema = variantBaseSchema.extend({
 	productId: z.string().uuid("Product id must be a valid UUID"),
 });
 
-export const updateVariantValidationSchema = z
+export const updateVariantSchema = z
 	.object({
 		variantId: z.string().uuid("Variant id must be a valid UUID"),
 		sku: z.string().trim().min(1, "Variant SKU is required").optional(),
@@ -102,6 +102,6 @@ export const updateVariantValidationSchema = z
 		},
 	);
 
-export const deleteVariantValidationSchema = z.object({
+export const deleteVariantSchema = z.object({
 	variantId: z.string().uuid("Variant id must be a valid UUID"),
 });

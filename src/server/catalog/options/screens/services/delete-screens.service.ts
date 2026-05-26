@@ -10,9 +10,9 @@ import type {
 	DeleteScreensOutputType,
 } from "../screens.types";
 
-export async function deleteScreens(
+export const deleteScreens = async (
 	data: DeleteScreensInputType,
-): Promise<JsonOk<DeleteScreensOutputType>> {
+): Promise<JsonOk<DeleteScreensOutputType>> => {
 	try {
 		const { screenIds } = data;
 
@@ -25,22 +25,14 @@ export async function deleteScreens(
 			throw badRequestError("Screen sizes deletion failed");
 		}
 
-		const items = deletedScreens.map((item) => ({
-			id: item.id,
-			name: item.name,
-			valueInches: Number(item.valueInches),
-			createdAt: item.createdAt.toISOString(),
-			updatedAt: item.updatedAt.toISOString(),
-		}));
-
 		return jsonOk({
 			status: HttpStatusCode.OK,
 			message: "Screen sizes deleted successfully",
 			data: {
-				screens: items,
+				screenIds: deletedScreens.map((item) => item.id),
 			},
 		});
 	} catch (error) {
 		throw handleError(error);
 	}
-}
+};

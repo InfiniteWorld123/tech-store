@@ -46,23 +46,25 @@ export const getCart = async (
 				status: HttpStatusCode.OK,
 				message: "Cart fetched successfully",
 				data: {
-					id: "",
-					userId,
-					sessionId,
-					items: [],
-					summary: {
-						itemsCount: 0,
-						uniqueItemsCount: 0,
-						subtotal: 0,
-						hasUnavailableItems: false,
-						hasOutOfStockItems: false,
-						hasLowStockItems: false,
-						hasPriceChanges: false,
-						canCheckout: false,
+					cart: {
+						id: "",
+						userId,
+						sessionId,
+						items: [],
+						summary: {
+							itemsCount: 0,
+							uniqueItemsCount: 0,
+							subtotal: 0,
+							hasUnavailableItems: false,
+							hasOutOfStockItems: false,
+							hasLowStockItems: false,
+							hasPriceChanges: false,
+							canCheckout: false,
+						},
+						warnings: [],
+						createdAt: new Date().toISOString(),
+						updatedAt: new Date().toISOString(),
 					},
-					warnings: [],
-					createdAt: new Date().toISOString(),
-					updatedAt: new Date().toISOString(),
 				},
 			});
 		}
@@ -248,7 +250,9 @@ export const getCart = async (
 		return jsonOk<CartOutputType>({
 			status: HttpStatusCode.OK,
 			message: "Cart fetched successfully",
-			data: cartResponse,
+			data: {
+				cart: cartResponse,
+			},
 		});
 	} catch (error) {
 		throw handleError(error);

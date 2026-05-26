@@ -1,4 +1,4 @@
-import type { ShippingMethodType } from "../admin/operational/operational.types";
+import type { ShippingMethodType } from "../admin/admin.types";
 
 export const ORDER_TAX_RATE = 0.19;
 

@@ -9,9 +9,9 @@ import type {
 	ListStoragesOutputType,
 } from "../storages.types";
 
-export async function listStorages(
+export const listStorages = async (
 	data: ListStoragesInputType,
-): Promise<JsonOk<ListStoragesOutputType>> {
+): Promise<JsonOk<ListStoragesOutputType>> => {
 	try {
 		const { searching } = data;
 		const search = searching?.search;
@@ -47,9 +47,9 @@ export async function listStorages(
 
 		return jsonOk({
 			status: HttpStatusCode.OK,
-			message: "Storages listed successfully",
+			message: "Storages fetched successfully",
 			data: {
-				storages: items,
+				items,
 				query: {
 					searching,
 				},
@@ -58,4 +58,4 @@ export async function listStorages(
 	} catch (error) {
 		throw handleError(error);
 	}
-}
+};
