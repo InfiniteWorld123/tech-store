@@ -1,8 +1,15 @@
-import { Button } from "@heroui/react";
 import { createFileRoute } from "@tanstack/react-router";
+import { LandingPage } from "#/components/landing/pages/landing-page";
+import { categoriesQueryOptions } from "#/queries/categories.queries";
+import { bestsellerProductsQueryOptions, featuredProductsQueryOptions } from "#/queries/products.queries";
 
-export const Route = createFileRoute("/")({ component: App });
-
-function App() {
-	return <Button>My Button</Button>;
-}
+// src/routes/index.tsx
+export const Route = createFileRoute("/")({
+    loader: ({ context: { queryClient } }) =>
+        Promise.all([
+            queryClient.ensureQueryData(categoriesQueryOptions),
+            queryClient.ensureQueryData(featuredProductsQueryOptions),
+            queryClient.ensureQueryData(bestsellerProductsQueryOptions),
+        ]),
+    component: LandingPage,
+});

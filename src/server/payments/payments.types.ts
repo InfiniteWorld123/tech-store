@@ -10,9 +10,13 @@ export type CreateStripeCheckoutSessionSchemaType = z.infer<
 >;
 
 export type CreateStripeCheckoutSessionInputType =
-	CreateStripeCheckoutSessionSchemaType;
+	CreateStripeCheckoutSessionSchemaType & {
+		userId: string;
+	};
 
-export type GetPaymentInputType = z.infer<typeof getPaymentSchema>;
+export type GetPaymentInputType = z.infer<typeof getPaymentSchema> & {
+	userId: string;
+};
 
 export type RefundPaymentInputType = z.infer<typeof refundPaymentSchema>;
 

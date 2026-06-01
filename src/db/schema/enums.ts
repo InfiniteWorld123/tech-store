@@ -1,5 +1,7 @@
 import { pgEnum } from "drizzle-orm/pg-core";
 
+export const userRoleEnum = pgEnum("user_role", ["customer", "admin"]);
+
 export const orderStatusEnum = pgEnum("order_status", [
 	"pending",
 	"processing",

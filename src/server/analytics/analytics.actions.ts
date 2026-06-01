@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { ensureSession } from "#/server/auth/ensure-session.middleware";
+import { ensureAdmin } from "#/server/auth/ensure-session.middleware";
 import {
 	getCartMetricsSchema,
 	getCustomerMetricsSchema,
@@ -18,49 +18,49 @@ import { getReviewMetrics } from "./services/get-review-metrics.service";
 import { getShippingMetrics } from "./services/get-shipping-metrics.service";
 
 export const getOrderMetricsAction = createServerFn({ method: "GET" })
-	.middleware([ensureSession])
+	.middleware([ensureAdmin])
 	.inputValidator(getOrderMetricsSchema)
 	.handler(async ({ data }) => {
 		return getOrderMetrics(data);
 	});
 
 export const getPaymentMetricsAction = createServerFn({ method: "GET" })
-	.middleware([ensureSession])
+	.middleware([ensureAdmin])
 	.inputValidator(getPaymentMetricsSchema)
 	.handler(async ({ data }) => {
 		return getPaymentMetrics(data);
 	});
 
 export const getShippingMetricsAction = createServerFn({ method: "GET" })
-	.middleware([ensureSession])
+	.middleware([ensureAdmin])
 	.inputValidator(getShippingMetricsSchema)
 	.handler(async ({ data }) => {
 		return getShippingMetrics(data);
 	});
 
 export const getProductMetricsAction = createServerFn({ method: "GET" })
-	.middleware([ensureSession])
+	.middleware([ensureAdmin])
 	.inputValidator(getProductMetricsSchema)
 	.handler(async ({ data }) => {
 		return getProductMetrics(data);
 	});
 
 export const getCustomerMetricsAction = createServerFn({ method: "GET" })
-	.middleware([ensureSession])
+	.middleware([ensureAdmin])
 	.inputValidator(getCustomerMetricsSchema)
 	.handler(async ({ data }) => {
 		return getCustomerMetrics(data);
 	});
 
 export const getReviewMetricsAction = createServerFn({ method: "GET" })
-	.middleware([ensureSession])
+	.middleware([ensureAdmin])
 	.inputValidator(getReviewMetricsSchema)
 	.handler(async ({ data }) => {
 		return getReviewMetrics(data);
 	});
 
 export const getCartMetricsAction = createServerFn({ method: "GET" })
-	.middleware([ensureSession])
+	.middleware([ensureAdmin])
 	.inputValidator(getCartMetricsSchema)
 	.handler(async ({ data }) => {
 		return getCartMetrics(data);

@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { env } from "#/constants/env";
 import { HttpStatusCode } from "#/constants/http";
 import { type JsonOk, jsonOk } from "#/constants/json";
@@ -11,10 +11,10 @@ import type {
 	CreateStripeCheckoutSessionInputType,
 	CreateStripeCheckoutSessionOutputType,
 } from "../payments.types";
-
-const toStripeAmount = (amount: string): number => {
-	return Math.round(Number(amount) * 100);
-};
+import {
+	isReusableCheckoutSession,
+	toStripeAmount,
+} from "./stripe-checkout-helpers";
 
 export const createStripeCheckoutSession = async (
 	data: CreateStripeCheckoutSessionInputType,
@@ -31,7 +31,7 @@ export const createStripeCheckoutSession = async (
 			})
 			.from(order)
 			.innerJoin(payment, eq(payment.orderId, order.id))
-			.where(eq(order.id, data.orderId));
+			.where(and(eq(order.id, data.orderId), eq(order.userId, data.userId)));
 
 		if (!row) {
 			throw notFoundError("Order payment not found");
@@ -51,11 +51,12 @@ export const createStripeCheckoutSession = async (
 			.select({
 				checkoutSessionId: stripePayment.checkoutSessionId,
 				checkoutUrl: stripePayment.checkoutUrl,
+				status: stripePayment.status,
 			})
 			.from(stripePayment)
 			.where(eq(stripePayment.paymentId, row.paymentId));
 
-		if (existingStripePayment?.checkoutUrl) {
+		if (isReusableCheckoutSession(existingStripePayment)) {
 			return jsonOk<CreateStripeCheckoutSessionOutputType>({
 				status: HttpStatusCode.OK,
 				message: "Stripe checkout session already exists",
@@ -100,8 +101,7 @@ export const createStripeCheckoutSession = async (
 			throw conflictError("Stripe did not return a checkout URL");
 		}
 
-		await db.insert(stripePayment).values({
-			paymentId: row.paymentId,
+		const stripePaymentValues = {
 			checkoutSessionId: session.id,
 			paymentIntentId:
 				typeof session.payment_intent === "string"
@@ -112,7 +112,19 @@ export const createStripeCheckoutSession = async (
 			currency: env.STRIPE_CURRENCY,
 			checkoutUrl: session.url,
 			status: session.status ?? "open",
-		});
+		};
+
+		if (existingStripePayment) {
+			await db
+				.update(stripePayment)
+				.set(stripePaymentValues)
+				.where(eq(stripePayment.paymentId, row.paymentId));
+		} else {
+			await db.insert(stripePayment).values({
+				paymentId: row.paymentId,
+				...stripePaymentValues,
+			});
+		}
 
 		return jsonOk<CreateStripeCheckoutSessionOutputType>({
 			status: HttpStatusCode.CREATED,

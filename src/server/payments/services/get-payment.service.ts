@@ -1,8 +1,8 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { HttpStatusCode } from "#/constants/http";
 import { type JsonOk, jsonOk } from "#/constants/json";
 import { db } from "#/db/drizzle";
-import { payment, stripePayment } from "#/db/schema";
+import { order, payment, stripePayment } from "#/db/schema";
 import { notFoundError } from "#/errors/app-error";
 import { handleError } from "#/errors/error-handler";
 import type {
@@ -84,8 +84,11 @@ export const getPayment = async (
 				stripeUpdatedAt: stripePayment.updatedAt,
 			})
 			.from(payment)
+			.innerJoin(order, eq(order.id, payment.orderId))
 			.leftJoin(stripePayment, eq(stripePayment.paymentId, payment.id))
-			.where(eq(payment.orderId, data.orderId));
+			.where(
+				and(eq(payment.orderId, data.orderId), eq(order.userId, data.userId)),
+			);
 
 		if (!row) {
 			throw notFoundError("Payment not found");

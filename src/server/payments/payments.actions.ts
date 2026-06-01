@@ -1,5 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
-import { ensureSession } from "#/server/auth/ensure-session.middleware";
+import {
+	ensureAdmin,
+	ensureSession,
+} from "#/server/auth/ensure-session.middleware";
 import {
 	createStripeCheckoutSessionSchema,
 	getPaymentSchema,
@@ -14,19 +17,25 @@ export const createStripeCheckoutSessionAction = createServerFn({
 })
 	.middleware([ensureSession])
 	.inputValidator(createStripeCheckoutSessionSchema)
-	.handler(async ({ data }) => {
-		return createStripeCheckoutSession(data);
+	.handler(async ({ context, data }) => {
+		return createStripeCheckoutSession({
+			...data,
+			userId: context.session.user.id,
+		});
 	});
 
 export const getPaymentAction = createServerFn({ method: "GET" })
 	.middleware([ensureSession])
 	.inputValidator(getPaymentSchema)
-	.handler(async ({ data }) => {
-		return getPayment(data);
+	.handler(async ({ context, data }) => {
+		return getPayment({
+			...data,
+			userId: context.session.user.id,
+		});
 	});
 
 export const refundPaymentAction = createServerFn({ method: "POST" })
-	.middleware([ensureSession])
+	.middleware([ensureAdmin])
 	.inputValidator(refundPaymentSchema)
 	.handler(async ({ data }) => {
 		return refundPayment(data);

@@ -1,4 +1,5 @@
 import { boolean, index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { userRoleEnum } from "./enums";
 import { timestamps } from "./shared";
 
 export const user = pgTable("user", {
@@ -7,6 +8,7 @@ export const user = pgTable("user", {
 	email: text("email").notNull().unique(),
 	emailVerified: boolean("email_verified").default(false).notNull(),
 	image: text("image"),
+	role: userRoleEnum("role").default("customer").notNull(),
 	...timestamps,
 });
 

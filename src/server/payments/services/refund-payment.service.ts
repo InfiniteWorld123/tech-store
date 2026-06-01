@@ -64,11 +64,16 @@ export const refundPayment = async (
 			},
 		});
 
+		const nextPaymentStatus =
+			refund.status === "succeeded" ? "refunded" : row.status;
+
 		const [updatedRow] = await db.transaction(async (tx) => {
 			await tx
 				.update(payment)
 				.set({
-					status: "refunded",
+					// Some refunds are pending at Stripe first, so keep the payment paid
+					// until Stripe confirms the refund succeeded.
+					status: nextPaymentStatus,
 				})
 				.where(eq(payment.id, row.paymentId));
 
@@ -106,7 +111,7 @@ export const refundPayment = async (
 
 		return jsonOk<RefundPaymentOutputType>({
 			status: HttpStatusCode.OK,
-			message: "Payment refunded successfully",
+			message: "Payment refund requested successfully",
 			data: {
 				payment: mapPayment(updatedRow),
 				refundId: refund.id,

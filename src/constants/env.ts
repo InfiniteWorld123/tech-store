@@ -18,6 +18,8 @@ export const env = {
 	BASE_URL: getEnvVar("BASE_URL"),
 	DATABASE_URL: getEnvVar("DATABASE_URL"),
 	RESEND: getEnvVar("RESEND"),
+	CONTACT_EMAIL:
+		getOptionalEnvVar("CONTACT_EMAIL") ?? "support@techstore-demo.de",
 	STRIPE_SECRET_KEY: getEnvVar("STRIPE_SECRET_KEY"),
 	STRIPE_WEBHOOK_SECRET: getEnvVar("STRIPE_WEBHOOK_SECRET"),
 	STRIPE_CURRENCY: getOptionalEnvVar("STRIPE_CURRENCY") ?? "eur",
