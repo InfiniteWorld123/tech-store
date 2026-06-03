@@ -1,11 +1,13 @@
+import { Link } from "@heroui/react";
 import { GitBranch, Mail, MessageCircle, Zap } from "lucide-react";
+import LinkAnchor from "#/components/ui/buttons/link-anchor";
 
 const QUICK_LINKS = [
 	{ label: "Products", href: "/products" },
 	{ label: "Categories", href: "/categories" },
 	{ label: "About Us", href: "/about" },
 	{ label: "Contact", href: "/contact" },
-];
+] as const;
 
 const SUPPORT_LINKS = [
 	{ label: "FAQ", href: "/faq" },
@@ -14,7 +16,7 @@ const SUPPORT_LINKS = [
 	{ label: "Track Order", href: "/track" },
 	{ label: "Withdrawal", href: "/withdrawal" },
 	{ label: "Impressum", href: "/impressum" },
-];
+] as const;
 
 const SOCIAL = [
 	{ Icon: GitBranch, href: "#", label: "Repository" },
@@ -29,28 +31,31 @@ export function Footer() {
 				<div className="grid grid-cols-1 md:grid-cols-4 gap-8">
 					{/* Brand */}
 					<div className="md:col-span-1">
-						<a href="/" className="flex items-center gap-2 mb-4">
+						<LinkAnchor
+							to="/"
+							className="flex items-center gap-2 mb-4 no-underline"
+						>
 							<div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center">
 								<Zap size={16} className="text-accent-foreground" />
 							</div>
 							<span className="font-bold text-lg text-foreground">
 								tech<span className="text-accent">store</span>
 							</span>
-						</a>
+						</LinkAnchor>
 						<p className="text-sm text-muted leading-relaxed mb-4">
 							TechStore Demo GmbH is a portfolio tech shop with German-style
 							support pages, clear returns, and realistic e-commerce flows.
 						</p>
 						<div className="flex gap-3">
 							{SOCIAL.map(({ Icon, href, label }) => (
-								<a
+								<Link
 									key={label}
 									href={href}
 									aria-label={label}
-									className="w-9 h-9 rounded-lg bg-default flex items-center justify-center text-muted hover:text-foreground hover:bg-default/80 transition-colors"
+									className="flex size-9 items-center justify-center rounded-lg bg-default text-muted transition-colors hover:bg-default/80 hover:text-foreground"
 								>
 									<Icon size={16} />
-								</a>
+								</Link>
 							))}
 						</div>
 					</div>
@@ -63,12 +68,12 @@ export function Footer() {
 						<ul className="space-y-2">
 							{QUICK_LINKS.map((link) => (
 								<li key={link.href}>
-									<a
-										href={link.href}
+									<LinkAnchor
+										to={link.href}
 										className="text-sm text-muted hover:text-foreground transition-colors"
 									>
 										{link.label}
-									</a>
+									</LinkAnchor>
 								</li>
 							))}
 						</ul>
@@ -82,12 +87,12 @@ export function Footer() {
 						<ul className="space-y-2">
 							{SUPPORT_LINKS.map((link) => (
 								<li key={link.href}>
-									<a
-										href={link.href}
+									<LinkAnchor
+										to={link.href}
 										className="text-sm text-muted hover:text-foreground transition-colors"
 									>
 										{link.label}
-									</a>
+									</LinkAnchor>
 								</li>
 							))}
 						</ul>
@@ -115,24 +120,24 @@ export function Footer() {
 						reserved.
 					</p>
 					<div className="flex gap-4">
-						<a
-							href="/privacy"
+						<LinkAnchor
+							to="/privacy"
 							className="hover:text-foreground transition-colors"
 						>
 							Privacy Policy
-						</a>
-						<a
-							href="/terms"
+						</LinkAnchor>
+						<LinkAnchor
+							to="/terms"
 							className="hover:text-foreground transition-colors"
 						>
 							Terms of Service
-						</a>
-						<a
-							href="/impressum"
+						</LinkAnchor>
+						<LinkAnchor
+							to="/impressum"
 							className="hover:text-foreground transition-colors"
 						>
 							Impressum
-						</a>
+						</LinkAnchor>
 					</div>
 				</div>
 			</div>

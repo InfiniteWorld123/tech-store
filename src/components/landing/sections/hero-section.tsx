@@ -1,3 +1,4 @@
+import { Chip } from "@heroui/react";
 import { ArrowRight, Shield, Truck, Zap } from "lucide-react";
 import LinkButton from "#/components/ui/buttons/link-button";
 
@@ -26,11 +27,14 @@ export function HeroSection() {
 
 			<div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
 				<div className="max-w-3xl">
-					{/* Badge */}
-					<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/30 bg-accent/10 text-accent text-sm font-medium mb-8">
+					<Chip
+						color="accent"
+						variant="soft"
+						className="mb-8 border border-accent/30 bg-accent/10"
+					>
 						<Zap size={14} />
-						New arrivals every week
-					</div>
+						<Chip.Label>New arrivals every week</Chip.Label>
+					</Chip>
 
 					{/* Headline */}
 					<h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.05] tracking-tight mb-6">

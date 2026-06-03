@@ -1,4 +1,4 @@
-import { Button, Form } from "@heroui/react";
+import { Alert, Button, Card, Form, Table } from "@heroui/react";
 import {
 	ClipboardCheck,
 	FileCheck,
@@ -18,6 +18,7 @@ import {
 	PublicPageLayout,
 	ShopCta,
 } from "#/components/legal/sections/public-page-layout";
+import { InputField } from "#/components/ui/fields/input-field";
 
 const shippingRows = [
 	["Germany standard", "DHL GoGreen", "2-4 business days", "4.90 EUR"],
@@ -88,29 +89,31 @@ export function ShippingPage() {
 		>
 			<section className="py-16 sm:py-20">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-					<div className="overflow-hidden rounded-2xl border border-border bg-surface">
-						<table className="w-full text-left text-sm">
-							<thead className="bg-surface-secondary text-foreground">
-								<tr>
-									<th className="p-4 font-semibold">Region</th>
-									<th className="p-4 font-semibold">Carrier</th>
-									<th className="p-4 font-semibold">Time</th>
-									<th className="p-4 font-semibold">Price</th>
-								</tr>
-							</thead>
-							<tbody className="divide-y divide-border text-muted">
-								{shippingRows.map((row) => (
-									<tr key={row[0]}>
-										{row.map((cell) => (
-											<td key={cell} className="p-4">
-												{cell}
-											</td>
-										))}
-									</tr>
-								))}
-							</tbody>
-						</table>
-					</div>
+					<Table>
+						<Table.ScrollContainer>
+							<Table.Content
+								aria-label="Shipping rates"
+								className="min-w-[680px]"
+							>
+								<Table.Header>
+									<Table.Column isRowHeader>Region</Table.Column>
+									<Table.Column>Carrier</Table.Column>
+									<Table.Column>Time</Table.Column>
+									<Table.Column>Price</Table.Column>
+								</Table.Header>
+								<Table.Body>
+									{shippingRows.map(([region, carrier, time, price]) => (
+										<Table.Row key={region} id={region}>
+											<Table.Cell>{region}</Table.Cell>
+											<Table.Cell>{carrier}</Table.Cell>
+											<Table.Cell>{time}</Table.Cell>
+											<Table.Cell>{price}</Table.Cell>
+										</Table.Row>
+									))}
+								</Table.Body>
+							</Table.Content>
+						</Table.ScrollContainer>
+					</Table>
 					<div className="grid md:grid-cols-3 gap-6 mt-8">
 						<InfoCard
 							icon={PackageCheck}
@@ -159,15 +162,12 @@ export function ReturnsPage() {
 					/>
 					<div className="grid gap-4">
 						{steps.map((step, index) => (
-							<div
-								key={step}
-								className="rounded-2xl border border-border bg-surface p-5 flex gap-4"
-							>
+							<Card key={step} className="flex-row gap-4 p-5">
 								<div className="h-9 w-9 rounded-full bg-accent text-accent-foreground flex items-center justify-center font-bold">
 									{index + 1}
 								</div>
 								<p className="text-muted leading-relaxed">{step}</p>
-							</div>
+							</Card>
 						))}
 					</div>
 				</div>
@@ -190,32 +190,24 @@ export function TrackOrderPage() {
 		>
 			<section className="py-16 sm:py-20">
 				<div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-					<div className="rounded-2xl border border-border bg-surface p-6 sm:p-8 shadow-sm">
+					<Card className="p-6 shadow-sm sm:p-8">
 						<Form className="grid gap-4">
-							<label className="grid gap-1.5">
-								<span className="text-sm font-medium text-foreground">
-									Order number
-								</span>
-								<input
-									className="rounded-xl border border-border bg-field-background px-4 py-3 outline-none focus:border-accent"
-									placeholder="TS-DEMO-10482"
-								/>
-							</label>
-							<label className="grid gap-1.5">
-								<span className="text-sm font-medium text-foreground">
-									Email address
-								</span>
-								<input
-									type="email"
-									className="rounded-xl border border-border bg-field-background px-4 py-3 outline-none focus:border-accent"
-									placeholder="you@example.com"
-								/>
-							</label>
+							<InputField
+								name="orderNumber"
+								label="Order number"
+								placeholder="TS-DEMO-10482"
+							/>
+							<InputField
+								name="email"
+								label="Email address"
+								type="email"
+								placeholder="you@example.com"
+							/>
 							<Button variant="primary" type="button">
 								<Search size={16} /> Check order status
 							</Button>
 						</Form>
-						<div className="mt-8 rounded-2xl bg-surface-secondary border border-border p-6">
+						<div className="mt-8 rounded-2xl bg-surface-secondary p-6">
 							<p className="font-semibold text-foreground">
 								Internal tracking API placeholder
 							</p>
@@ -232,7 +224,7 @@ export function TrackOrderPage() {
 								<p>No DHL integration is needed for the portfolio version.</p>
 							</div>
 						</div>
-					</div>
+					</Card>
 				</div>
 			</section>
 		</PublicPageLayout>
@@ -447,10 +439,15 @@ function PolicyContent({ children }: { children: React.ReactNode }) {
 	return (
 		<section className="py-16 sm:py-20">
 			<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5">
-				<div className="rounded-2xl border border-warning/30 bg-warning/10 p-5 text-sm text-muted">
-					This is realistic portfolio copy, not legal advice. Replace it with
-					lawyer-reviewed text before using a real shop.
-				</div>
+				<Alert status="warning">
+					<Alert.Indicator />
+					<Alert.Content>
+						<Alert.Description>
+							This is realistic portfolio copy, not legal advice. Replace it
+							with lawyer-reviewed text before using a real shop.
+						</Alert.Description>
+					</Alert.Content>
+				</Alert>
 				{children}
 			</div>
 		</section>

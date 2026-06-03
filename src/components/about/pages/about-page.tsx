@@ -1,6 +1,4 @@
-import LinkButton from "#/components/ui/buttons/link-button";
-import { Footer } from "#/components/layout/footer";
-import { Header } from "#/components/layout/header";
+import { Card, Chip } from "@heroui/react";
 import {
 	ArrowRight,
 	Camera,
@@ -14,6 +12,9 @@ import {
 	Watch,
 	Zap,
 } from "lucide-react";
+import { Footer } from "#/components/layout/footer";
+import { Header } from "#/components/layout/header";
+import LinkButton from "#/components/ui/buttons/link-button";
 
 const STATS = [
 	{ value: "500+", label: "Products" },
@@ -82,10 +83,14 @@ export function AboutPage() {
 
 					<div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
 						<div className="max-w-2xl">
-							<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/30 bg-accent/10 text-accent text-sm font-medium mb-8">
+							<Chip
+								color="accent"
+								variant="soft"
+								className="mb-8 border border-accent/30 bg-accent/10"
+							>
 								<Users size={14} />
-								Our Story
-							</div>
+								<Chip.Label>Our Story</Chip.Label>
+							</Chip>
 							<h1 className="text-5xl sm:text-6xl font-extrabold text-white leading-[1.05] tracking-tight mb-6">
 								Tech You Can Trust,{" "}
 								<span className="text-accent">Delivered Fast.</span>
@@ -172,9 +177,9 @@ export function AboutPage() {
 							{/* Tech showcase grid */}
 							<div className="grid grid-cols-3 gap-4">
 								{TECH_SHOWCASE.map(({ icon: Icon, label }, i) => (
-									<div
+									<Card
 										key={label}
-										className={`rounded-2xl flex flex-col items-center justify-center gap-3 p-6 aspect-square transition-all duration-300 ${
+										className={`aspect-square items-center justify-center gap-3 p-6 transition-all duration-300 ${
 											i % 2 === 0
 												? "bg-accent/10 border border-accent/20 hover:bg-accent/15"
 												: "bg-surface-secondary border border-border hover:border-accent/20"
@@ -191,7 +196,7 @@ export function AboutPage() {
 										>
 											{label}
 										</span>
-									</div>
+									</Card>
 								))}
 							</div>
 						</div>
@@ -209,26 +214,26 @@ export function AboutPage() {
 								Why Customers Choose TechStore
 							</h2>
 							<p className="text-muted mt-3 max-w-xl mx-auto">
-								Four principles that guide everything we do, from the products we
-								carry to the support we provide.
+								Four principles that guide everything we do, from the products
+								we carry to the support we provide.
 							</p>
 						</div>
 						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 							{VALUES.map(({ icon: Icon, title, description, color }) => (
-								<div
+								<Card
 									key={title}
-									className="flex flex-col items-center text-center p-6 rounded-2xl bg-surface border border-border hover:border-accent/30 hover:shadow-md transition-all duration-300"
+									className="items-center p-6 text-center transition-all duration-300 hover:border-accent/30 hover:shadow-md"
 								>
 									<div
 										className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${color}`}
 									>
 										<Icon size={26} />
 									</div>
-									<h3 className="font-semibold text-foreground mb-2">{title}</h3>
-									<p className="text-sm text-muted leading-relaxed">
-										{description}
-									</p>
-								</div>
+									<Card.Header className="items-center">
+										<Card.Title className="text-base">{title}</Card.Title>
+										<Card.Description>{description}</Card.Description>
+									</Card.Header>
+								</Card>
 							))}
 						</div>
 					</div>

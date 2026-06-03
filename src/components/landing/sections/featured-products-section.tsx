@@ -1,3 +1,4 @@
+import { Card, Link, Skeleton } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, PackageSearch } from "lucide-react";
 import { featuredProductsQueryOptions } from "#/queries/products.queries";
@@ -29,7 +30,7 @@ export function FeaturedProductsSection() {
 						</h2>
 					</div>
 					{hasProducts && (
-						<a
+						<Link
 							href="/products?featured=true"
 							className="hidden sm:flex items-center gap-1.5 text-sm font-medium text-muted hover:text-foreground transition-colors group"
 						>
@@ -38,7 +39,7 @@ export function FeaturedProductsSection() {
 								size={16}
 								className="group-hover:translate-x-0.5 transition-transform"
 							/>
-						</a>
+						</Link>
 					)}
 				</div>
 
@@ -46,10 +47,14 @@ export function FeaturedProductsSection() {
 				{isLoading ? (
 					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 						{FEATURED_PRODUCT_SKELETON_IDS.map((skeletonId) => (
-							<div
-								key={skeletonId}
-								className="aspect-[3/4] rounded-lg bg-surface border border-border animate-pulse"
-							/>
+							<Card key={skeletonId} className="aspect-[3/4] p-4">
+								<Skeleton className="h-3/5 rounded-lg" />
+								<Card.Content className="mt-4 gap-3 p-0">
+									<Skeleton className="h-3 w-2/5 rounded" />
+									<Skeleton className="h-4 w-4/5 rounded" />
+									<Skeleton className="h-4 w-1/2 rounded" />
+								</Card.Content>
+							</Card>
 						))}
 					</div>
 				) : hasProducts ? (
@@ -60,37 +65,37 @@ export function FeaturedProductsSection() {
 								product={product}
 								badge={{
 									label: "Featured",
-									className: "bg-accent text-accent-foreground",
+									color: "accent",
 								}}
 							/>
 						))}
 					</div>
 				) : (
-					<div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-surface px-6 py-12 text-center">
-						<div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-default text-muted">
-							<PackageSearch size={26} />
-						</div>
-						<h3 className="text-base font-semibold text-foreground">
-							No featured products yet
-						</h3>
-						<p className="mt-2 max-w-md text-sm text-muted">
-							{isError
-								? "We couldn't load featured products right now. Please try again later."
-								: "There are no featured products available right now. Check back soon."}
-						</p>
-					</div>
+					<Card className="items-center border-dashed px-6 py-12 text-center">
+						<PackageSearch size={26} className="text-muted" />
+						<Card.Header className="items-center">
+							<Card.Title className="text-base">
+								No featured products yet
+							</Card.Title>
+							<Card.Description className="max-w-md">
+								{isError
+									? "We couldn't load featured products right now. Please try again later."
+									: "There are no featured products available right now. Check back soon."}
+							</Card.Description>
+						</Card.Header>
+					</Card>
 				)}
 
 				{/* Mobile link */}
 				{hasProducts && (
 					<div className="mt-8 flex sm:hidden">
-						<a
+						<Link
 							href="/products?featured=true"
 							className="flex items-center gap-1.5 text-sm font-medium text-muted hover:text-foreground transition-colors"
 						>
 							View all featured products
 							<ArrowRight size={16} />
-						</a>
+						</Link>
 					</div>
 				)}
 			</div>

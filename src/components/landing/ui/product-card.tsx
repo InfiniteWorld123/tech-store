@@ -1,6 +1,13 @@
-import { Card } from "@heroui/react";
+import { Button, Card, Chip } from "@heroui/react";
 import { ImageOff, ShoppingCart, Star } from "lucide-react";
 import type { AdminProductListItemType } from "#/server/catalog/products/products.types";
+
+type ProductBadgeColor =
+	| "accent"
+	| "success"
+	| "warning"
+	| "danger"
+	| "default";
 
 type Props = {
 	product: Pick<
@@ -15,7 +22,7 @@ type Props = {
 		| "ratingAvg"
 		| "reviewsCount"
 	>;
-	badge?: { label: string; className: string };
+	badge?: { label: string; color?: ProductBadgeColor };
 };
 
 function StarRating({ value }: { value: number }) {
@@ -50,8 +57,7 @@ export function ProductCard({ product, badge }: Props) {
 			: `$${product.price.toLocaleString()}`;
 
 	return (
-		<Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer overflow-hidden">
-			{/* Image */}
+		<Card className="group overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
 			<div className="relative bg-surface-secondary aspect-square flex items-center justify-center">
 				{product.image ? (
 					<img
@@ -66,24 +72,29 @@ export function ProductCard({ product, badge }: Props) {
 					</div>
 				)}
 
-				{/* Badge */}
 				{badge && (
-					<span
-						className={`absolute top-3 left-3 text-xs font-semibold px-2 py-1 rounded-full ${badge.className}`}
+					<Chip
+						size="sm"
+						color={badge.color ?? "accent"}
+						variant="primary"
+						className="absolute top-3 left-3"
 					>
 						{badge.label}
-					</span>
+					</Chip>
 				)}
 
-				{/* Discount badge */}
-				{discount && (
-					<span className="absolute top-3 right-3 text-xs font-semibold px-2 py-1 rounded-full bg-danger text-danger-foreground">
+				{discount ? (
+					<Chip
+						size="sm"
+						color="danger"
+						variant="primary"
+						className="absolute top-3 right-3"
+					>
 						-{discount}%
-					</span>
-				)}
+					</Chip>
+				) : null}
 			</div>
 
-			{/* Info */}
 			<Card.Content className="p-4 flex flex-col gap-2">
 				<div>
 					<p className="text-xs text-muted font-medium uppercase tracking-wide">
@@ -110,13 +121,15 @@ export function ProductCard({ product, badge }: Props) {
 							</span>
 						)}
 					</div>
-					<button
+					<Button
 						type="button"
-						className="p-2 rounded-lg bg-accent/10 text-accent hover:bg-accent hover:text-accent-foreground transition-colors"
+						isIconOnly
+						size="sm"
+						variant="secondary"
 						aria-label="Add to cart"
 					>
 						<ShoppingCart size={16} />
-					</button>
+					</Button>
 				</div>
 			</Card.Content>
 		</Card>

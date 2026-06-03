@@ -1,9 +1,9 @@
-import { Header } from "#/components/layout/header";
 import { Footer } from "#/components/layout/footer";
-import { HeroSection } from "../sections/hero-section";
+import { Header } from "#/components/layout/header";
+import { BestsellersSection } from "../sections/bestsellers-section";
 import { CategoriesSection } from "../sections/categories-section";
 import { FeaturedProductsSection } from "../sections/featured-products-section";
-import { BestsellersSection } from "../sections/bestsellers-section";
+import { HeroSection } from "../sections/hero-section";
 import { TrustSection } from "../sections/trust-section";
 
 export function LandingPage() {

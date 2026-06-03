@@ -2,6 +2,7 @@ import { Form } from "@heroui/react";
 import { useForm } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
 import { Lock, Mail, User } from "lucide-react";
+import { AuthAlert } from "#/components/auth/sections/auth-alert";
 import { AuthCard } from "#/components/auth/sections/auth-card";
 import { AuthFooter } from "#/components/auth/sections/auth-footer";
 import { AuthHeader } from "#/components/auth/sections/auth-header";
@@ -161,7 +162,7 @@ export function SignUpPage() {
 					)}
 				</Subscribe>
 			</Form>
-			{authError && <p className="text-red-500 text-center">{authError}</p>}
+			{authError ? <AuthAlert message={authError} /> : null}
 			<AuthFooter
 				prompt="Already have an account?"
 				linkLabel="Sign in"

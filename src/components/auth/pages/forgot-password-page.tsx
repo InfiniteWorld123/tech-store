@@ -1,6 +1,7 @@
 import { Form } from "@heroui/react";
 import { useForm } from "@tanstack/react-form";
 import { Mail } from "lucide-react";
+import { AuthAlert } from "#/components/auth/sections/auth-alert";
 import { AuthCard } from "#/components/auth/sections/auth-card";
 import { AuthFooter } from "#/components/auth/sections/auth-footer";
 import { AuthHeader } from "#/components/auth/sections/auth-header";
@@ -72,9 +73,7 @@ export function ForgotPasswordPage() {
 				</Subscribe>
 
 				{requestResetPasswordError && (
-					<p className="text-red-500 text-center">
-						{requestResetPasswordError}
-					</p>
+					<AuthAlert message={requestResetPasswordError} />
 				)}
 			</Form>
 

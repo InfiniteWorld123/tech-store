@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Card } from "@heroui/react";
 import {
 	ArrowRight,
 	Gamepad2,
@@ -9,6 +9,7 @@ import {
 	Smartphone,
 	Tablet,
 } from "lucide-react";
+import LinkAnchor from "#/components/ui/buttons/link-anchor";
 
 const CATEGORY_ICONS: Record<string, React.ElementType> = {
 	laptops: Laptop,
@@ -45,23 +46,27 @@ export function CategoryCard({ category }: Category) {
 	const colorClass = CATEGORY_COLORS[category.slug] ?? "bg-default text-muted";
 
 	return (
-		<Link
+		<LinkAnchor
 			to="/categories/$slug"
 			params={{ slug: category.slug }}
-			className="group flex flex-col items-center gap-4 p-6 rounded-2xl bg-surface border border-border hover:border-accent/40 hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+			className="group no-underline"
 		>
-			<div
-				className={`w-14 h-14 rounded-2xl flex items-center justify-center ${colorClass} transition-transform group-hover:scale-110 duration-300`}
-			>
-				<Icon size={26} />
-			</div>
-			<div className="flex items-center gap-1 text-sm font-semibold text-foreground">
-				{category.name}
-				<ArrowRight
-					size={14}
-					className="text-muted opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
-				/>
-			</div>
-		</Link>
+			<Card className="h-full items-center gap-4 p-6 text-center transition-all duration-300 group-hover:-translate-y-1 group-hover:border-accent/40 group-hover:shadow-md">
+				<div
+					className={`w-14 h-14 rounded-2xl flex items-center justify-center ${colorClass} transition-transform duration-300 group-hover:scale-110`}
+				>
+					<Icon size={26} />
+				</div>
+				<Card.Content className="p-0">
+					<div className="flex items-center justify-center gap-1 text-sm font-semibold text-foreground">
+						{category.name}
+						<ArrowRight
+							size={14}
+							className="text-muted opacity-0 -translate-x-1 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100"
+						/>
+					</div>
+				</Card.Content>
+			</Card>
+		</LinkAnchor>
 	);
 }

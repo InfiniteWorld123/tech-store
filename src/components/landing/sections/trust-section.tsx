@@ -1,4 +1,5 @@
-import { Truck, ShieldCheck, Headphones, Lock } from "lucide-react";
+import { Card } from "@heroui/react";
+import { Headphones, Lock, ShieldCheck, Truck } from "lucide-react";
 
 const TRUST_ITEMS = [
 	{
@@ -48,16 +49,20 @@ export function TrustSection() {
 				{/* Grid */}
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 					{TRUST_ITEMS.map(({ icon: Icon, title, description, color }) => (
-						<div
+						<Card
 							key={title}
-							className="flex flex-col items-center text-center p-6 rounded-2xl bg-surface border border-border hover:border-accent/30 hover:shadow-md transition-all duration-300"
+							className="items-center p-6 text-center transition-all duration-300 hover:border-accent/30 hover:shadow-md"
 						>
-							<div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${color}`}>
+							<div
+								className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${color}`}
+							>
 								<Icon size={26} />
 							</div>
-							<h3 className="font-semibold text-foreground mb-2">{title}</h3>
-							<p className="text-sm text-muted leading-relaxed">{description}</p>
-						</div>
+							<Card.Header className="items-center">
+								<Card.Title className="text-base">{title}</Card.Title>
+								<Card.Description>{description}</Card.Description>
+							</Card.Header>
+						</Card>
 					))}
 				</div>
 			</div>

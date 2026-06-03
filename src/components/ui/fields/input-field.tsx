@@ -1,12 +1,14 @@
 import {
+	Button,
 	FieldError,
 	InputGroup,
 	type InputGroupInputProps,
 	Label,
+	TextField,
+	type TextFieldProps,
 } from "@heroui/react";
 import { Eye, EyeOff } from "lucide-react";
 import { type ReactNode, useState } from "react";
-import { TextField, type TextFieldProps } from "react-aria-components";
 
 type Props = Omit<TextFieldProps, "children" | "className" | "type"> & {
 	errorText?: string;
@@ -50,14 +52,17 @@ export function InputField({
 				/>
 				{isPassword ? (
 					<InputGroup.Suffix>
-						<button
+						<Button
 							type="button"
-							onClick={() => setIsVisible((v) => !v)}
+							onPress={() => setIsVisible((v) => !v)}
 							aria-label={isVisible ? "Hide password" : "Show password"}
-							className="text-muted hover:text-foreground transition-colors"
+							isIconOnly
+							size="sm"
+							variant="ghost"
+							className="size-7 text-muted hover:text-foreground"
 						>
 							{isVisible ? <EyeOff size={16} /> : <Eye size={16} />}
-						</button>
+						</Button>
 					</InputGroup.Suffix>
 				) : null}
 			</InputGroup>

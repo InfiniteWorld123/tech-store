@@ -3,6 +3,7 @@ import { useForm } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
 import { Lock } from "lucide-react";
 import { useEffect, useState } from "react";
+import { AuthAlert } from "#/components/auth/sections/auth-alert";
 import { AuthCard } from "#/components/auth/sections/auth-card";
 import { AuthHeader } from "#/components/auth/sections/auth-header";
 import { SubmitButton } from "#/components/ui/buttons/submit-button";
@@ -137,9 +138,7 @@ export function ResetPasswordPage({
 					)}
 				</Subscribe>
 
-				{displayErrMsg && (
-					<p className="text-red-500 text-center">{displayErrMsg}</p>
-				)}
+				{displayErrMsg ? <AuthAlert message={displayErrMsg} /> : null}
 			</Form>
 		</AuthCard>
 	);

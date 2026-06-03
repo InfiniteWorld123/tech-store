@@ -1,18 +1,26 @@
 "use client";
 
-import { toast } from "@heroui/react";
+import { Card, Chip, Form, toast } from "@heroui/react";
+import {
+	ArrowRight,
+	Clock,
+	Mail,
+	MapPin,
+	MessageSquare,
+	Phone,
+} from "lucide-react";
 import { useState } from "react";
 import { Footer } from "#/components/layout/footer";
 import { Header } from "#/components/layout/header";
 import LinkButton from "#/components/ui/buttons/link-button";
 import { SubmitButton } from "#/components/ui/buttons/submit-button";
 import { InputField } from "#/components/ui/fields/input-field";
+import { TextareaField } from "#/components/ui/fields/textarea-field";
 import { sendContactEmailAction } from "#/server/contact/contact.actions";
 import {
-	contactMessageSchema,
 	type ContactMessageInput,
+	contactMessageSchema,
 } from "#/server/contact/contact.schemas";
-import { ArrowRight, Clock, Mail, MapPin, MessageSquare, Phone } from "lucide-react";
 
 const INFO_CARDS = [
 	{
@@ -111,10 +119,14 @@ export function ContactPage() {
 
 					<div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
 						<div className="max-w-2xl">
-							<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/30 bg-accent/10 text-accent text-sm font-medium mb-8">
+							<Chip
+								color="accent"
+								variant="soft"
+								className="mb-8 border border-accent/30 bg-accent/10"
+							>
 								<MessageSquare size={14} />
-								We'd love to hear from you
-							</div>
+								<Chip.Label>We'd love to hear from you</Chip.Label>
+							</Chip>
 							<h1 className="text-5xl sm:text-6xl font-extrabold text-white leading-[1.05] tracking-tight mb-6">
 								Get in <span className="text-accent">Touch</span>
 							</h1>
@@ -131,9 +143,9 @@ export function ContactPage() {
 					<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 						<div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
 							{INFO_CARDS.map(({ icon: Icon, title, value, detail, color }) => (
-								<div
+								<Card
 									key={title}
-									className="flex items-start gap-4 p-6 rounded-2xl bg-surface border border-border hover:border-accent/30 transition-all duration-300"
+									className="flex-row items-start gap-4 p-6 transition-all duration-300 hover:border-accent/30"
 								>
 									<div
 										className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${color}`}
@@ -149,7 +161,7 @@ export function ContactPage() {
 										</p>
 										<p className="text-xs text-muted">{detail}</p>
 									</div>
-								</div>
+								</Card>
 							))}
 						</div>
 					</div>
@@ -168,7 +180,7 @@ export function ContactPage() {
 									We'll get back to you in under 2 hours.
 								</h2>
 
-								<form onSubmit={handleSubmit} className="flex flex-col gap-5">
+								<Form onSubmit={handleSubmit} className="flex flex-col gap-5">
 									<div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
 										<InputField
 											label="Name"
@@ -197,39 +209,36 @@ export function ContactPage() {
 										errorText={errors.subject}
 									/>
 
-									<div className="flex flex-col gap-1.5">
-										<span className="text-sm font-medium text-foreground">
-											Message
+									<TextareaField
+										label="Message"
+										placeholder="Tell us how we can help..."
+										value={fields.message}
+										onChange={setField("message")}
+										errorText={errors.message}
+										textAreaProps={{
+											maxLength: 2000,
+											rows: 6,
+										}}
+									/>
+									{errors.message ? null : (
+										<span className="-mt-4 text-xs text-muted self-end">
+											{fields.message.length} / 2000
 										</span>
-										<textarea
-											className="w-full rounded-xl border border-border bg-transparent px-3 py-2.5 text-sm text-foreground placeholder:text-muted resize-none transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/50"
-											rows={6}
-											placeholder="Tell us how we can help..."
-											value={fields.message}
-											onChange={(e) => setField("message")(e.target.value)}
-											maxLength={2000}
-										/>
-										{errors.message ? (
-											<span className="text-xs text-red-500">
-												{errors.message}
-											</span>
-										) : (
-											<span className="text-xs text-muted self-end">
-												{fields.message.length} / 2000
-											</span>
-										)}
-									</div>
+									)}
 
 									<SubmitButton isLoading={submitting} loadingText="Sending...">
 										Send Message
 									</SubmitButton>
-								</form>
+								</Form>
 							</div>
 
 							{/* Map + Location */}
 							<div className="flex flex-col gap-6">
 								{/* Fake map */}
-								<div className="flex-1 rounded-2xl overflow-hidden border border-border relative min-h-[280px] bg-surface-secondary">
+								<Card
+									variant="secondary"
+									className="relative min-h-[280px] flex-1 overflow-hidden"
+								>
 									<div
 										className="absolute inset-0 opacity-[0.08]"
 										style={{
@@ -259,10 +268,10 @@ export function ContactPage() {
 											</div>
 										</div>
 									</div>
-								</div>
+								</Card>
 
 								{/* Address card */}
-								<div className="rounded-2xl border border-border bg-surface p-6">
+								<Card className="p-6">
 									<div className="flex items-start gap-3 mb-4">
 										<div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
 											<MapPin size={18} className="text-accent" />
@@ -286,7 +295,7 @@ export function ContactPage() {
 											placeholder.
 										</p>
 									</div>
-								</div>
+								</Card>
 							</div>
 						</div>
 					</div>

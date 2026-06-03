@@ -1,7 +1,8 @@
-import { Form, toast } from "@heroui/react";
+import { Button, Form, toast } from "@heroui/react";
 import { useForm } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { AuthAlert } from "#/components/auth/sections/auth-alert";
 import { AuthCard } from "#/components/auth/sections/auth-card";
 import { AuthHeader } from "#/components/auth/sections/auth-header";
 import { SubmitButton } from "#/components/ui/buttons/submit-button";
@@ -102,20 +103,19 @@ export function VerifyEmailPage() {
 					)}
 				</Subscribe>
 
-				{displayErrMsg && (
-					<p className="text-red-500 text-center">{displayErrMsg}</p>
-				)}
+				{displayErrMsg ? <AuthAlert message={displayErrMsg} /> : null}
 			</Form>
 
 			<p className="text-center text-sm text-muted">
 				Didn't get a code?{" "}
-				<button
+				<Button
 					type="button"
-					className="font-medium text-accent hover:underline"
-					onClick={onResend}
+					variant="ghost"
+					className="inline-flex h-auto min-h-0 px-1 py-0 font-medium text-accent hover:underline"
+					onPress={onResend}
 				>
 					Resend
-				</button>
+				</Button>
 			</p>
 		</AuthCard>
 	);

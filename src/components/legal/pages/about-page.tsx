@@ -1,3 +1,4 @@
+import { Card } from "@heroui/react";
 import {
 	Award,
 	HeartHandshake,
@@ -89,13 +90,10 @@ export function AboutPage() {
 								</p>
 							</div>
 						</div>
-						<div className="rounded-3xl border border-border bg-surface-secondary p-6">
+						<Card variant="secondary" className="p-6">
 							<div className="grid grid-cols-2 gap-4">
 								{STATS.map((stat) => (
-									<div
-										key={stat.label}
-										className="rounded-2xl bg-surface border border-border p-5"
-									>
+									<div key={stat.label} className="rounded-xl bg-surface p-5">
 										<p className="text-2xl font-extrabold text-foreground">
 											{stat.value}
 										</p>
@@ -103,7 +101,7 @@ export function AboutPage() {
 									</div>
 								))}
 							</div>
-						</div>
+						</Card>
 					</div>
 					<div className="grid md:grid-cols-3 gap-6 mt-12">
 						{VALUES.map((item) => (

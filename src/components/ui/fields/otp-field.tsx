@@ -1,4 +1,4 @@
-import { InputOTP, type InputOTPProps } from "@heroui/react";
+import { FieldError, InputOTP, type InputOTPProps } from "@heroui/react";
 import type { ComponentProps } from "react";
 
 type Props = Omit<InputOTPProps, "children" | "maxLength"> & {
@@ -30,7 +30,7 @@ export function OtpField({
 					))}
 				</InputOTP.Group>
 			</InputOTP>
-			{errorText ? <p className="text-sm text-danger">{errorText}</p> : null}
+			{errorText ? <FieldError>{errorText}</FieldError> : null}
 		</div>
 	);
 }

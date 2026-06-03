@@ -1,6 +1,7 @@
+import { Card, Skeleton } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
 import { ArrowRight, Tags } from "lucide-react";
+import LinkAnchor from "#/components/ui/buttons/link-anchor";
 import { categoriesQueryOptions } from "#/queries/categories.queries";
 import { CategoryCard } from "../ui/category-card";
 
@@ -32,7 +33,7 @@ export function CategoriesSection() {
 						</h2>
 					</div>
 					{hasCategories && (
-						<Link
+						<LinkAnchor
 							to="/categories"
 							className="hidden sm:flex items-center gap-1.5 text-sm font-medium text-muted hover:text-foreground transition-colors group"
 						>
@@ -41,7 +42,7 @@ export function CategoriesSection() {
 								size={16}
 								className="group-hover:translate-x-0.5 transition-transform"
 							/>
-						</Link>
+						</LinkAnchor>
 					)}
 				</div>
 
@@ -49,10 +50,12 @@ export function CategoriesSection() {
 				{isLoading ? (
 					<div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
 						{CATEGORY_SKELETON_IDS.map((skeletonId) => (
-							<div
-								key={skeletonId}
-								className="h-40 rounded-2xl bg-surface border border-border animate-pulse"
-							/>
+							<Card key={skeletonId} className="h-40 items-center p-6">
+								<Skeleton className="h-14 w-14 rounded-2xl" />
+								<Card.Content className="mt-5 p-0">
+									<Skeleton className="h-4 w-20 rounded" />
+								</Card.Content>
+							</Card>
 						))}
 					</div>
 				) : hasCategories ? (
@@ -62,31 +65,29 @@ export function CategoriesSection() {
 						))}
 					</div>
 				) : (
-					<div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-surface px-6 py-12 text-center">
-						<div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-default text-muted">
-							<Tags size={26} />
-						</div>
-						<h3 className="text-base font-semibold text-foreground">
-							No categories yet
-						</h3>
-						<p className="mt-2 max-w-md text-sm text-muted">
-							{isError
-								? "We couldn't load categories right now. Please try again later."
-								: "There are no categories available right now. Check back soon."}
-						</p>
-					</div>
+					<Card className="items-center border-dashed px-6 py-12 text-center">
+						<Tags size={26} className="text-muted" />
+						<Card.Header className="items-center">
+							<Card.Title className="text-base">No categories yet</Card.Title>
+							<Card.Description className="max-w-md">
+								{isError
+									? "We couldn't load categories right now. Please try again later."
+									: "There are no categories available right now. Check back soon."}
+							</Card.Description>
+						</Card.Header>
+					</Card>
 				)}
 
 				{/* Mobile "view all" */}
 				{hasCategories && (
 					<div className="mt-6 flex sm:hidden">
-						<Link
+						<LinkAnchor
 							to="/categories"
 							className="flex items-center gap-1.5 text-sm font-medium text-muted hover:text-foreground transition-colors"
 						>
 							View all categories
 							<ArrowRight size={16} />
-						</Link>
+						</LinkAnchor>
 					</div>
 				)}
 			</div>

@@ -1,12 +1,14 @@
 import { Form } from "@heroui/react";
 import { useForm } from "@tanstack/react-form";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { Lock, Mail } from "lucide-react";
+import { AuthAlert } from "#/components/auth/sections/auth-alert";
 import { AuthCard } from "#/components/auth/sections/auth-card";
 import { AuthFooter } from "#/components/auth/sections/auth-footer";
 import { AuthHeader } from "#/components/auth/sections/auth-header";
 import { DividerWithText } from "#/components/auth/sections/divider-with-text";
 import { SocialProviders } from "#/components/auth/sections/social-providers";
+import LinkAnchor from "#/components/ui/buttons/link-anchor";
 import { SubmitButton } from "#/components/ui/buttons/submit-button";
 import { InputField } from "#/components/ui/fields/input-field";
 import { useSignIn } from "#/hooks/auth.hook";
@@ -83,12 +85,12 @@ export function SignInPage() {
 				</Field>
 
 				<div className="flex w-full justify-end">
-					<Link
+					<LinkAnchor
 						to="/forgot-password"
 						className="text-sm font-medium text-accent hover:underline"
 					>
 						Forgot password?
-					</Link>
+					</LinkAnchor>
 				</div>
 
 				<Subscribe>
@@ -100,7 +102,7 @@ export function SignInPage() {
 				</Subscribe>
 			</Form>
 
-			{signInError && <p className="text-red-500 text-center">{signInError}</p>}
+			{signInError ? <AuthAlert message={signInError} /> : null}
 
 			<AuthFooter
 				prompt="Don't have an account?"

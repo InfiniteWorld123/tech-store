@@ -9,21 +9,34 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WithdrawalRouteImport } from './routes/withdrawal'
-import { Route as TrackRouteImport } from './routes/track'
-import { Route as TermsRouteImport } from './routes/terms'
-import { Route as ShippingRouteImport } from './routes/shipping'
-import { Route as ReturnsRouteImport } from './routes/returns'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as ImpressumRouteImport } from './routes/impressum'
-import { Route as FaqRouteImport } from './routes/faq'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CategoriesIndexRouteImport } from './routes/categories/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as CategoriesSlugRouteImport } from './routes/categories/$slug'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
+import { Route as AdminVariantsRouteImport } from './routes/admin/variants'
+import { Route as AdminShippingRouteImport } from './routes/admin/shipping'
+import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
+import { Route as AdminReviewsRouteImport } from './routes/admin/reviews'
+import { Route as AdminProductsRouteImport } from './routes/admin/products'
+import { Route as AdminPaymentsRouteImport } from './routes/admin/payments'
+import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
+import { Route as AdminInventoryRouteImport } from './routes/admin/inventory'
+import { Route as AdminCustomersRouteImport } from './routes/admin/customers'
+import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
+import { Route as AdminAnalyticsRouteImport } from './routes/admin/analytics'
+import { Route as LandingWithdrawalRouteImport } from './routes/_landing/withdrawal'
+import { Route as LandingTrackRouteImport } from './routes/_landing/track'
+import { Route as LandingTermsRouteImport } from './routes/_landing/terms'
+import { Route as LandingShippingRouteImport } from './routes/_landing/shipping'
+import { Route as LandingReturnsRouteImport } from './routes/_landing/returns'
+import { Route as LandingPrivacyRouteImport } from './routes/_landing/privacy'
+import { Route as LandingImpressumRouteImport } from './routes/_landing/impressum'
+import { Route as LandingFaqRouteImport } from './routes/_landing/faq'
+import { Route as LandingContactRouteImport } from './routes/_landing/contact'
+import { Route as LandingAboutRouteImport } from './routes/_landing/about'
 import { Route as AuthVerifyEmailRouteImport } from './routes/_auth/verify-email'
 import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
@@ -32,54 +45,9 @@ import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-pa
 import { Route as ApiWebhooksStripeRouteImport } from './routes/api/webhooks/stripe'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
-const WithdrawalRoute = WithdrawalRouteImport.update({
-  id: '/withdrawal',
-  path: '/withdrawal',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TrackRoute = TrackRouteImport.update({
-  id: '/track',
-  path: '/track',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TermsRoute = TermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ShippingRoute = ShippingRouteImport.update({
-  id: '/shipping',
-  path: '/shipping',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReturnsRoute = ReturnsRouteImport.update({
-  id: '/returns',
-  path: '/returns',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ImpressumRoute = ImpressumRouteImport.update({
-  id: '/impressum',
-  path: '/impressum',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FaqRoute = FaqRouteImport.update({
-  id: '/faq',
-  path: '/faq',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -96,6 +64,11 @@ const CategoriesIndexRoute = CategoriesIndexRouteImport.update({
   path: '/categories/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const CategoriesSlugRoute = CategoriesSlugRouteImport.update({
   id: '/categories/$slug',
   path: '/categories/$slug',
@@ -104,6 +77,111 @@ const CategoriesSlugRoute = CategoriesSlugRouteImport.update({
 const ApiContactRoute = ApiContactRouteImport.update({
   id: '/api/contact',
   path: '/api/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminVariantsRoute = AdminVariantsRouteImport.update({
+  id: '/variants',
+  path: '/variants',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminShippingRoute = AdminShippingRouteImport.update({
+  id: '/shipping',
+  path: '/shipping',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReviewsRoute = AdminReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProductsRoute = AdminProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPaymentsRoute = AdminPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminOrdersRoute = AdminOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminInventoryRoute = AdminInventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCustomersRoute = AdminCustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AdminRoute,
+} as any)
+const LandingWithdrawalRoute = LandingWithdrawalRouteImport.update({
+  id: '/_landing/withdrawal',
+  path: '/withdrawal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LandingTrackRoute = LandingTrackRouteImport.update({
+  id: '/_landing/track',
+  path: '/track',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LandingTermsRoute = LandingTermsRouteImport.update({
+  id: '/_landing/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LandingShippingRoute = LandingShippingRouteImport.update({
+  id: '/_landing/shipping',
+  path: '/shipping',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LandingReturnsRoute = LandingReturnsRouteImport.update({
+  id: '/_landing/returns',
+  path: '/returns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LandingPrivacyRoute = LandingPrivacyRouteImport.update({
+  id: '/_landing/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LandingImpressumRoute = LandingImpressumRouteImport.update({
+  id: '/_landing/impressum',
+  path: '/impressum',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LandingFaqRoute = LandingFaqRouteImport.update({
+  id: '/_landing/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LandingContactRoute = LandingContactRouteImport.update({
+  id: '/_landing/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LandingAboutRoute = LandingAboutRouteImport.update({
+  id: '/_landing/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthVerifyEmailRoute = AuthVerifyEmailRouteImport.update({
@@ -144,46 +222,71 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/contact': typeof ContactRoute
-  '/faq': typeof FaqRoute
-  '/impressum': typeof ImpressumRoute
-  '/privacy': typeof PrivacyRoute
-  '/returns': typeof ReturnsRoute
-  '/shipping': typeof ShippingRoute
-  '/terms': typeof TermsRoute
-  '/track': typeof TrackRoute
-  '/withdrawal': typeof WithdrawalRoute
+  '/admin': typeof AdminRouteWithChildren
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
   '/verify-email': typeof AuthVerifyEmailRoute
+  '/about': typeof LandingAboutRoute
+  '/contact': typeof LandingContactRoute
+  '/faq': typeof LandingFaqRoute
+  '/impressum': typeof LandingImpressumRoute
+  '/privacy': typeof LandingPrivacyRoute
+  '/returns': typeof LandingReturnsRoute
+  '/shipping': typeof LandingShippingRoute
+  '/terms': typeof LandingTermsRoute
+  '/track': typeof LandingTrackRoute
+  '/withdrawal': typeof LandingWithdrawalRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/customers': typeof AdminCustomersRoute
+  '/admin/inventory': typeof AdminInventoryRoute
+  '/admin/orders': typeof AdminOrdersRoute
+  '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/shipping': typeof AdminShippingRoute
+  '/admin/variants': typeof AdminVariantsRoute
   '/api/contact': typeof ApiContactRoute
   '/categories/$slug': typeof CategoriesSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/categories/': typeof CategoriesIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/contact': typeof ContactRoute
-  '/faq': typeof FaqRoute
-  '/impressum': typeof ImpressumRoute
-  '/privacy': typeof PrivacyRoute
-  '/returns': typeof ReturnsRoute
-  '/shipping': typeof ShippingRoute
-  '/terms': typeof TermsRoute
-  '/track': typeof TrackRoute
-  '/withdrawal': typeof WithdrawalRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
   '/verify-email': typeof AuthVerifyEmailRoute
+  '/about': typeof LandingAboutRoute
+  '/contact': typeof LandingContactRoute
+  '/faq': typeof LandingFaqRoute
+  '/impressum': typeof LandingImpressumRoute
+  '/privacy': typeof LandingPrivacyRoute
+  '/returns': typeof LandingReturnsRoute
+  '/shipping': typeof LandingShippingRoute
+  '/terms': typeof LandingTermsRoute
+  '/track': typeof LandingTrackRoute
+  '/withdrawal': typeof LandingWithdrawalRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/customers': typeof AdminCustomersRoute
+  '/admin/inventory': typeof AdminInventoryRoute
+  '/admin/orders': typeof AdminOrdersRoute
+  '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/shipping': typeof AdminShippingRoute
+  '/admin/variants': typeof AdminVariantsRoute
   '/api/contact': typeof ApiContactRoute
   '/categories/$slug': typeof CategoriesSlugRoute
+  '/admin': typeof AdminIndexRoute
   '/categories': typeof CategoriesIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
@@ -192,23 +295,36 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
-  '/about': typeof AboutRoute
-  '/contact': typeof ContactRoute
-  '/faq': typeof FaqRoute
-  '/impressum': typeof ImpressumRoute
-  '/privacy': typeof PrivacyRoute
-  '/returns': typeof ReturnsRoute
-  '/shipping': typeof ShippingRoute
-  '/terms': typeof TermsRoute
-  '/track': typeof TrackRoute
-  '/withdrawal': typeof WithdrawalRoute
+  '/admin': typeof AdminRouteWithChildren
   '/_auth/forgot-password': typeof AuthForgotPasswordRoute
   '/_auth/reset-password': typeof AuthResetPasswordRoute
   '/_auth/sign-in': typeof AuthSignInRoute
   '/_auth/sign-up': typeof AuthSignUpRoute
   '/_auth/verify-email': typeof AuthVerifyEmailRoute
+  '/_landing/about': typeof LandingAboutRoute
+  '/_landing/contact': typeof LandingContactRoute
+  '/_landing/faq': typeof LandingFaqRoute
+  '/_landing/impressum': typeof LandingImpressumRoute
+  '/_landing/privacy': typeof LandingPrivacyRoute
+  '/_landing/returns': typeof LandingReturnsRoute
+  '/_landing/shipping': typeof LandingShippingRoute
+  '/_landing/terms': typeof LandingTermsRoute
+  '/_landing/track': typeof LandingTrackRoute
+  '/_landing/withdrawal': typeof LandingWithdrawalRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/customers': typeof AdminCustomersRoute
+  '/admin/inventory': typeof AdminInventoryRoute
+  '/admin/orders': typeof AdminOrdersRoute
+  '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/shipping': typeof AdminShippingRoute
+  '/admin/variants': typeof AdminVariantsRoute
   '/api/contact': typeof ApiContactRoute
   '/categories/$slug': typeof CategoriesSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/categories/': typeof CategoriesIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
@@ -217,6 +333,12 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
+    | '/forgot-password'
+    | '/reset-password'
+    | '/sign-in'
+    | '/sign-up'
+    | '/verify-email'
     | '/about'
     | '/contact'
     | '/faq'
@@ -227,19 +349,31 @@ export interface FileRouteTypes {
     | '/terms'
     | '/track'
     | '/withdrawal'
-    | '/forgot-password'
-    | '/reset-password'
-    | '/sign-in'
-    | '/sign-up'
-    | '/verify-email'
+    | '/admin/analytics'
+    | '/admin/categories'
+    | '/admin/customers'
+    | '/admin/inventory'
+    | '/admin/orders'
+    | '/admin/payments'
+    | '/admin/products'
+    | '/admin/reviews'
+    | '/admin/settings'
+    | '/admin/shipping'
+    | '/admin/variants'
     | '/api/contact'
     | '/categories/$slug'
+    | '/admin/'
     | '/categories/'
     | '/api/auth/$'
     | '/api/webhooks/stripe'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/forgot-password'
+    | '/reset-password'
+    | '/sign-in'
+    | '/sign-up'
+    | '/verify-email'
     | '/about'
     | '/contact'
     | '/faq'
@@ -250,13 +384,20 @@ export interface FileRouteTypes {
     | '/terms'
     | '/track'
     | '/withdrawal'
-    | '/forgot-password'
-    | '/reset-password'
-    | '/sign-in'
-    | '/sign-up'
-    | '/verify-email'
+    | '/admin/analytics'
+    | '/admin/categories'
+    | '/admin/customers'
+    | '/admin/inventory'
+    | '/admin/orders'
+    | '/admin/payments'
+    | '/admin/products'
+    | '/admin/reviews'
+    | '/admin/settings'
+    | '/admin/shipping'
+    | '/admin/variants'
     | '/api/contact'
     | '/categories/$slug'
+    | '/admin'
     | '/categories'
     | '/api/auth/$'
     | '/api/webhooks/stripe'
@@ -264,23 +405,36 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_auth'
-    | '/about'
-    | '/contact'
-    | '/faq'
-    | '/impressum'
-    | '/privacy'
-    | '/returns'
-    | '/shipping'
-    | '/terms'
-    | '/track'
-    | '/withdrawal'
+    | '/admin'
     | '/_auth/forgot-password'
     | '/_auth/reset-password'
     | '/_auth/sign-in'
     | '/_auth/sign-up'
     | '/_auth/verify-email'
+    | '/_landing/about'
+    | '/_landing/contact'
+    | '/_landing/faq'
+    | '/_landing/impressum'
+    | '/_landing/privacy'
+    | '/_landing/returns'
+    | '/_landing/shipping'
+    | '/_landing/terms'
+    | '/_landing/track'
+    | '/_landing/withdrawal'
+    | '/admin/analytics'
+    | '/admin/categories'
+    | '/admin/customers'
+    | '/admin/inventory'
+    | '/admin/orders'
+    | '/admin/payments'
+    | '/admin/products'
+    | '/admin/reviews'
+    | '/admin/settings'
+    | '/admin/shipping'
+    | '/admin/variants'
     | '/api/contact'
     | '/categories/$slug'
+    | '/admin/'
     | '/categories/'
     | '/api/auth/$'
     | '/api/webhooks/stripe'
@@ -289,16 +443,17 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
-  AboutRoute: typeof AboutRoute
-  ContactRoute: typeof ContactRoute
-  FaqRoute: typeof FaqRoute
-  ImpressumRoute: typeof ImpressumRoute
-  PrivacyRoute: typeof PrivacyRoute
-  ReturnsRoute: typeof ReturnsRoute
-  ShippingRoute: typeof ShippingRoute
-  TermsRoute: typeof TermsRoute
-  TrackRoute: typeof TrackRoute
-  WithdrawalRoute: typeof WithdrawalRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  LandingAboutRoute: typeof LandingAboutRoute
+  LandingContactRoute: typeof LandingContactRoute
+  LandingFaqRoute: typeof LandingFaqRoute
+  LandingImpressumRoute: typeof LandingImpressumRoute
+  LandingPrivacyRoute: typeof LandingPrivacyRoute
+  LandingReturnsRoute: typeof LandingReturnsRoute
+  LandingShippingRoute: typeof LandingShippingRoute
+  LandingTermsRoute: typeof LandingTermsRoute
+  LandingTrackRoute: typeof LandingTrackRoute
+  LandingWithdrawalRoute: typeof LandingWithdrawalRoute
   ApiContactRoute: typeof ApiContactRoute
   CategoriesSlugRoute: typeof CategoriesSlugRoute
   CategoriesIndexRoute: typeof CategoriesIndexRoute
@@ -308,74 +463,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/withdrawal': {
-      id: '/withdrawal'
-      path: '/withdrawal'
-      fullPath: '/withdrawal'
-      preLoaderRoute: typeof WithdrawalRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/track': {
-      id: '/track'
-      path: '/track'
-      fullPath: '/track'
-      preLoaderRoute: typeof TrackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/shipping': {
-      id: '/shipping'
-      path: '/shipping'
-      fullPath: '/shipping'
-      preLoaderRoute: typeof ShippingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/returns': {
-      id: '/returns'
-      path: '/returns'
-      fullPath: '/returns'
-      preLoaderRoute: typeof ReturnsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/impressum': {
-      id: '/impressum'
-      path: '/impressum'
-      fullPath: '/impressum'
-      preLoaderRoute: typeof ImpressumRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/faq': {
-      id: '/faq'
-      path: '/faq'
-      fullPath: '/faq'
-      preLoaderRoute: typeof FaqRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -399,6 +491,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoriesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/categories/$slug': {
       id: '/categories/$slug'
       path: '/categories/$slug'
@@ -411,6 +510,153 @@ declare module '@tanstack/react-router' {
       path: '/api/contact'
       fullPath: '/api/contact'
       preLoaderRoute: typeof ApiContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/variants': {
+      id: '/admin/variants'
+      path: '/variants'
+      fullPath: '/admin/variants'
+      preLoaderRoute: typeof AdminVariantsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/shipping': {
+      id: '/admin/shipping'
+      path: '/shipping'
+      fullPath: '/admin/shipping'
+      preLoaderRoute: typeof AdminShippingRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reviews': {
+      id: '/admin/reviews'
+      path: '/reviews'
+      fullPath: '/admin/reviews'
+      preLoaderRoute: typeof AdminReviewsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/products': {
+      id: '/admin/products'
+      path: '/products'
+      fullPath: '/admin/products'
+      preLoaderRoute: typeof AdminProductsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/payments': {
+      id: '/admin/payments'
+      path: '/payments'
+      fullPath: '/admin/payments'
+      preLoaderRoute: typeof AdminPaymentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/orders': {
+      id: '/admin/orders'
+      path: '/orders'
+      fullPath: '/admin/orders'
+      preLoaderRoute: typeof AdminOrdersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/inventory': {
+      id: '/admin/inventory'
+      path: '/inventory'
+      fullPath: '/admin/inventory'
+      preLoaderRoute: typeof AdminInventoryRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/customers': {
+      id: '/admin/customers'
+      path: '/customers'
+      fullPath: '/admin/customers'
+      preLoaderRoute: typeof AdminCustomersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/categories': {
+      id: '/admin/categories'
+      path: '/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AdminCategoriesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/analytics': {
+      id: '/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AdminAnalyticsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_landing/withdrawal': {
+      id: '/_landing/withdrawal'
+      path: '/withdrawal'
+      fullPath: '/withdrawal'
+      preLoaderRoute: typeof LandingWithdrawalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_landing/track': {
+      id: '/_landing/track'
+      path: '/track'
+      fullPath: '/track'
+      preLoaderRoute: typeof LandingTrackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_landing/terms': {
+      id: '/_landing/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof LandingTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_landing/shipping': {
+      id: '/_landing/shipping'
+      path: '/shipping'
+      fullPath: '/shipping'
+      preLoaderRoute: typeof LandingShippingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_landing/returns': {
+      id: '/_landing/returns'
+      path: '/returns'
+      fullPath: '/returns'
+      preLoaderRoute: typeof LandingReturnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_landing/privacy': {
+      id: '/_landing/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof LandingPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_landing/impressum': {
+      id: '/_landing/impressum'
+      path: '/impressum'
+      fullPath: '/impressum'
+      preLoaderRoute: typeof LandingImpressumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_landing/faq': {
+      id: '/_landing/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof LandingFaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_landing/contact': {
+      id: '/_landing/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof LandingContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_landing/about': {
+      id: '/_landing/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof LandingAboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth/verify-email': {
@@ -483,19 +729,52 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
+interface AdminRouteChildren {
+  AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminCategoriesRoute: typeof AdminCategoriesRoute
+  AdminCustomersRoute: typeof AdminCustomersRoute
+  AdminInventoryRoute: typeof AdminInventoryRoute
+  AdminOrdersRoute: typeof AdminOrdersRoute
+  AdminPaymentsRoute: typeof AdminPaymentsRoute
+  AdminProductsRoute: typeof AdminProductsRoute
+  AdminReviewsRoute: typeof AdminReviewsRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminShippingRoute: typeof AdminShippingRoute
+  AdminVariantsRoute: typeof AdminVariantsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminCategoriesRoute: AdminCategoriesRoute,
+  AdminCustomersRoute: AdminCustomersRoute,
+  AdminInventoryRoute: AdminInventoryRoute,
+  AdminOrdersRoute: AdminOrdersRoute,
+  AdminPaymentsRoute: AdminPaymentsRoute,
+  AdminProductsRoute: AdminProductsRoute,
+  AdminReviewsRoute: AdminReviewsRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminShippingRoute: AdminShippingRoute,
+  AdminVariantsRoute: AdminVariantsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
-  AboutRoute: AboutRoute,
-  ContactRoute: ContactRoute,
-  FaqRoute: FaqRoute,
-  ImpressumRoute: ImpressumRoute,
-  PrivacyRoute: PrivacyRoute,
-  ReturnsRoute: ReturnsRoute,
-  ShippingRoute: ShippingRoute,
-  TermsRoute: TermsRoute,
-  TrackRoute: TrackRoute,
-  WithdrawalRoute: WithdrawalRoute,
+  AdminRoute: AdminRouteWithChildren,
+  LandingAboutRoute: LandingAboutRoute,
+  LandingContactRoute: LandingContactRoute,
+  LandingFaqRoute: LandingFaqRoute,
+  LandingImpressumRoute: LandingImpressumRoute,
+  LandingPrivacyRoute: LandingPrivacyRoute,
+  LandingReturnsRoute: LandingReturnsRoute,
+  LandingShippingRoute: LandingShippingRoute,
+  LandingTermsRoute: LandingTermsRoute,
+  LandingTrackRoute: LandingTrackRoute,
+  LandingWithdrawalRoute: LandingWithdrawalRoute,
   ApiContactRoute: ApiContactRoute,
   CategoriesSlugRoute: CategoriesSlugRoute,
   CategoriesIndexRoute: CategoriesIndexRoute,

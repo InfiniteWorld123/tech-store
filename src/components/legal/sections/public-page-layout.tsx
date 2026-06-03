@@ -1,3 +1,4 @@
+import { Card, Chip } from "@heroui/react";
 import type { LucideIcon } from "lucide-react";
 import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
@@ -40,10 +41,14 @@ export function PublicPageLayout({
 					/>
 					<div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
 						<div className="max-w-3xl">
-							<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/30 bg-accent/10 text-accent text-sm font-medium mb-6">
+							<Chip
+								color="accent"
+								variant="soft"
+								className="mb-6 border border-accent/30 bg-accent/10"
+							>
 								{Icon ? <Icon size={15} /> : null}
-								{eyebrow}
-							</div>
+								<Chip.Label>{eyebrow}</Chip.Label>
+							</Chip>
 							<h1 className="text-4xl sm:text-5xl font-extrabold leading-tight">
 								{title}
 							</h1>
@@ -73,27 +78,29 @@ export function ShopCta({
 	return (
 		<section className="bg-surface-secondary py-16">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-				<div className="rounded-2xl border border-border bg-surface p-8 sm:p-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-					<div>
-						<p className="text-accent text-sm font-semibold uppercase tracking-widest mb-2">
-							TechStore
-						</p>
-						<h2 className="text-2xl sm:text-3xl font-bold text-foreground">
-							{title}
-						</h2>
-						<p className="text-muted mt-3 max-w-2xl leading-relaxed">
-							{description}
-						</p>
-					</div>
-					<div className="flex flex-wrap gap-3">
-						<LinkButton to="/" variant="primary">
-							Browse products <ArrowRight size={16} className="ml-1" />
-						</LinkButton>
-						<LinkButton to="/categories" variant="outline">
-							Explore categories
-						</LinkButton>
-					</div>
-				</div>
+				<Card className="p-8 sm:p-10">
+					<Card.Content className="flex flex-col gap-6 p-0 lg:flex-row lg:items-center lg:justify-between">
+						<div>
+							<p className="text-accent text-sm font-semibold uppercase tracking-widest mb-2">
+								TechStore
+							</p>
+							<h2 className="text-2xl sm:text-3xl font-bold text-foreground">
+								{title}
+							</h2>
+							<p className="text-muted mt-3 max-w-2xl leading-relaxed">
+								{description}
+							</p>
+						</div>
+						<div className="flex flex-wrap gap-3">
+							<LinkButton to="/" variant="primary">
+								Browse products <ArrowRight size={16} className="ml-1" />
+							</LinkButton>
+							<LinkButton to="/categories" variant="outline">
+								Explore categories
+							</LinkButton>
+						</div>
+					</Card.Content>
+				</Card>
 			</div>
 		</section>
 	);

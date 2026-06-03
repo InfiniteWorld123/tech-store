@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Form } from "@heroui/react";
+import { Alert, Button, Card, Form } from "@heroui/react";
 import {
 	Headphones,
 	Mail,
@@ -14,6 +14,7 @@ import { useState } from "react";
 import { InfoCard } from "#/components/legal/sections/info-card";
 import { PublicPageLayout } from "#/components/legal/sections/public-page-layout";
 import { InputField } from "#/components/ui/fields/input-field";
+import { TextareaField } from "#/components/ui/fields/textarea-field";
 
 type ContactState = "idle" | "loading" | "success" | "error";
 
@@ -84,8 +85,8 @@ export function ContactPage() {
 								title="Berlin demo office"
 								description="TechStore Demo GmbH, Invalidenstrasse 117, 10115 Berlin, Germany"
 							/>
-							<div className="rounded-2xl border border-border bg-surface-secondary p-6">
-								<div className="rounded-xl bg-surface border border-border h-56 flex items-center justify-center text-center p-6">
+							<Card variant="secondary" className="p-6">
+								<div className="flex h-56 items-center justify-center rounded-xl bg-surface p-6 text-center">
 									<div>
 										<MapPin className="mx-auto text-accent mb-3" size={34} />
 										<p className="font-semibold text-foreground">
@@ -96,10 +97,10 @@ export function ContactPage() {
 										</p>
 									</div>
 								</div>
-							</div>
+							</Card>
 						</div>
 
-						<div className="rounded-2xl border border-border bg-surface p-6 sm:p-8 shadow-sm">
+						<Card className="p-6 shadow-sm sm:p-8">
 							<div className="mb-6">
 								<div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent mb-4">
 									<MessageSquare size={22} />
@@ -135,24 +136,21 @@ export function ContactPage() {
 									placeholder="Question about my order"
 									isRequired
 								/>
-								<label className="flex flex-col gap-1.5">
-									<span className="text-sm font-medium text-foreground">
-										Message
-									</span>
-									<textarea
-										name="message"
-										required
-										minLength={10}
-										maxLength={2000}
-										rows={7}
-										placeholder="Tell us what you need help with..."
-										className="w-full rounded-xl border border-border bg-field-background px-4 py-3 text-field-foreground outline-none transition-colors focus:border-accent"
-									/>
-								</label>
+								<TextareaField
+									name="message"
+									label="Message"
+									placeholder="Tell us what you need help with..."
+									isRequired
+									textAreaProps={{
+										minLength: 10,
+										maxLength: 2000,
+										rows: 7,
+									}}
+								/>
 								<Button
 									type="submit"
 									variant="primary"
-									isDisabled={state === "loading"}
+									isPending={state === "loading"}
 									className="w-full sm:w-auto"
 								>
 									<Send size={16} />
@@ -161,24 +159,37 @@ export function ContactPage() {
 							</Form>
 
 							{state === "success" ? (
-								<p className="mt-4 rounded-xl bg-success/10 p-4 text-sm text-success-foreground border border-success/20">
-									Your message was sent. We will reply to your email address.
-								</p>
+								<Alert status="success" className="mt-4">
+									<Alert.Indicator />
+									<Alert.Content>
+										<Alert.Title>Your message was sent.</Alert.Title>
+										<Alert.Description>
+											We will reply to your email address.
+										</Alert.Description>
+									</Alert.Content>
+								</Alert>
 							) : null}
 							{state === "error" ? (
-								<p className="mt-4 rounded-xl bg-danger/10 p-4 text-sm text-danger border border-danger/20">
-									{error}
-								</p>
+								<Alert status="danger" className="mt-4">
+									<Alert.Indicator />
+									<Alert.Content>
+										<Alert.Title>{error}</Alert.Title>
+									</Alert.Content>
+								</Alert>
 							) : null}
 
-							<div className="mt-6 flex items-start gap-3 text-sm text-muted">
-								<ShieldCheck size={18} className="text-accent mt-0.5" />
-								<p>
-									We only use your message details to answer your request.
-									Legal-style details are explained in the Privacy page.
-								</p>
-							</div>
-						</div>
+							<Alert status="accent" className="mt-6">
+								<Alert.Indicator>
+									<ShieldCheck size={18} />
+								</Alert.Indicator>
+								<Alert.Content>
+									<Alert.Description>
+										We only use your message details to answer your request.
+										Legal-style details are explained in the Privacy page.
+									</Alert.Description>
+								</Alert.Content>
+							</Alert>
+						</Card>
 					</div>
 				</div>
 			</section>

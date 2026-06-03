@@ -15,3 +15,5 @@ todos.json
 
 #Ignore cursor AI rules
 .cursor/rules/codacy.mdc
+# heroui-agents-md
+.heroui-docs/
