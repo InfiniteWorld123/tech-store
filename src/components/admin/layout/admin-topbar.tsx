@@ -8,13 +8,14 @@ const PAGE_TITLES: Record<string, string> = {
 	"/admin": "Dashboard",
 	"/admin/orders": "Orders",
 	"/admin/products": "Products",
+	"/admin/variants": "Variants",
 	"/admin/categories": "Categories",
 	"/admin/analytics": "Analytics",
 	"/admin/customers": "Customers",
 	"/admin/payments": "Payments",
 	"/admin/shipping": "Shipping",
 	"/admin/reviews": "Reviews",
-	"/admin/inventory": "Inventory",
+	"/admin/inventory": "Options",
 	"/admin/settings": "Settings",
 };
 
