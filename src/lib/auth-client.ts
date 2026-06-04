@@ -8,6 +8,9 @@ export const {
 	useSession,
 	requestPasswordReset,
 	resetPassword,
+	updateUser,
+	changePassword,
+	changeEmail,
 } = createAuthClient({
 	plugins: [emailOTPClient()],
 });
