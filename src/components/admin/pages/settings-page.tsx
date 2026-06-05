@@ -4,7 +4,6 @@ import { Card, Form, toast } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { InputField } from "#/components/ui/fields/input-field";
 import { SubmitButton } from "#/components/ui/buttons/submit-button";
-import { AdminPageHeader } from "#/components/admin/sections/admin-page";
 import {
 	changeEmail,
 	changePassword,
@@ -233,10 +232,6 @@ function ChangePasswordSection() {
 export function SettingsPage() {
 	return (
 		<div className="flex flex-col gap-6">
-			<AdminPageHeader
-				title="Settings"
-				description="Manage your account"
-			/>
 			<div className="flex max-w-2xl flex-col gap-4">
 				<UpdateNameSection />
 				<ChangeEmailSection />

@@ -1,10 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { getProductsAction } from "#/server/catalog/products/products.actions";
 import type { GetProductsInputType } from "#/server/catalog/products/products.types";
-
-export type ListProductsQueryResult = Awaited<
-	ReturnType<typeof getProductsAction>
->;
+import { getProductMetricsAction } from "#/server/analytics/analytics.actions";
 
 export const defaultProductsInput = {
 	pagination: {
@@ -42,7 +39,14 @@ export const listProductsQueryOptions = ({
 }) => {
 	return queryOptions({
 		queryKey: ["products", data],
-		queryFn: (): Promise<ListProductsQueryResult> =>
-			getProductsAction({ data }),
+		queryFn: () => getProductsAction({ data }),
 	});
+};
+
+export const getProductMetricsQueryOptions = (data = {}) => {
+	return queryOptions({
+		queryKey: ["products", "metrics", data],
+		queryFn: () =>
+			getProductMetricsAction({ data }),
+	}); 
 };

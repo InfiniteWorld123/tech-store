@@ -1,7 +1,9 @@
 "use client";
 
+import { useSignOut } from "#/hooks/auth.hook.ts";
+import { useSession } from "#/lib/auth-client";
 import { Avatar, Button, Dropdown } from "@heroui/react";
-import { useLocation } from "@tanstack/react-router";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 import { Menu } from "lucide-react";
 
 const PAGE_TITLES: Record<string, string> = {
@@ -25,7 +27,20 @@ type Props = {
 
 export function AdminTopbar({ onMenuClick }: Props) {
 	const { pathname } = useLocation();
-	const pageTitle = PAGE_TITLES[pathname] ?? "Admin";
+  const pageTitle = PAGE_TITLES[pathname] ?? "Admin";
+
+ 	const { data: session } = useSession();
+  const userName = session?.user.name ?? "Admin";
+	const avatarImage = session?.user.image ?? "";
+	const userInitials = userName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
+
+	const { submitSignOut } = useSignOut();
+   const navigate = useNavigate();
+	
+	const handleSignOut = async () => {
+		const didSignOut = await submitSignOut();
+		if (didSignOut) navigate({ to: "/" });
+	};
 
 	return (
 		<header className="flex h-16 flex-shrink-0 items-center justify-between rounded-2xl border border-border bg-surface px-4 shadow-sm">
@@ -50,19 +65,18 @@ export function AdminTopbar({ onMenuClick }: Props) {
 					<div className="flex items-center gap-2.5 px-2 py-1.5">
 						<Avatar className="w-7 h-7">
 							<Avatar.Fallback className="text-xs bg-accent text-accent-foreground">
-								AU
+								{avatarImage ? <Avatar.Image src={avatarImage} alt={userName} /> : userInitials}
 							</Avatar.Fallback>
 						</Avatar>
 						<span className="hidden sm:block text-sm font-medium text-foreground">
-							Admin User
+							{userName}
 						</span>
 					</div>
 				</Dropdown.Trigger>
 				<Dropdown.Popover>
 					<Dropdown.Menu>
-						<Dropdown.Item>Profile</Dropdown.Item>
-						<Dropdown.Item>Settings</Dropdown.Item>
-						<Dropdown.Item className="text-danger">Sign out</Dropdown.Item>
+						<Dropdown.Item onAction={() => navigate({ to: "/admin/settings" })}>Settings</Dropdown.Item>
+						<Dropdown.Item className="text-danger" onClick={handleSignOut}>Sign out</Dropdown.Item>
 					</Dropdown.Menu>
 				</Dropdown.Popover>
 			</Dropdown>

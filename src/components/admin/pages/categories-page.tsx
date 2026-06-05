@@ -10,7 +10,6 @@ import {
 	TextField,
 } from "@heroui/react";
 import { ImageIcon, MoreHorizontal, Plus, Search } from "lucide-react";
-import { AdminPageHeader } from "#/components/admin/sections/admin-page";
 
 type AdminCategoryMock = {
 	id: string;
@@ -301,13 +300,7 @@ function CategoryStats() {
 export function CategoriesPage() {
 	return (
 		<div className="flex flex-col gap-6">
-			<AdminPageHeader
-				title="Categories"
-				description="Manage product category structure"
-			/>
-
 			<CategoryStats />
-
 			<div className="flex min-w-0 flex-col gap-3">
 				<CategoriesToolbar />
 				<CategoriesTable />

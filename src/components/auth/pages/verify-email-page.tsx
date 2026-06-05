@@ -28,7 +28,7 @@ export function VerifyEmailPage() {
 					otp: value.code,
 				});
 
-				if (isEmailVerified) {
+        if (isEmailVerified) {
 					navigate({ to: "/" });
 					reset();
 				}

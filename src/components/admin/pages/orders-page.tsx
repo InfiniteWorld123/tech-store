@@ -43,9 +43,7 @@ import {
 } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import {
-	AdminEmptyState,
-	AdminPageHeader,
-	AdminSectionError,
+	AdminEmptyState,	AdminSectionError,
 } from "#/components/admin/sections/admin-page";
 
 type OrderStatus = "pending" | "processing" | "completed" | "cancelled";
@@ -1833,11 +1831,6 @@ export function OrdersPage() {
 
 	return (
 		<div className="flex flex-col gap-6">
-			<AdminPageHeader
-				title="Orders"
-				description="Manage order queue, status, and archived order records"
-			/>
-
 			<OrderStatCards orders={orders} />
 
 			<Card className="border-accent/20 bg-accent/5 px-4 py-3">

@@ -43,7 +43,6 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
-import { AdminPageHeader } from "#/components/admin/sections/admin-page";
 import type {
 	GetCustomerMetricsOutputType,
 	GetOrderMetricsOutputType,
@@ -884,13 +883,7 @@ function ReviewsSection() {
 export function AnalyticsPage() {
 	return (
 		<div className="flex flex-col gap-8">
-			<AdminPageHeader
-				title="Analytics"
-				description="Store performance overview"
-			/>
-
 			<TopKpiCards />
-
 			<OrdersSection />
 			<PaymentsSection />
 			<ShippingSection />

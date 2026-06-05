@@ -24,11 +24,11 @@ export function SignInPage() {
 			password: "",
 		},
 		onSubmit: async ({ value }) => {
-			const didSignIn = await submitSignIn(value);
+			const result = await submitSignIn(value);
 
-			if (didSignIn) {
+			if (result.success) {
 				reset();
-				navigate({ to: "/" });
+				navigate({ to: result.isAdmin ? "/admin" : "/" });
 			}
 		},
 		validators: {

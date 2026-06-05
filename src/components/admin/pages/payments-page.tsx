@@ -42,7 +42,6 @@ import {
 import { type ReactNode, useState } from "react";
 import {
 	AdminEmptyState,
-	AdminPageHeader,
 	AdminSectionError,
 } from "#/components/admin/sections/admin-page";
 
@@ -1385,11 +1384,6 @@ export function PaymentsPage() {
 
 	return (
 		<div className="flex flex-col gap-6">
-			<AdminPageHeader
-				title="Payments"
-				description="Track payment records, methods, and collection status"
-			/>
-
 			<PaymentStatCards payments={MOCK_PAYMENTS} />
 
 			<Card className="border-accent/20 bg-accent/5 px-4 py-3">

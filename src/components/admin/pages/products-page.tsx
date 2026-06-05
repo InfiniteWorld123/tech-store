@@ -1,6 +1,5 @@
 import { Button, Disclosure } from "@heroui/react";
 import { SlidersHorizontal } from "lucide-react";
-import { AdminPageHeader } from "#/components/admin/sections/admin-page";
 import { ProductStatCards } from "#/components/admin/sections/product-stat-cards";
 import { ProductsFilterSidebar } from "#/components/admin/sections/products-filters";
 import { ProductsResults } from "#/components/admin/sections/products-view";
@@ -20,11 +19,6 @@ export function ProductsPage({
 }) {
 	return (
 		<div className="flex flex-col gap-6">
-			<AdminPageHeader
-				title="Products"
-				description="Manage your product catalog"
-			/>
-
 			<ProductStatCards />
 
 			<div className="lg:hidden">

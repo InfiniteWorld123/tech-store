@@ -42,9 +42,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import {
-	AdminEmptyState,
-	AdminPageHeader,
-	AdminSectionError,
+	AdminEmptyState,AdminSectionError,
 } from "#/components/admin/sections/admin-page";
 
 type ChipColor = "accent" | "default" | "danger" | "success" | "warning";
@@ -1878,11 +1876,6 @@ export function VariantsPage() {
 
 	return (
 		<div className="flex flex-col gap-6">
-			<AdminPageHeader
-				title="Variants"
-				description="Manage product variants, options, pricing, and stock"
-			/>
-
 			<VariantStatCards />
 
 			<Card className="border-accent/20 bg-accent/5 px-4 py-3">

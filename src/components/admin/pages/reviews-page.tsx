@@ -37,7 +37,6 @@ import {
 import { type ReactNode, useState } from "react";
 import {
 	AdminEmptyState,
-	AdminPageHeader,
 	AdminSectionError,
 } from "#/components/admin/sections/admin-page";
 
@@ -1224,11 +1223,6 @@ export function ReviewsPage() {
 
 	return (
 		<div className="flex flex-col gap-6">
-			<AdminPageHeader
-				title="Reviews"
-				description="Moderate customer reviews and track product feedback"
-			/>
-
 			<ReviewStatCards reviews={MOCK_REVIEWS} />
 
 			<Card className="border-accent/20 bg-accent/5 px-4 py-3">

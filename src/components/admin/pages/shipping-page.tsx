@@ -41,9 +41,7 @@ import {
 } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import {
-	AdminEmptyState,
-	AdminPageHeader,
-	AdminSectionError,
+	AdminEmptyState, AdminSectionError,
 } from "#/components/admin/sections/admin-page";
 
 type ShippingStatus =
@@ -1461,10 +1459,6 @@ export function ShippingPage() {
 
 	return (
 		<div className="flex flex-col gap-6">
-			<AdminPageHeader
-				title="Shipping"
-				description="Track shipment records, carriers, and delivery progress"
-			/>
 
 			<ShippingStatCards shipments={MOCK_SHIPMENTS} />
 

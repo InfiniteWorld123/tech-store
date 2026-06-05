@@ -28,7 +28,6 @@ import {
 	Trash2,
 } from "lucide-react";
 import { useState } from "react";
-import { AdminPageHeader } from "#/components/admin/sections/admin-page";
 
 type OptionKind = "colors" | "storage" | "ram" | "screens";
 
@@ -777,10 +776,6 @@ export function InventoryPage() {
 
 	return (
 		<div className="flex flex-col gap-6">
-			<AdminPageHeader
-				title="Options"
-				description="Manage reusable variant options"
-			/>
 
 			<OptionStats />
 

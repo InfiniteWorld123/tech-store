@@ -29,7 +29,6 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
-import { AdminPageHeader } from "#/components/admin/sections/admin-page";
 
 // ─── Mock data ─────────────────────────────────────────────────────────────────
 
@@ -686,7 +685,6 @@ function QuickNavGrid() {
 export function DashboardPage() {
 	return (
 		<div className="flex flex-col gap-6">
-			<AdminPageHeader title="Dashboard" description="Your store at a glance" />
 			<WelcomeBanner />
 			<KpiStrip />
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-3">

@@ -43,7 +43,6 @@ import {
 import { type ReactNode, useState } from "react";
 import {
 	AdminEmptyState,
-	AdminPageHeader,
 	AdminSectionError,
 } from "#/components/admin/sections/admin-page";
 
@@ -1282,11 +1281,6 @@ export function CustomersPage() {
 
 	return (
 		<div className="flex flex-col gap-6">
-			<AdminPageHeader
-				title="Customers"
-				description="Manage registered customers, roles, and account status"
-			/>
-
 			<CustomerStatCards customers={MOCK_CUSTOMERS} />
 
 			<Card className="border-accent/20 bg-accent/5 px-4 py-3">

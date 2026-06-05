@@ -12,7 +12,7 @@ export function ProductsResultsSkeleton({
 	className = "",
 }: {
 	className?: string;
-}) {
+  }) {
 	return (
 		<div className={`flex min-w-0 flex-col gap-3 lg:min-h-0 ${className}`}>
 			<div className="shrink-0 rounded-2xl border border-border bg-surface p-2 shadow-sm">
