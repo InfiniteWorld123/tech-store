@@ -35,7 +35,7 @@ function AdminLayout() {
 			/>
 			<div className="flex min-w-0 flex-1 flex-col gap-4 overflow-hidden">
 				<AdminTopbar onMenuClick={() => setMobileOpen(true)} />
-				<main className="flex-1 overflow-auto px-2 pb-2">
+				<main className="flex-1 overflow-auto px-2 pb-2 rounded-2xl border border-border bg-surface px-4 shadow-sm">
 					<Outlet />
 				</main>
 			</div>

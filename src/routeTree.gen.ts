@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CategoriesIndexRouteImport } from './routes/categories/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as CategoriesSlugRouteImport } from './routes/categories/$slug'
+import { Route as ApiUploadthingRouteImport } from './routes/api/uploadthing'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
 import { Route as AdminVariantsRouteImport } from './routes/admin/variants'
 import { Route as AdminShippingRouteImport } from './routes/admin/shipping'
@@ -72,6 +73,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const CategoriesSlugRoute = CategoriesSlugRouteImport.update({
   id: '/categories/$slug',
   path: '/categories/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiUploadthingRoute = ApiUploadthingRouteImport.update({
+  id: '/api/uploadthing',
+  path: '/api/uploadthing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiContactRoute = ApiContactRouteImport.update({
@@ -250,6 +256,7 @@ export interface FileRoutesByFullPath {
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/variants': typeof AdminVariantsRoute
   '/api/contact': typeof ApiContactRoute
+  '/api/uploadthing': typeof ApiUploadthingRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/categories/': typeof CategoriesIndexRoute
@@ -285,6 +292,7 @@ export interface FileRoutesByTo {
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/variants': typeof AdminVariantsRoute
   '/api/contact': typeof ApiContactRoute
+  '/api/uploadthing': typeof ApiUploadthingRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/admin': typeof AdminIndexRoute
   '/categories': typeof CategoriesIndexRoute
@@ -323,6 +331,7 @@ export interface FileRoutesById {
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/variants': typeof AdminVariantsRoute
   '/api/contact': typeof ApiContactRoute
+  '/api/uploadthing': typeof ApiUploadthingRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/categories/': typeof CategoriesIndexRoute
@@ -361,6 +370,7 @@ export interface FileRouteTypes {
     | '/admin/shipping'
     | '/admin/variants'
     | '/api/contact'
+    | '/api/uploadthing'
     | '/categories/$slug'
     | '/admin/'
     | '/categories/'
@@ -396,6 +406,7 @@ export interface FileRouteTypes {
     | '/admin/shipping'
     | '/admin/variants'
     | '/api/contact'
+    | '/api/uploadthing'
     | '/categories/$slug'
     | '/admin'
     | '/categories'
@@ -433,6 +444,7 @@ export interface FileRouteTypes {
     | '/admin/shipping'
     | '/admin/variants'
     | '/api/contact'
+    | '/api/uploadthing'
     | '/categories/$slug'
     | '/admin/'
     | '/categories/'
@@ -455,6 +467,7 @@ export interface RootRouteChildren {
   LandingTrackRoute: typeof LandingTrackRoute
   LandingWithdrawalRoute: typeof LandingWithdrawalRoute
   ApiContactRoute: typeof ApiContactRoute
+  ApiUploadthingRoute: typeof ApiUploadthingRoute
   CategoriesSlugRoute: typeof CategoriesSlugRoute
   CategoriesIndexRoute: typeof CategoriesIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -503,6 +516,13 @@ declare module '@tanstack/react-router' {
       path: '/categories/$slug'
       fullPath: '/categories/$slug'
       preLoaderRoute: typeof CategoriesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/uploadthing': {
+      id: '/api/uploadthing'
+      path: '/api/uploadthing'
+      fullPath: '/api/uploadthing'
+      preLoaderRoute: typeof ApiUploadthingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/contact': {
@@ -776,6 +796,7 @@ const rootRouteChildren: RootRouteChildren = {
   LandingTrackRoute: LandingTrackRoute,
   LandingWithdrawalRoute: LandingWithdrawalRoute,
   ApiContactRoute: ApiContactRoute,
+  ApiUploadthingRoute: ApiUploadthingRoute,
   CategoriesSlugRoute: CategoriesSlugRoute,
   CategoriesIndexRoute: CategoriesIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

@@ -32,6 +32,7 @@
     "@tanstack/react-router-ssr-query": "latest",
     "@tanstack/react-start": "latest",
     "@tanstack/router-plugin": "^1.132.0",
+    "@uploadthing/react": "^7.3.3",
     "better-auth": "^1.6.5",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
@@ -42,6 +43,7 @@
     "resend": "^6.12.2",
     "stripe": "^22.1.1",
     "tailwindcss": "^4.1.18",
+    "uploadthing": "^7.7.4",
     "zod": "^4.3.6"
   },
   "devDependencies": {

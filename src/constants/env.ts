@@ -24,7 +24,8 @@ export const env = {
 	STRIPE_WEBHOOK_SECRET: getEnvVar("STRIPE_WEBHOOK_SECRET"),
 	STRIPE_CURRENCY: getOptionalEnvVar("STRIPE_CURRENCY") ?? "eur",
 	EMAIL_FROM:
-		getOptionalEnvVar("EMAIL_FROM") ?? "Tech Store <no-reply@yamanwarda.dev>",
+    getOptionalEnvVar("EMAIL_FROM") ?? "Tech Store <no-reply@yamanwarda.dev>",
+  UPLOADTHING_TOKEN: getEnvVar("UPLOADTHING_TOKEN"),
 } as const;
 
 export type EnvVariables = typeof env;
