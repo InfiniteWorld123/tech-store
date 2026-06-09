@@ -1,7 +1,7 @@
 import { Card, Link, Skeleton } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, PackageSearch, TrendingUp } from "lucide-react";
-import { bestsellerProductsQueryOptions } from "#/queries/products.queries";
+import { useBestsellerProductsQueryOptions } from "#/hooks/products.hooks.ts";
 import { ProductCard } from "../ui/product-card";
 
 const BESTSELLER_PRODUCT_SKELETON_IDS = [
@@ -12,7 +12,7 @@ const BESTSELLER_PRODUCT_SKELETON_IDS = [
 ];
 
 export function BestsellersSection() {
-	const { data, isError, isLoading } = useQuery(bestsellerProductsQueryOptions);
+	const { data, isError, isLoading } = useQuery(useBestsellerProductsQueryOptions);
 	const products = data?.data.items ?? [];
 	const hasProducts = products.length > 0;
 

@@ -3,16 +3,20 @@ import { ensureSession } from "../auth/ensure-session.middleware";
 import {
 	createReviewSchema,
 	deleteReviewSchema,
-	getReviewSummarySchema,
-	listCustomerReviewsSchema,
-	listProductReviewsSchema,
+	getProductRatingSummarySchema,
+	getReviewByIdSchema,
+	listAllReviewsSchema,
+	listMyReviewsSchema,
+	listReviewsByProductSchema,
 	updateReviewSchema,
 } from "./reviews.schemas";
 import { createReview } from "./services/create-review.service";
 import { deleteReview } from "./services/delete-review.service";
-import { getReviewSummary } from "./services/get-review-summary.service";
-import { listCustomerReviews } from "./services/list-customer-reviews.service";
-import { listProductReviews } from "./services/list-product-reviews.service";
+import { getProductRatingSummary } from "./services/get-product-rating-summary.service";
+import { getReviewById } from "./services/get-review-by-id.service";
+import { listAllReviews } from "./services/list-all-reviews.service";
+import { listMyReviews } from "./services/list-my-reviews.service";
+import { listReviewsByProduct } from "./services/list-reviews-by-product.service";
 import { updateReview } from "./services/update-review.service";
 
 export const createReviewAction = createServerFn({ method: "POST" })
@@ -45,24 +49,38 @@ export const deleteReviewAction = createServerFn({ method: "POST" })
 		});
 	});
 
-export const listProductReviewsAction = createServerFn({ method: "GET" })
-	.inputValidator(listProductReviewsSchema)
+export const listReviewsByProductAction = createServerFn({ method: "GET" })
+	.inputValidator(listReviewsByProductSchema)
 	.handler(async ({ data }) => {
-		return listProductReviews(data);
+		return listReviewsByProduct(data);
 	});
 
-export const listCustomerReviewsAction = createServerFn({ method: "GET" })
+export const listMyReviewsAction = createServerFn({ method: "GET" })
 	.middleware([ensureSession])
-	.inputValidator(listCustomerReviewsSchema)
+	.inputValidator(listMyReviewsSchema)
 	.handler(async ({ context, data }) => {
-		return listCustomerReviews({
+		return listMyReviews({
 			...data,
 			userId: context.session.user.id,
 		});
 	});
 
-export const getReviewSummaryAction = createServerFn({ method: "GET" })
-	.inputValidator(getReviewSummarySchema)
+export const getProductRatingSummaryAction = createServerFn({ method: "GET" })
+	.inputValidator(getProductRatingSummarySchema)
 	.handler(async ({ data }) => {
-		return getReviewSummary(data);
+		return getProductRatingSummary(data);
+	});
+
+export const listAllReviewsAction = createServerFn({ method: "GET" })
+	.middleware([ensureSession])
+	.inputValidator(listAllReviewsSchema)
+	.handler(async ({ data }) => {
+		return listAllReviews(data);
+	});
+
+export const getReviewByIdAction = createServerFn({ method: "GET" })
+	.middleware([ensureSession])
+	.inputValidator(getReviewByIdSchema)
+	.handler(async ({ data }) => {
+		return getReviewById(data);
 	});

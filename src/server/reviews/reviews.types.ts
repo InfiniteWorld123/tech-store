@@ -2,9 +2,11 @@ import type { z } from "zod";
 import type {
 	createReviewSchema,
 	deleteReviewSchema,
-	getReviewSummarySchema,
-	listCustomerReviewsSchema,
-	listProductReviewsSchema,
+	getProductRatingSummarySchema,
+	getReviewByIdSchema,
+	listAllReviewsSchema,
+	listMyReviewsSchema,
+	listReviewsByProductSchema,
 	reviewRatingSchema,
 	updateReviewSchema,
 } from "./reviews.schemas";
@@ -29,7 +31,7 @@ export type ReviewWithCustomerType = ReviewType & {
 	};
 };
 
-export type CustomerReviewType = ReviewType & {
+export type ReviewWithProductType = ReviewType & {
 	product: {
 		id: string;
 		name: string;
@@ -38,7 +40,21 @@ export type CustomerReviewType = ReviewType & {
 	};
 };
 
-export type ReviewSummaryType = {
+export type ReviewWithCustomerAndProductType = ReviewType & {
+	customer: {
+		id: string;
+		name: string;
+		image: string | null;
+	};
+	product: {
+		id: string;
+		name: string;
+		slug: string;
+		image: string | null;
+	};
+};
+
+export type ProductRatingSummaryType = {
 	productId: string;
 	averageRating: number;
 	reviewsCount: number;
@@ -60,17 +76,21 @@ export type UpdateReviewSchemaInputType = z.infer<typeof updateReviewSchema>;
 
 export type DeleteReviewSchemaInputType = z.infer<typeof deleteReviewSchema>;
 
-export type ListProductReviewsSchemaInputType = z.infer<
-	typeof listProductReviewsSchema
+export type ListReviewsByProductSchemaInputType = z.infer<
+	typeof listReviewsByProductSchema
 >;
 
-export type ListCustomerReviewsSchemaInputType = z.infer<
-	typeof listCustomerReviewsSchema
+export type ListMyReviewsSchemaInputType = z.infer<typeof listMyReviewsSchema>;
+
+export type GetProductRatingSummarySchemaInputType = z.infer<
+	typeof getProductRatingSummarySchema
 >;
 
-export type GetReviewSummarySchemaInputType = z.infer<
-	typeof getReviewSummarySchema
+export type ListAllReviewsSchemaInputType = z.infer<
+	typeof listAllReviewsSchema
 >;
+
+export type GetReviewByIdSchemaInputType = z.infer<typeof getReviewByIdSchema>;
 
 // input types
 export type CreateReviewInputType = CreateReviewSchemaInputType & {
@@ -85,14 +105,18 @@ export type DeleteReviewInputType = DeleteReviewSchemaInputType & {
 	userId: string;
 };
 
-export type ListProductReviewsInputType = ListProductReviewsSchemaInputType;
+export type ListReviewsByProductInputType = ListReviewsByProductSchemaInputType;
 
-export type ListCustomerReviewsInputType =
-	ListCustomerReviewsSchemaInputType & {
-		userId: string;
-	};
+export type ListMyReviewsInputType = ListMyReviewsSchemaInputType & {
+	userId: string;
+};
 
-export type GetReviewSummaryInputType = GetReviewSummarySchemaInputType;
+export type GetProductRatingSummaryInputType =
+	GetProductRatingSummarySchemaInputType;
+
+export type ListAllReviewsInputType = ListAllReviewsSchemaInputType;
+
+export type GetReviewByIdInputType = GetReviewByIdSchemaInputType;
 
 // output types
 export type CreateReviewOutputType = {
@@ -108,7 +132,7 @@ export type DeleteReviewOutputType = {
 	deleted: boolean;
 };
 
-export type ListProductReviewsOutputType = {
+export type ListReviewsByProductOutputType = {
 	items: ReviewWithCustomerType[];
 	pagination: {
 		page: number;
@@ -120,8 +144,8 @@ export type ListProductReviewsOutputType = {
 	};
 };
 
-export type ListCustomerReviewsOutputType = {
-	items: CustomerReviewType[];
+export type ListMyReviewsOutputType = {
+	items: ReviewWithProductType[];
 	pagination: {
 		page: number;
 		limit: number;
@@ -132,6 +156,22 @@ export type ListCustomerReviewsOutputType = {
 	};
 };
 
-export type GetReviewSummaryOutputType = {
-	summary: ReviewSummaryType;
+export type GetProductRatingSummaryOutputType = {
+	summary: ProductRatingSummaryType;
+};
+
+export type ListAllReviewsOutputType = {
+	items: ReviewWithCustomerAndProductType[];
+	pagination: {
+		page: number;
+		limit: number;
+		total: number;
+		totalPages: number;
+		hasNextPage: boolean;
+		hasPreviousPage: boolean;
+	};
+};
+
+export type GetReviewByIdOutputType = {
+	review: ReviewWithCustomerAndProductType;
 };

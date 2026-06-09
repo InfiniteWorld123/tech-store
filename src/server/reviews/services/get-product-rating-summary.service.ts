@@ -6,13 +6,13 @@ import { product, review } from "#/db/schema";
 import { notFoundError } from "#/errors/app-error";
 import { handleError } from "#/errors/error-handler";
 import type {
-	GetReviewSummaryInputType,
-	GetReviewSummaryOutputType,
+	GetProductRatingSummaryInputType,
+	GetProductRatingSummaryOutputType,
 } from "../reviews.types";
 
-export const getReviewSummary = async (
-	data: GetReviewSummaryInputType,
-): Promise<JsonOk<GetReviewSummaryOutputType>> => {
+export const getProductRatingSummary = async (
+	data: GetProductRatingSummaryInputType,
+): Promise<JsonOk<GetProductRatingSummaryOutputType>> => {
 	try {
 		const { productId } = data;
 
@@ -38,9 +38,9 @@ export const getReviewSummary = async (
 			.from(review)
 			.where(eq(review.productId, productId));
 
-		return jsonOk<GetReviewSummaryOutputType>({
+		return jsonOk<GetProductRatingSummaryOutputType>({
 			status: HttpStatusCode.OK,
-			message: "Review summary fetched successfully",
+			message: "Product rating summary fetched successfully",
 			data: {
 				summary: {
 					productId,

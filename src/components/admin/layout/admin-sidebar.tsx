@@ -204,9 +204,10 @@ function SidebarContent({
 							const isActive = pathname === item.href;
 							return (
 								<LinkAnchor
+									preload="intent"
 									key={item.href}
 									to={item.href}
-									title={collapsed ? item.label : undefined}
+									aria-label={collapsed ? item.label : undefined}
 									className={`
 										flex items-center rounded-xl text-sm transition-colors
 										${collapsed ? "mx-auto mb-2 size-11 justify-center p-0" : "mb-0.5 gap-3 px-2 py-2"}

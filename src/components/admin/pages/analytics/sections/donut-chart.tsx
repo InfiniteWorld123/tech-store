@@ -1,5 +1,6 @@
 import { Skeleton } from "@heroui/react";
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import { useEffect, useState } from "react";
+import { Cell, Pie, PieChart, Tooltip } from "recharts";
 
 type DonutData = {
 	name: string;
@@ -16,43 +17,44 @@ type DonutChartProps = {
 const COLORS = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#14b8a6"];
 
 export function DonutChart({ title, data, isLoading, isError }: DonutChartProps) {
+	const [mounted, setMounted] = useState(false);
+	useEffect(() => { setMounted(true); }, []);
+
 	return (
 		<div className="bg-surface border border-border rounded-2xl p-4 shadow-sm space-y-4">
 			<p className="text-xs font-semibold uppercase tracking-widest text-muted">{title}</p>
 
 			{isError ? (
 				<p className="text-sm text-danger">Failed to load</p>
-			) : isLoading ? (
+			) : isLoading || !mounted ? (
 				<Skeleton className="h-48 w-full rounded-xl" />
 			) : (
 				<div className="flex items-center gap-6">
-					<ResponsiveContainer width={160} height={160}>
-						<PieChart>
-							<Pie
-								data={data}
-								cx="50%"
-								cy="50%"
-								innerRadius={45}
-								outerRadius={70}
-								paddingAngle={3}
-								dataKey="value"
-							>
-								{data.map((_, i) => (
-									<Cell key={`cell-${i}`} fill={COLORS[i % COLORS.length]} />
-								))}
-							</Pie>
-							<Tooltip
-								formatter={(value, name) => [value, name]}
-								contentStyle={{
-									borderRadius: "12px",
-									border: "1px solid var(--border)",
-									background: "var(--surface)",
-									color: "var(--foreground)",
-									fontSize: "12px",
-								}}
-							/>
-						</PieChart>
-					</ResponsiveContainer>
+					<PieChart width={160} height={160}>
+						<Pie
+							data={data}
+							cx="50%"
+							cy="50%"
+							innerRadius={45}
+							outerRadius={70}
+							paddingAngle={3}
+							dataKey="value"
+						>
+							{data.map((_, i) => (
+								<Cell key={`cell-${i}`} fill={COLORS[i % COLORS.length]} />
+							))}
+						</Pie>
+						<Tooltip
+							formatter={(value, name) => [value, name]}
+							contentStyle={{
+								borderRadius: "12px",
+								border: "1px solid var(--border)",
+								background: "var(--surface)",
+								color: "var(--foreground)",
+								fontSize: "12px",
+							}}
+						/>
+					</PieChart>
 
 					<ul className="flex flex-col gap-2 flex-1">
 						{data.map((entry, i) => (

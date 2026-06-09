@@ -1,35 +1,32 @@
-import { and, count, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq, ilike } from "drizzle-orm";
 import { HttpStatusCode } from "#/constants/http";
 import { type JsonOk, jsonOk } from "#/constants/json";
 import { db } from "#/db/drizzle";
 import { product, review, user } from "#/db/schema";
-import { notFoundError } from "#/errors/app-error";
 import { handleError } from "#/errors/error-handler";
 import type {
-	ListProductReviewsInputType,
-	ListProductReviewsOutputType,
+	ListAllReviewsInputType,
+	ListAllReviewsOutputType,
 } from "../reviews.types";
 
-export const listProductReviews = async (
-	data: ListProductReviewsInputType,
-): Promise<JsonOk<ListProductReviewsOutputType>> => {
+export const listAllReviews = async (
+	data: ListAllReviewsInputType,
+): Promise<JsonOk<ListAllReviewsOutputType>> => {
 	try {
-		const { limit, page, productId } = data;
+		const { limit, page, search, rating } = data;
 		const offset = (page - 1) * limit;
 
-		const [existingProduct] = await db
-			.select({ id: product.id })
-			.from(product)
-			.where(and(eq(product.id, productId), eq(product.isActive, true)));
+		const conditions = [
+			search ? ilike(review.title, `%${search}%`) : undefined,
+			rating ? eq(review.rating, rating.toString()) : undefined,
+		].filter((condition) => condition !== undefined);
 
-		if (!existingProduct) {
-			throw notFoundError("Product not found");
-		}
+		const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
 		const [totalRow] = await db
 			.select({ total: count(review.id) })
 			.from(review)
-			.where(eq(review.productId, productId));
+			.where(whereClause);
 
 		const rows = await db
 			.select({
@@ -44,10 +41,14 @@ export const listProductReviews = async (
 				customerId: user.id,
 				customerName: user.name,
 				customerImage: user.image,
+				productName: product.name,
+				productSlug: product.slug,
+				productImage: product.image,
 			})
 			.from(review)
 			.innerJoin(user, eq(user.id, review.userId))
-			.where(eq(review.productId, productId))
+			.innerJoin(product, eq(product.id, review.productId))
+			.where(whereClause)
 			.orderBy(desc(review.createdAt))
 			.limit(limit)
 			.offset(offset);
@@ -55,9 +56,9 @@ export const listProductReviews = async (
 		const total = totalRow.total;
 		const totalPages = Math.ceil(total / limit);
 
-		return jsonOk<ListProductReviewsOutputType>({
+		return jsonOk<ListAllReviewsOutputType>({
 			status: HttpStatusCode.OK,
-			message: "Product reviews fetched successfully",
+			message: "Reviews fetched successfully",
 			data: {
 				items: rows.map((row) => ({
 					id: row.id,
@@ -72,6 +73,12 @@ export const listProductReviews = async (
 						id: row.customerId,
 						name: row.customerName,
 						image: row.customerImage,
+					},
+					product: {
+						id: row.productId,
+						name: row.productName,
+						slug: row.productSlug,
+						image: row.productImage,
 					},
 				})),
 				pagination: {

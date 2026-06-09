@@ -10,7 +10,7 @@ export const defaultProductsInput = {
 	},
 } satisfies GetProductsInputType;
 
-export const featuredProductsQueryOptions = queryOptions({
+export const useFeaturedProductsQueryOptions = queryOptions({
 	queryKey: ["products", "featured"],
 	queryFn: () =>
 		getProductsAction({
@@ -21,7 +21,7 @@ export const featuredProductsQueryOptions = queryOptions({
 		}),
 });
 
-export const bestsellerProductsQueryOptions = queryOptions({
+export const useBestsellerProductsQueryOptions = queryOptions({
 	queryKey: ["products", "bestsellers"],
 	queryFn: () =>
 		getProductsAction({
@@ -32,7 +32,7 @@ export const bestsellerProductsQueryOptions = queryOptions({
 		}),
 });
 
-export const listProductsQueryOptions = ({
+export const useListProductsQueryOptions = ({
 	data,
 }: {
 	data: GetProductsInputType;
@@ -43,7 +43,7 @@ export const listProductsQueryOptions = ({
 	});
 };
 
-export const getProductMetricsQueryOptions = (data = {}) => {
+export const useGetProductMetricsQueryOptions = (data = {}) => {
 	return queryOptions({
 		queryKey: ["products", "metrics", data],
 		queryFn: () =>

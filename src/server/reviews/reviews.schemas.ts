@@ -41,17 +41,28 @@ export const deleteReviewSchema = z.object({
 	reviewId: z.uuid("Review id must be a valid UUID"),
 });
 
-export const listProductReviewsSchema = z.object({
+export const listReviewsByProductSchema = z.object({
 	productId: z.uuid("Product id must be a valid UUID"),
 	page: z.number().int().min(1).default(1),
 	limit: z.number().int().min(1).max(50).default(10),
 });
 
-export const listCustomerReviewsSchema = z.object({
+export const listMyReviewsSchema = z.object({
 	page: z.number().int().min(1).default(1),
 	limit: z.number().int().min(1).max(50).default(10),
 });
 
-export const getReviewSummarySchema = z.object({
+export const getProductRatingSummarySchema = z.object({
 	productId: z.uuid("Product id must be a valid UUID"),
+});
+
+export const listAllReviewsSchema = z.object({
+	page: z.number().int().min(1).default(1),
+	limit: z.number().int().min(1).max(50).default(10),
+	search: z.string().trim().max(100).optional(),
+	rating: z.number().int().min(1).max(5).optional(),
+});
+
+export const getReviewByIdSchema = z.object({
+	reviewId: z.uuid("Review id must be a valid UUID"),
 });
