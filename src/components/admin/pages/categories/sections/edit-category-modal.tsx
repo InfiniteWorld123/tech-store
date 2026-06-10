@@ -3,6 +3,7 @@ import { useForm } from "@tanstack/react-form";
 import { X } from "lucide-react";
 import { InputField } from "#/components/ui/fields/input-field";
 import { CategoryIconDisplay } from "#/components/ui/icons/category-icon";
+import { CategoryIconPicker } from "#/components/ui/icons/category-icon-picker";
 import { useUpdateCategory } from "#/hooks/use-update-category";
 import { Route } from "#/routes/admin/categories";
 import type { CategoryWithCount } from "#/server/catalog/categories/categories.types";
@@ -115,15 +116,12 @@ function EditCategoryForm({
 					}}
 				</Field>
 
-				{/* Icon name */}
+				{/* Icon picker */}
 				<Field name="icon">
 					{(field) => (
-						<InputField
-							label="Icon"
-							placeholder="e.g. Laptop, Smartphone, Headphones"
-							description="A Lucide icon name (PascalCase)."
-							value={field.state.value}
-							onChange={(v) => field.handleChange(v)}
+						<CategoryIconPicker
+							value={field.state.value || null}
+							onChange={(name) => field.handleChange(name ?? "")}
 						/>
 					)}
 				</Field>

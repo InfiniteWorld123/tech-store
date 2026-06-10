@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { useRef } from "react";
 import { InputField } from "#/components/ui/fields/input-field";
 import { CategoryIconDisplay } from "#/components/ui/icons/category-icon";
+import { CategoryIconPicker } from "#/components/ui/icons/category-icon-picker";
 import { useCreateCategory } from "#/hooks/use-create-category";
 import { Route } from "#/routes/admin/categories";
 import { categoryFormSchema } from "../category-form-schema";
@@ -133,15 +134,12 @@ export function CreateCategoryModal({ isOpen, onClose }: Props) {
 									}}
 								</Field>
 
-								{/* Icon name */}
+								{/* Icon picker */}
 								<Field name="icon">
 									{(field) => (
-										<InputField
-											label="Icon"
-											placeholder="e.g. Laptop, Smartphone, Headphones"
-											description="A Lucide icon name."
-											value={field.state.value}
-											onChange={(v) => field.handleChange(v)}
+										<CategoryIconPicker
+											value={field.state.value || null}
+											onChange={(name) => field.handleChange(name ?? "")}
 										/>
 									)}
 								</Field>
