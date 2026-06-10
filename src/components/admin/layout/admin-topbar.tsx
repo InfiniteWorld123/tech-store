@@ -3,7 +3,7 @@
 import { Avatar, Button, Dropdown } from "@heroui/react";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { Menu } from "lucide-react";
-import { useSignOut } from "#/hooks/auth.hook.ts";
+import { useSignOut } from "#/hooks/use-auth.ts";
 import { useSession } from "#/lib/auth-client";
 
 const PAGE_TITLES: Record<string, string> = {

@@ -11,7 +11,7 @@ import { SocialProviders } from "#/components/auth/sections/social-providers";
 import LinkAnchor from "#/components/ui/buttons/link-anchor";
 import { SubmitButton } from "#/components/ui/buttons/submit-button";
 import { InputField } from "#/components/ui/fields/input-field";
-import { useSignIn } from "#/hooks/auth.hook";
+import { useSignIn } from "#/hooks/use-auth";
 import { SignInSchema } from "#/server/auth/auth.schemas";
 
 export function SignInPage() {

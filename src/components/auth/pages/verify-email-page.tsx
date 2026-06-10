@@ -7,7 +7,7 @@ import { AuthCard } from "#/components/auth/sections/auth-card";
 import { AuthHeader } from "#/components/auth/sections/auth-header";
 import { SubmitButton } from "#/components/ui/buttons/submit-button";
 import { OtpField } from "#/components/ui/fields/otp-field";
-import { useSendOtp, useVerifyEmail } from "#/hooks/auth.hook";
+import { useSendOtp, useVerifyEmail } from "#/hooks/use-auth";
 
 export function VerifyEmailPage() {
 	const navigate = useNavigate();

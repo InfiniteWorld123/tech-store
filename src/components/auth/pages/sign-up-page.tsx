@@ -10,7 +10,7 @@ import { DividerWithText } from "#/components/auth/sections/divider-with-text";
 import { SocialProviders } from "#/components/auth/sections/social-providers";
 import { SubmitButton } from "#/components/ui/buttons/submit-button";
 import { InputField } from "#/components/ui/fields/input-field";
-import { useSendOtp, useSignUp } from "#/hooks/auth.hook";
+import { useSendOtp, useSignUp } from "#/hooks/use-auth";
 import { SignUpSchema } from "#/server/auth/auth.schemas";
 
 export function SignUpPage() {
