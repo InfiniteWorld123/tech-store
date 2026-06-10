@@ -2,7 +2,7 @@ import { Card, Skeleton } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Tags } from "lucide-react";
 import LinkAnchor from "#/components/ui/buttons/link-anchor";
-import { useCategoriesQueryOptions } from "#/hooks/categories.hooks";
+import { listCategoriesQueryOptions } from "#/queries/categories.queries.ts";
 import { CategoryCard } from "../ui/category-card";
 
 const CATEGORY_SKELETON_IDS = [
@@ -15,7 +15,7 @@ const CATEGORY_SKELETON_IDS = [
 ];
 
 export function CategoriesSection() {
-	const { data, isError, isLoading } = useQuery(useCategoriesQueryOptions);
+	const { data, isError, isLoading } = useQuery(listCategoriesQueryOptions({}));
 	const categories = data?.data.items.slice(0, 6) ?? [];
 	const hasCategories = categories.length > 0;
 

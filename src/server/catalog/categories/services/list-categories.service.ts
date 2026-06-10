@@ -1,9 +1,8 @@
-import type { SQL } from "drizzle-orm";
-import { eq, ilike } from "drizzle-orm";
+import { count, eq, ilike, type SQL } from "drizzle-orm";
 import { HttpStatusCode } from "#/constants/http";
 import { type JsonOk, jsonOk } from "#/constants/json";
 import { db } from "#/db/drizzle";
-import { category } from "#/db/schema";
+import { category, product } from "#/db/schema";
 import { handleError } from "#/errors/error-handler";
 import type {
 	ListCategoriesInputType,
@@ -34,15 +33,34 @@ export const listCategories = async (
 			}
 		}
 
+		const baseQuery = db
+			.select({
+				id: category.id,
+				name: category.name,
+				slug: category.slug,
+				icon: category.icon,
+				iconColor: category.iconColor,
+				iconBg: category.iconBg,
+				createdAt: category.createdAt,
+				updatedAt: category.updatedAt,
+				totalProducts: count(product.id),
+			})
+			.from(category)
+			.leftJoin(product, eq(product.categoryId, category.id))
+			.groupBy(category.id);
+
 		const listedCategories = searchCondition
-			? await db.select().from(category).where(searchCondition)
-			: await db.select().from(category);
+			? await baseQuery.where(searchCondition)
+			: await baseQuery;
 
 		const items = listedCategories.map((item) => ({
 			id: item.id,
 			name: item.name,
 			slug: item.slug,
-			image: item.image ?? null,
+			icon: item.icon ?? null,
+			iconColor: item.iconColor ?? null,
+			iconBg: item.iconBg ?? null,
+			totalProducts: item.totalProducts,
 			createdAt: item.createdAt.toISOString(),
 			updatedAt: item.updatedAt.toISOString(),
 		}));

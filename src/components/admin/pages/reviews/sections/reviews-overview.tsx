@@ -1,12 +1,12 @@
 import { AnalyticsSection } from "#/components/admin/pages/analytics/sections/analytics-section";
 import { HorizontalBarChart } from "#/components/admin/pages/analytics/sections/horizontal-bar-chart";
 import { StatCard } from "#/components/admin/pages/analytics/sections/stat-card";
-import { useGetReviewMetricsQueryOptions } from "#/hooks/analytics.hook";
+import { reviewMetricsQueryOptions } from "#/queries";
 import { useQuery } from "@tanstack/react-query";
 import { BarChart2, Star } from "lucide-react";
 
 export function ReviewsOverview() {
-	const { data, isLoading, isError } = useQuery(useGetReviewMetricsQueryOptions());
+	const { data, isLoading, isError } = useQuery(reviewMetricsQueryOptions());
 
 	const statCards = [
 		{ label: "Total Reviews", value: data?.data.totalReviews, icon: BarChart2, color: "accent" },

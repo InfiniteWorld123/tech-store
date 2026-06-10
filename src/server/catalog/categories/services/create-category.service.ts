@@ -14,7 +14,7 @@ export const createCategory = async (
 	data: CreateCategoryInputType,
 ): Promise<JsonOk<CreateCategoryOutputType>> => {
 	try {
-		const { image, name, slug } = data;
+		const { icon, iconColor, iconBg, name, slug } = data;
 
 		const existingCategories = await db
 			.select({
@@ -36,8 +36,10 @@ export const createCategory = async (
 			.insert(category)
 			.values({
 				name,
-				image,
 				slug,
+				icon,
+				iconColor,
+				iconBg,
 			})
 			.returning();
 
@@ -53,7 +55,9 @@ export const createCategory = async (
 					id: createdCategory.id,
 					name: createdCategory.name,
 					slug: createdCategory.slug,
-					image: createdCategory.image ?? null,
+					icon: createdCategory.icon ?? null,
+					iconColor: createdCategory.iconColor ?? null,
+					iconBg: createdCategory.iconBg ?? null,
 					createdAt: createdCategory.createdAt.toISOString(),
 					updatedAt: createdCategory.updatedAt.toISOString(),
 				},

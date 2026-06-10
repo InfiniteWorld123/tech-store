@@ -11,9 +11,15 @@ export type Category = {
 	id: string;
 	name: string;
 	slug: string;
-	image: string | null;
+	icon: string | null;
+	iconColor: string | null;
+	iconBg: string | null;
 	createdAt: string;
 	updatedAt: string;
+};
+
+export type CategoryWithCount = Category & {
+	totalProducts: number;
 };
 
 // input types
@@ -39,7 +45,7 @@ export type UpdateCategoryOutputType = {
 };
 
 export type ListCategoriesOutputType = {
-	items: Category[];
+	items: CategoryWithCount[];
 	query: {
 		searching?: ListCategoriesInputType["searching"];
 	};

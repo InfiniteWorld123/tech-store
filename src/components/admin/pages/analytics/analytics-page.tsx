@@ -1,12 +1,12 @@
 import {
-	useGetCartMetricsQueryOptions,
-	useGetCustomerMetricsQueryOptions,
-	useGetOrderMetricsQueryOptions,
-	useGetPaymentsMetricsQueryOptions,
-	useGetProductMetricsQueryOptions,
-	useGetReviewMetricsQueryOptions,
-	useGetShippingMetricsQueryOptions,
-} from "#/hooks/analytics.hook";
+	cartMetricsQueryOptions,
+	customerMetricsQueryOptions,
+	orderMetricsQueryOptions,
+	paymentsMetricsQueryOptions,
+	productMetricsQueryOptions,
+	reviewMetricsQueryOptions,
+	shippingMetricsQueryOptions,
+} from "#/queries";
 import { useQuery } from "@tanstack/react-query";
 import {
 	Archive,
@@ -37,13 +37,13 @@ import { HorizontalBarChart } from "./sections/horizontal-bar-chart";
 import { StatCard } from "./sections/stat-card";
 
 export function AnalyticsPage() {
-	const { data: orderMetrics, isLoading: isLoadingOrders, isError: isErrorOrders } = useQuery(useGetOrderMetricsQueryOptions());
-	const { data: paymentMetrics, isLoading: isLoadingPayments, isError: isErrorPayments } = useQuery(useGetPaymentsMetricsQueryOptions());
-	const { data: shippingMetrics, isLoading: isLoadingShipping, isError: isErrorShipping } = useQuery(useGetShippingMetricsQueryOptions());
-	const { data: productMetrics, isLoading: isLoadingProducts, isError: isErrorProducts } = useQuery(useGetProductMetricsQueryOptions());
-	const { data: reviewMetrics, isLoading: isLoadingReviews, isError: isErrorReviews } = useQuery(useGetReviewMetricsQueryOptions());
-	const { data: customerMetrics, isLoading: isLoadingCustomers, isError: isErrorCustomers } = useQuery(useGetCustomerMetricsQueryOptions());
-	const { data: cartMetrics, isLoading: isLoadingCarts, isError: isErrorCarts } = useQuery(useGetCartMetricsQueryOptions());
+	const { data: orderMetrics, isLoading: isLoadingOrders, isError: isErrorOrders } = useQuery(orderMetricsQueryOptions());
+	const { data: paymentMetrics, isLoading: isLoadingPayments, isError: isErrorPayments } = useQuery(paymentsMetricsQueryOptions());
+	const { data: shippingMetrics, isLoading: isLoadingShipping, isError: isErrorShipping } = useQuery(shippingMetricsQueryOptions());
+	const { data: productMetrics, isLoading: isLoadingProducts, isError: isErrorProducts } = useQuery(productMetricsQueryOptions());
+	const { data: reviewMetrics, isLoading: isLoadingReviews, isError: isErrorReviews } = useQuery(reviewMetricsQueryOptions());
+	const { data: customerMetrics, isLoading: isLoadingCustomers, isError: isErrorCustomers } = useQuery(customerMetricsQueryOptions());
+	const { data: cartMetrics, isLoading: isLoadingCarts, isError: isErrorCarts } = useQuery(cartMetricsQueryOptions());
 
 	// ── Orders ───────────────────────────────────────────────────────────────
 	const orderStatCards = [

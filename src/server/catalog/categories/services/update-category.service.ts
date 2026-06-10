@@ -18,7 +18,7 @@ export const updateCategory = async (
 	data: UpdateCategoryInputType,
 ): Promise<JsonOk<UpdateCategoryOutputType>> => {
 	try {
-		const { categoryId, name, slug, image } = data;
+		const { categoryId, name, slug, icon, iconColor, iconBg } = data;
 
 		const [existingCategory] = await db
 			.select({ id: category.id })
@@ -43,7 +43,9 @@ export const updateCategory = async (
 		const updateFields = {
 			...(name !== undefined ? { name } : {}),
 			...(slug !== undefined ? { slug } : {}),
-			...(image !== undefined ? { image } : {}),
+			...(icon !== undefined ? { icon } : {}),
+			...(iconColor !== undefined ? { iconColor } : {}),
+			...(iconBg !== undefined ? { iconBg } : {}),
 		};
 
 		if (Object.keys(updateFields).length === 0) {
@@ -68,7 +70,9 @@ export const updateCategory = async (
 					id: updatedCategory.id,
 					name: updatedCategory.name,
 					slug: updatedCategory.slug,
-					image: updatedCategory.image ?? null,
+					icon: updatedCategory.icon ?? null,
+					iconColor: updatedCategory.iconColor ?? null,
+					iconBg: updatedCategory.iconBg ?? null,
 					createdAt: updatedCategory.createdAt.toISOString(),
 					updatedAt: updatedCategory.updatedAt.toISOString(),
 				},

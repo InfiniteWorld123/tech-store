@@ -1,9 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ReviewsPage } from "#/components/admin/pages/reviews/reviews-page.tsx";
-import {
-	useGetReviewMetricsQueryOptions,
-	useListAllReviewsQueryOptions,
-} from "#/hooks/reviews.hook";
+import { listAllReviewsQueryOptions } from "../../queries/reviews.queries.ts";
+import { reviewMetricsQueryOptions } from "../../queries/analytics.queries.ts";
 import { listAllReviewsSchema } from "../../server/reviews/reviews.schemas.ts"
 
 export const Route = createFileRoute("/admin/reviews")({
@@ -15,8 +13,8 @@ export const Route = createFileRoute("/admin/reviews")({
 		rating: search.rating,
 	}),
 	loader: ({ context, deps }) => Promise.all([
-		context.queryClient.ensureQueryData(useListAllReviewsQueryOptions(deps)),
-		context.queryClient.ensureQueryData(useGetReviewMetricsQueryOptions()),
+		context.queryClient.ensureQueryData(listAllReviewsQueryOptions(deps)),
+		context.queryClient.ensureQueryData(reviewMetricsQueryOptions()),
 	]),
 	component: ReviewsPage,
 	pendingComponent: () => <div></div>,

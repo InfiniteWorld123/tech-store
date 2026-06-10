@@ -1,5 +1,5 @@
-import { Card } from "@heroui/react";
 import { createFileRoute } from "@tanstack/react-router";
+import { CategoryDetailPage } from "#/components/catalog/pages/category-detail-page";
 
 export const Route = createFileRoute("/categories/$slug")({
 	component: RouteComponent,
@@ -7,16 +7,5 @@ export const Route = createFileRoute("/categories/$slug")({
 
 function RouteComponent() {
 	const { slug } = Route.useParams();
-
-	return (
-		<Card className="m-6 p-8">
-			<Card.Header>
-				<Card.Title>{slug}</Card.Title>
-				<Card.Description>
-					Products for this category will appear here when the catalog page is
-					connected.
-				</Card.Description>
-			</Card.Header>
-		</Card>
-	);
+	return <CategoryDetailPage slug={slug} />;
 }

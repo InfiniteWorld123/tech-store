@@ -1,7 +1,7 @@
 import { Card, Link, Skeleton } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, PackageSearch } from "lucide-react";
-import { useFeaturedProductsQueryOptions } from "#/hooks/products.hooks";
+import { featuredProductsQueryOptions } from "#/queries/products.queries.ts";
 import { ProductCard } from "../ui/product-card";
 
 const FEATURED_PRODUCT_SKELETON_IDS = [
@@ -12,7 +12,7 @@ const FEATURED_PRODUCT_SKELETON_IDS = [
 ];
 
 export function FeaturedProductsSection() {
-	const { data, isError, isLoading } = useQuery(useFeaturedProductsQueryOptions);
+	const { data, isError, isLoading } = useQuery(featuredProductsQueryOptions);
 	const products = data?.data.items ?? [];
 	const hasProducts = products.length > 0;
 

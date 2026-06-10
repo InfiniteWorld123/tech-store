@@ -16,7 +16,9 @@ export const category = pgTable(
 		id: uuidId(),
 		name: text("name").notNull(),
 		slug: text("slug").notNull(),
-		image: text("image"),
+		icon: text("icon"),
+		iconColor: text("icon_color"),
+		iconBg: text("icon_bg"),
 		...timestamps,
 	},
 	(table) => [

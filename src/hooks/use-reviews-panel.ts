@@ -1,4 +1,4 @@
-import { useListAllReviewsQueryOptions } from "#/hooks/reviews.hook";
+import { listAllReviewsQueryOptions } from "#/queries";
 import { Route } from "#/routes/admin/reviews";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
@@ -20,7 +20,7 @@ export function useReviewsPanel() {
     }, [inputValue]);
 
     const { data, isLoading, isError } = useQuery(
-        useListAllReviewsQueryOptions({ search: deferredSearch, rating, page, limit })
+        listAllReviewsQueryOptions({ search: deferredSearch, rating, page, limit })
     );
 
     const setRating = (value: number | undefined) =>
@@ -33,12 +33,12 @@ export function useReviewsPanel() {
 
     const prefetchPage = (targetPage: number) =>
         queryClient.prefetchQuery(
-            useListAllReviewsQueryOptions({ search, rating, page: targetPage, limit })
+            listAllReviewsQueryOptions({ search, rating, page: targetPage, limit })
         );
 
     const prefetchRating = (value: number | undefined) =>
         queryClient.prefetchQuery(
-            useListAllReviewsQueryOptions({ search, rating: value, page: 1, limit })
+            listAllReviewsQueryOptions({ search, rating: value, page: 1, limit })
         );
 
     return {
