@@ -8,8 +8,8 @@ import {
 	updateCartItemQuantitySchema,
 	validateCartSchema,
 } from "./cart.schemas";
-import { resolveCartOwnerMiddleware } from "./middlewares/resolveCartOwnerMiddleware";
-import { resolveMergeCartOwnerMiddleware } from "./middlewares/resolveMergeCartOwnerMiddleware";
+import { resolveCartOwnerMiddleware } from "./middlewares/resolve-cart-owner.middleware";
+import { resolveMergeCartOwnerMiddleware } from "./middlewares/resolve-merge-cart-owner.middleware";
 import { addToCart } from "./services/add-to-cart.service";
 import { clearCart } from "./services/clear-cart.service";
 import { getCart } from "./services/get-cart.service";
