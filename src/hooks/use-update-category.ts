@@ -1,10 +1,10 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@heroui/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateCategoryAction } from "#/server/catalog/categories/categories.actions";
 import type {
-	UpdateCategoryInputType,
 	ListCategoriesInputType,
 	ListCategoriesOutputType,
+	UpdateCategoryInputType,
 } from "#/server/catalog/categories/categories.types";
 
 type CategoriesCache = {
@@ -24,7 +24,8 @@ export function useUpdateCategory({
 	const queryKey = ["categories", { searching }];
 
 	return useMutation({
-		mutationFn: (data: UpdateCategoryInputType) => updateCategoryAction({ data }),
+		mutationFn: (data: UpdateCategoryInputType) =>
+			updateCategoryAction({ data }),
 
 		// --- Optimistic update ---
 		onMutate: async (updated) => {
@@ -44,8 +45,7 @@ export function useUpdateCategory({
 										name: updated.name ?? item.name,
 										slug: updated.slug ?? item.slug,
 										// undefined means "not touched"; null means "explicitly cleared"
-										icon:
-											updated.icon !== undefined ? updated.icon : item.icon,
+										icon: updated.icon !== undefined ? updated.icon : item.icon,
 										iconColor:
 											updated.iconColor !== undefined
 												? updated.iconColor
@@ -56,7 +56,7 @@ export function useUpdateCategory({
 												: item.iconBg,
 										updatedAt: new Date().toISOString(),
 									}
-								: item
+								: item,
 						),
 					},
 				};
@@ -66,11 +66,13 @@ export function useUpdateCategory({
 		},
 
 		// --- Rollback on error ---
-		onError: (err: any, _vars, context) => {
+		onError: (err, _vars, context) => {
 			if (context?.previous) {
 				queryClient.setQueryData(queryKey, context.previous);
 			}
-			toast.danger(err?.message ?? "Failed to update category. Please try again.");
+			toast.danger(
+				err.message || "Failed to update category. Please try again.",
+			);
 		},
 
 		// --- Toast on confirmed success ---

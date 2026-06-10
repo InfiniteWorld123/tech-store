@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { AlertTriangle, Loader2 } from "lucide-react";
+import { useState } from "react";
 import { useCategoriesPage } from "#/hooks/use-categories-page";
 import type { CategoryWithCount } from "#/server/catalog/categories/categories.types";
 import { CategoriesTable } from "./sections/categories-table";
@@ -13,9 +13,12 @@ import { EditCategoryModal } from "./sections/edit-category-modal";
 export function CategoriesPage() {
 	const [createOpen, setCreateOpen] = useState(false);
 	const [editTarget, setEditTarget] = useState<CategoryWithCount | null>(null);
-	const [deleteTarget, setDeleteTarget] = useState<CategoryWithCount | null>(null);
+	const [deleteTarget, setDeleteTarget] = useState<CategoryWithCount | null>(
+		null,
+	);
 
-	const { inputValue, setInputValue, items, isLoading, isError } = useCategoriesPage();
+	const { inputValue, setInputValue, items, isLoading, isError } =
+		useCategoriesPage();
 
 	return (
 		<div className="space-y-4 py-6">

@@ -1,16 +1,26 @@
+import { useQuery } from "@tanstack/react-query";
+import { BarChart2, Star } from "lucide-react";
 import { AnalyticsSection } from "#/components/admin/pages/analytics/sections/analytics-section";
 import { HorizontalBarChart } from "#/components/admin/pages/analytics/sections/horizontal-bar-chart";
 import { StatCard } from "#/components/admin/pages/analytics/sections/stat-card";
 import { reviewMetricsQueryOptions } from "#/queries";
-import { useQuery } from "@tanstack/react-query";
-import { BarChart2, Star } from "lucide-react";
 
 export function ReviewsOverview() {
 	const { data, isLoading, isError } = useQuery(reviewMetricsQueryOptions());
 
 	const statCards = [
-		{ label: "Total Reviews", value: data?.data.totalReviews, icon: BarChart2, color: "accent" },
-		{ label: "Avg Rating", value: data?.data.averageRating?.toFixed(1), icon: Star, color: "success" },
+		{
+			label: "Total Reviews",
+			value: data?.data.totalReviews,
+			icon: BarChart2,
+			color: "accent",
+		},
+		{
+			label: "Avg Rating",
+			value: data?.data.averageRating?.toFixed(1),
+			icon: Star,
+			color: "success",
+		},
 	] as const;
 
 	const starDistributionData = [

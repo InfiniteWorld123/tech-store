@@ -5,8 +5,8 @@ import {
 	requestPasswordReset,
 	resetPassword,
 	signIn,
-  signUp,
-  signOut,
+	signOut,
+	signUp,
 } from "#/lib/auth-client";
 import type { SignUpType } from "#/server/auth/auth.types";
 
@@ -193,22 +193,22 @@ export const useResetPassword = () => {
 };
 
 export const useSignOut = () => {
-  const [signOutError, setSignOutError] = useState<string | null>(null);
+	const [signOutError, setSignOutError] = useState<string | null>(null);
 
-  const submitSignOut = async (): Promise<boolean> => {
-    const { error } = await signOut();
+	const submitSignOut = async (): Promise<boolean> => {
+		const { error } = await signOut();
 
-    if (error) {
-      const errMsg = error.message || "Failed to sign out. Please try again.";
-      setSignOutError(errMsg);
-      toast.danger(errMsg);
-      return false;
-    }
+		if (error) {
+			const errMsg = error.message || "Failed to sign out. Please try again.";
+			setSignOutError(errMsg);
+			toast.danger(errMsg);
+			return false;
+		}
 
-    toast.success("Signed out successfully");
-    setSignOutError(null);
-    return true;
-  };
+		toast.success("Signed out successfully");
+		setSignOutError(null);
+		return true;
+	};
 
-  return { signOutError, submitSignOut };
+	return { signOutError, submitSignOut };
 };

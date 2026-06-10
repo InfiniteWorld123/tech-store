@@ -14,15 +14,31 @@ type DonutChartProps = {
 	isError: boolean;
 };
 
-const COLORS = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#14b8a6"];
+const COLORS = [
+	"#6366f1",
+	"#22c55e",
+	"#f59e0b",
+	"#ef4444",
+	"#8b5cf6",
+	"#14b8a6",
+];
 
-export function DonutChart({ title, data, isLoading, isError }: DonutChartProps) {
+export function DonutChart({
+	title,
+	data,
+	isLoading,
+	isError,
+}: DonutChartProps) {
 	const [mounted, setMounted] = useState(false);
-	useEffect(() => { setMounted(true); }, []);
+	useEffect(() => {
+		setMounted(true);
+	}, []);
 
 	return (
 		<div className="bg-surface border border-border rounded-2xl p-4 shadow-sm space-y-4">
-			<p className="text-xs font-semibold uppercase tracking-widest text-muted">{title}</p>
+			<p className="text-xs font-semibold uppercase tracking-widest text-muted">
+				{title}
+			</p>
 
 			{isError ? (
 				<p className="text-sm text-danger">Failed to load</p>
@@ -40,8 +56,8 @@ export function DonutChart({ title, data, isLoading, isError }: DonutChartProps)
 							paddingAngle={3}
 							dataKey="value"
 						>
-							{data.map((_, i) => (
-								<Cell key={`cell-${i}`} fill={COLORS[i % COLORS.length]} />
+							{data.map((entry, i) => (
+								<Cell key={entry.name} fill={COLORS[i % COLORS.length]} />
 							))}
 						</Pie>
 						<Tooltip
@@ -58,15 +74,22 @@ export function DonutChart({ title, data, isLoading, isError }: DonutChartProps)
 
 					<ul className="flex flex-col gap-2 flex-1">
 						{data.map((entry, i) => (
-							<li key={entry.name} className="flex items-center justify-between gap-2">
+							<li
+								key={entry.name}
+								className="flex items-center justify-between gap-2"
+							>
 								<div className="flex items-center gap-2">
 									<span
 										className="size-2.5 rounded-full flex-shrink-0"
 										style={{ background: COLORS[i % COLORS.length] }}
 									/>
-									<span className="text-xs text-muted capitalize">{entry.name.replace(/_/g, " ")}</span>
+									<span className="text-xs text-muted capitalize">
+										{entry.name.replace(/_/g, " ")}
+									</span>
 								</div>
-								<span className="text-xs font-semibold text-foreground">{entry.value}</span>
+								<span className="text-xs font-semibold text-foreground">
+									{entry.value}
+								</span>
 							</li>
 						))}
 					</ul>

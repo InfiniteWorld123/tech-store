@@ -1,8 +1,8 @@
 import { AlertDialog, Button } from "@heroui/react";
 import { Trash2 } from "lucide-react";
 import { useDeleteCategory } from "#/hooks/use-delete-category";
-import type { CategoryWithCount } from "#/server/catalog/categories/categories.types";
 import { Route } from "#/routes/admin/categories";
+import type { CategoryWithCount } from "#/server/catalog/categories/categories.types";
 
 type Props = {
 	category: CategoryWithCount | null;
@@ -11,7 +11,10 @@ type Props = {
 
 export function DeleteCategoryDialog({ category, onClose }: Props) {
 	const { searching } = Route.useSearch();
-	const { mutate, isPending } = useDeleteCategory({ onSuccess: onClose, searching });
+	const { mutate, isPending } = useDeleteCategory({
+		onSuccess: onClose,
+		searching,
+	});
 
 	const handleDelete = () => {
 		if (!category) return;

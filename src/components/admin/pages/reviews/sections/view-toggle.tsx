@@ -19,6 +19,7 @@ export function ViewToggle({ value, onChange }: ViewToggleProps) {
 			{views.map(({ mode, icon: Icon, label }) => (
 				<button
 					key={mode}
+					type="button"
 					onClick={() => onChange(mode)}
 					title={label}
 					className={`flex items-center justify-center size-8 rounded-lg transition-all ${

@@ -7,7 +7,11 @@ type AnalyticsSectionProps = {
 	children: ReactNode;
 };
 
-export function AnalyticsSection({ title, icon: Icon, children }: AnalyticsSectionProps) {
+export function AnalyticsSection({
+	title,
+	icon: Icon,
+	children,
+}: AnalyticsSectionProps) {
 	return (
 		<div className="bg-surface border border-border rounded-2xl p-5 shadow-sm space-y-4">
 			<div className="flex items-center gap-2 pb-1 border-b border-border">

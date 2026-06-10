@@ -12,7 +12,11 @@ export function StarRating({ rating, size = 13 }: StarRatingProps) {
 				<Star
 					key={star}
 					size={size}
-					className={star <= rating ? "fill-warning text-warning" : "fill-default text-default"}
+					className={
+						star <= rating
+							? "fill-warning text-warning"
+							: "fill-default text-default"
+					}
 				/>
 			))}
 		</div>

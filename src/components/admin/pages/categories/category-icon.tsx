@@ -1,11 +1,14 @@
-import type { ComponentType } from "react";
+import type { LucideProps } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { Tags } from "lucide-react";
-import type { LucideProps } from "lucide-react";
+import type { ComponentType } from "react";
 
 // Renders a lucide icon by its PascalCase string name (e.g. "Laptop", "Smartphone").
 // Falls back to <Tags> if the name is null or not a valid lucide icon.
-export function DynamicIcon({ name, ...props }: LucideProps & { name: string | null }) {
+export function DynamicIcon({
+	name,
+	...props
+}: LucideProps & { name: string | null }) {
 	if (name) {
 		const Icon = (LucideIcons as Record<string, unknown>)[name];
 		if (typeof Icon === "function") {

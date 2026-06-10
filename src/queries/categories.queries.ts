@@ -3,7 +3,7 @@ import { listCategoriesAction } from "#/server/catalog/categories/categories.act
 import type { ListCategoriesInputType } from "#/server/catalog/categories/categories.types";
 
 export const listCategoriesQueryOptions = (data: ListCategoriesInputType) =>
-    queryOptions({
-        queryKey: ["categories", data],
-        queryFn: () => listCategoriesAction({ data }),
-    });
+	queryOptions({
+		queryKey: ["categories", data],
+		queryFn: () => listCategoriesAction({ data }),
+	});

@@ -27,23 +27,34 @@ function EmptyState({ hasSearch }: { hasSearch: boolean }) {
 	);
 }
 
-
 export function CategoriesTable({ categories, onEdit, onDelete }: Props) {
 	if (categories.length === 0) {
 		return <EmptyState hasSearch={false} />;
 	}
-	
+
 	return (
 		<div className="overflow-x-auto">
 			<table className="w-full text-sm">
 				<thead>
 					<tr className="border-b border-border">
-						<th className="text-left py-3 px-2 text-xs font-semibold text-muted">Category</th>
-						<th className="text-left py-3 px-2 text-xs font-semibold text-muted">Slug</th>
-						<th className="text-left py-3 px-2 text-xs font-semibold text-muted">Products</th>
-						<th className="text-left py-3 px-2 text-xs font-semibold text-muted">Created</th>
-						<th className="text-left py-3 px-2 text-xs font-semibold text-muted">Updated</th>
-						<th className="text-right py-3 px-2 text-xs font-semibold text-muted">Actions</th>
+						<th className="text-left py-3 px-2 text-xs font-semibold text-muted">
+							Category
+						</th>
+						<th className="text-left py-3 px-2 text-xs font-semibold text-muted">
+							Slug
+						</th>
+						<th className="text-left py-3 px-2 text-xs font-semibold text-muted">
+							Products
+						</th>
+						<th className="text-left py-3 px-2 text-xs font-semibold text-muted">
+							Created
+						</th>
+						<th className="text-left py-3 px-2 text-xs font-semibold text-muted">
+							Updated
+						</th>
+						<th className="text-right py-3 px-2 text-xs font-semibold text-muted">
+							Actions
+						</th>
 					</tr>
 				</thead>
 				<tbody>

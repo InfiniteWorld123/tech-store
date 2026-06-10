@@ -42,7 +42,9 @@ export function HorizontalBarChart({
 								<span className="text-xs capitalize text-foreground font-medium">
 									{item.name.replace(/_/g, " ")}
 								</span>
-								<span className="text-xs font-semibold text-muted">{item.value}</span>
+								<span className="text-xs font-semibold text-muted">
+									{item.value}
+								</span>
 							</div>
 							<div className="h-2 w-full rounded-full bg-default overflow-hidden">
 								<div

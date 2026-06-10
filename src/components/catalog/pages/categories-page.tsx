@@ -5,12 +5,54 @@ import { Footer } from "#/components/layout/footer";
 import { Header } from "#/components/layout/header";
 
 const MOCK_CATEGORIES = [
-	{ id: "1", name: "Laptops", slug: "laptops", image: null, createdAt: "", updatedAt: "" },
-	{ id: "2", name: "Smartphones", slug: "smartphones", image: null, createdAt: "", updatedAt: "" },
-	{ id: "3", name: "Tablets", slug: "tablets", image: null, createdAt: "", updatedAt: "" },
-	{ id: "4", name: "Audio", slug: "audio", image: null, createdAt: "", updatedAt: "" },
-	{ id: "5", name: "Accessories", slug: "accessories", image: null, createdAt: "", updatedAt: "" },
-	{ id: "6", name: "Gaming", slug: "gaming", image: null, createdAt: "", updatedAt: "" },
+	{
+		id: "1",
+		name: "Laptops",
+		slug: "laptops",
+		image: null,
+		createdAt: "",
+		updatedAt: "",
+	},
+	{
+		id: "2",
+		name: "Smartphones",
+		slug: "smartphones",
+		image: null,
+		createdAt: "",
+		updatedAt: "",
+	},
+	{
+		id: "3",
+		name: "Tablets",
+		slug: "tablets",
+		image: null,
+		createdAt: "",
+		updatedAt: "",
+	},
+	{
+		id: "4",
+		name: "Audio",
+		slug: "audio",
+		image: null,
+		createdAt: "",
+		updatedAt: "",
+	},
+	{
+		id: "5",
+		name: "Accessories",
+		slug: "accessories",
+		image: null,
+		createdAt: "",
+		updatedAt: "",
+	},
+	{
+		id: "6",
+		name: "Gaming",
+		slug: "gaming",
+		image: null,
+		createdAt: "",
+		updatedAt: "",
+	},
 ];
 
 export function CategoriesPage() {

@@ -46,18 +46,138 @@ const SORT_OPTIONS = [
 ];
 
 const MOCK_PRODUCTS = [
-	{ id: "1", name: "MacBook Pro 16\"", brand: "Apple", slug: "macbook-pro-16", image: null, price: 2499, compareAtPrice: 2799, ratingAvg: 4.8, reviewsCount: 342 },
-	{ id: "2", name: "Dell XPS 15", brand: "Dell", slug: "dell-xps-15", image: null, price: 1799, compareAtPrice: null, ratingAvg: 4.5, reviewsCount: 218 },
-	{ id: "3", name: "ThinkPad X1 Carbon", brand: "Lenovo", slug: "thinkpad-x1-carbon", image: null, price: 1599, compareAtPrice: 1899, ratingAvg: 4.6, reviewsCount: 187 },
-	{ id: "4", name: "Surface Laptop 5", brand: "Microsoft", slug: "surface-laptop-5", image: null, price: 1299, compareAtPrice: null, ratingAvg: 4.3, reviewsCount: 94 },
-	{ id: "5", name: "Galaxy Book3 Pro", brand: "Samsung", slug: "galaxy-book3-pro", image: null, price: 1399, compareAtPrice: 1599, ratingAvg: 4.4, reviewsCount: 112 },
-	{ id: "6", name: "HP Spectre x360", brand: "HP", slug: "hp-spectre-x360", image: null, price: 1449, compareAtPrice: null, ratingAvg: 4.2, reviewsCount: 76 },
-	{ id: "7", name: "ASUS ZenBook 14", brand: "ASUS", slug: "asus-zenbook-14", image: null, price: 999, compareAtPrice: 1199, ratingAvg: 4.1, reviewsCount: 155 },
-	{ id: "8", name: "Razer Blade 15", brand: "Razer", slug: "razer-blade-15", image: null, price: 2199, compareAtPrice: null, ratingAvg: 4.7, reviewsCount: 203 },
-	{ id: "9", name: "MacBook Air M2", brand: "Apple", slug: "macbook-air-m2", image: null, price: 1099, compareAtPrice: 1299, ratingAvg: 4.9, reviewsCount: 521 },
-	{ id: "10", name: "Acer Swift 5", brand: "Acer", slug: "acer-swift-5", image: null, price: 849, compareAtPrice: null, ratingAvg: 3.9, reviewsCount: 63 },
-	{ id: "11", name: "LG Gram 16", brand: "LG", slug: "lg-gram-16", image: null, price: 1349, compareAtPrice: 1499, ratingAvg: 4.4, reviewsCount: 88 },
-	{ id: "12", name: "MSI Creator Z16", brand: "MSI", slug: "msi-creator-z16", image: null, price: 2699, compareAtPrice: null, ratingAvg: 4.6, reviewsCount: 47 },
+	{
+		id: "1",
+		name: 'MacBook Pro 16"',
+		brand: "Apple",
+		slug: "macbook-pro-16",
+		image: null,
+		price: 2499,
+		compareAtPrice: 2799,
+		ratingAvg: 4.8,
+		reviewsCount: 342,
+	},
+	{
+		id: "2",
+		name: "Dell XPS 15",
+		brand: "Dell",
+		slug: "dell-xps-15",
+		image: null,
+		price: 1799,
+		compareAtPrice: null,
+		ratingAvg: 4.5,
+		reviewsCount: 218,
+	},
+	{
+		id: "3",
+		name: "ThinkPad X1 Carbon",
+		brand: "Lenovo",
+		slug: "thinkpad-x1-carbon",
+		image: null,
+		price: 1599,
+		compareAtPrice: 1899,
+		ratingAvg: 4.6,
+		reviewsCount: 187,
+	},
+	{
+		id: "4",
+		name: "Surface Laptop 5",
+		brand: "Microsoft",
+		slug: "surface-laptop-5",
+		image: null,
+		price: 1299,
+		compareAtPrice: null,
+		ratingAvg: 4.3,
+		reviewsCount: 94,
+	},
+	{
+		id: "5",
+		name: "Galaxy Book3 Pro",
+		brand: "Samsung",
+		slug: "galaxy-book3-pro",
+		image: null,
+		price: 1399,
+		compareAtPrice: 1599,
+		ratingAvg: 4.4,
+		reviewsCount: 112,
+	},
+	{
+		id: "6",
+		name: "HP Spectre x360",
+		brand: "HP",
+		slug: "hp-spectre-x360",
+		image: null,
+		price: 1449,
+		compareAtPrice: null,
+		ratingAvg: 4.2,
+		reviewsCount: 76,
+	},
+	{
+		id: "7",
+		name: "ASUS ZenBook 14",
+		brand: "ASUS",
+		slug: "asus-zenbook-14",
+		image: null,
+		price: 999,
+		compareAtPrice: 1199,
+		ratingAvg: 4.1,
+		reviewsCount: 155,
+	},
+	{
+		id: "8",
+		name: "Razer Blade 15",
+		brand: "Razer",
+		slug: "razer-blade-15",
+		image: null,
+		price: 2199,
+		compareAtPrice: null,
+		ratingAvg: 4.7,
+		reviewsCount: 203,
+	},
+	{
+		id: "9",
+		name: "MacBook Air M2",
+		brand: "Apple",
+		slug: "macbook-air-m2",
+		image: null,
+		price: 1099,
+		compareAtPrice: 1299,
+		ratingAvg: 4.9,
+		reviewsCount: 521,
+	},
+	{
+		id: "10",
+		name: "Acer Swift 5",
+		brand: "Acer",
+		slug: "acer-swift-5",
+		image: null,
+		price: 849,
+		compareAtPrice: null,
+		ratingAvg: 3.9,
+		reviewsCount: 63,
+	},
+	{
+		id: "11",
+		name: "LG Gram 16",
+		brand: "LG",
+		slug: "lg-gram-16",
+		image: null,
+		price: 1349,
+		compareAtPrice: 1499,
+		ratingAvg: 4.4,
+		reviewsCount: 88,
+	},
+	{
+		id: "12",
+		name: "MSI Creator Z16",
+		brand: "MSI",
+		slug: "msi-creator-z16",
+		image: null,
+		price: 2699,
+		compareAtPrice: null,
+		ratingAvg: 4.6,
+		reviewsCount: 47,
+	},
 ];
 
 const TOTAL_PAGES = 4;
@@ -93,7 +213,10 @@ export function CategoryDetailPage({ slug }: Props) {
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					{/* Breadcrumb */}
 					<nav className="flex items-center gap-2 text-sm text-muted mb-8">
-						<LinkAnchor to="/categories" className="hover:text-foreground transition-colors">
+						<LinkAnchor
+							to="/categories"
+							className="hover:text-foreground transition-colors"
+						>
 							All categories
 						</LinkAnchor>
 						<ArrowRight size={14} />
@@ -102,7 +225,9 @@ export function CategoryDetailPage({ slug }: Props) {
 
 					{/* Category hero */}
 					<div className="flex items-center gap-4 mb-10">
-						<div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${iconColor}`}>
+						<div
+							className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${iconColor}`}
+						>
 							<Icon size={26} />
 						</div>
 						<div>
@@ -178,7 +303,8 @@ export function CategoryDetailPage({ slug }: Props) {
 						<div className="mt-10 pt-6 border-t border-border">
 							<Pagination className="w-full">
 								<Pagination.Summary>
-									Showing {(page - 1) * 12 + 1}–{Math.min(page * 12, TOTAL_ITEMS)} of {TOTAL_ITEMS} products
+									Showing {(page - 1) * 12 + 1}–
+									{Math.min(page * 12, TOTAL_ITEMS)} of {TOTAL_ITEMS} products
 								</Pagination.Summary>
 								<Pagination.Content>
 									<Pagination.Item>
@@ -191,16 +317,18 @@ export function CategoryDetailPage({ slug }: Props) {
 										</Pagination.Previous>
 									</Pagination.Item>
 
-									{Array.from({ length: TOTAL_PAGES }, (_, i) => i + 1).map((p) => (
-										<Pagination.Item key={p}>
-											<Pagination.Link
-												isActive={p === page}
-												onPress={() => setPage(p)}
-											>
-												{p}
-											</Pagination.Link>
-										</Pagination.Item>
-									))}
+									{Array.from({ length: TOTAL_PAGES }, (_, i) => i + 1).map(
+										(p) => (
+											<Pagination.Item key={p}>
+												<Pagination.Link
+													isActive={p === page}
+													onPress={() => setPage(p)}
+												>
+													{p}
+												</Pagination.Link>
+											</Pagination.Item>
+										),
+									)}
 
 									<Pagination.Item>
 										<Pagination.Next

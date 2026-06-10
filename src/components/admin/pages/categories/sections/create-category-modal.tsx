@@ -1,11 +1,11 @@
 import { Button, Form, Modal } from "@heroui/react";
+import { useForm } from "@tanstack/react-form";
 import { X } from "lucide-react";
 import { useRef } from "react";
-import { useForm } from "@tanstack/react-form";
 import { InputField } from "#/components/ui/fields/input-field";
 import { useCreateCategory } from "#/hooks/use-create-category";
-import { createCategorySchema } from "#/server/catalog/categories/categories.schemas";
 import { Route } from "#/routes/admin/categories";
+import { createCategorySchema } from "#/server/catalog/categories/categories.schemas";
 import { CategoryIconDisplay } from "../category-icon";
 
 type Props = {
@@ -99,7 +99,11 @@ export function CreateCategoryModal({ isOpen, onClose }: Props) {
 														form.setFieldValue("slug", toSlug(v));
 													}
 												}}
-												errorText={field.state.meta.isTouched && error ? error : undefined}
+												errorText={
+													field.state.meta.isTouched && error
+														? error
+														: undefined
+												}
 											/>
 										);
 									}}
@@ -119,7 +123,11 @@ export function CreateCategoryModal({ isOpen, onClose }: Props) {
 													slugEditedRef.current = true;
 													field.handleChange(toSlug(v));
 												}}
-												errorText={field.state.meta.isTouched && error ? error : undefined}
+												errorText={
+													field.state.meta.isTouched && error
+														? error
+														: undefined
+												}
 											/>
 										);
 									}}
@@ -146,12 +154,16 @@ export function CreateCategoryModal({ isOpen, onClose }: Props) {
 												<div className="flex items-end gap-3">
 													{/* Icon color */}
 													<div className="flex flex-col gap-1.5 flex-1">
-														<span className="text-sm font-medium text-foreground">Icon color</span>
+														<span className="text-sm font-medium text-foreground">
+															Icon color
+														</span>
 														<div className="flex items-center gap-2 border border-border rounded-xl px-3 py-2 bg-surface">
 															<input
 																type="color"
 																value={colorField.state.value}
-																onChange={(e) => colorField.handleChange(e.target.value)}
+																onChange={(e) =>
+																	colorField.handleChange(e.target.value)
+																}
 																className="size-6 rounded cursor-pointer border-0 bg-transparent p-0"
 															/>
 															<span className="text-sm text-muted font-mono">
@@ -162,12 +174,16 @@ export function CreateCategoryModal({ isOpen, onClose }: Props) {
 
 													{/* Background color */}
 													<div className="flex flex-col gap-1.5 flex-1">
-														<span className="text-sm font-medium text-foreground">Background</span>
+														<span className="text-sm font-medium text-foreground">
+															Background
+														</span>
 														<div className="flex items-center gap-2 border border-border rounded-xl px-3 py-2 bg-surface">
 															<input
 																type="color"
 																value={bgField.state.value}
-																onChange={(e) => bgField.handleChange(e.target.value)}
+																onChange={(e) =>
+																	bgField.handleChange(e.target.value)
+																}
 																className="size-6 rounded cursor-pointer border-0 bg-transparent p-0"
 															/>
 															<span className="text-sm text-muted font-mono">
@@ -178,7 +194,9 @@ export function CreateCategoryModal({ isOpen, onClose }: Props) {
 
 													{/* Live preview — icon name comes from form state via Subscribe */}
 													<div className="flex flex-col gap-1.5">
-														<span className="text-sm font-medium text-foreground">Preview</span>
+														<span className="text-sm font-medium text-foreground">
+															Preview
+														</span>
 														<Subscribe>
 															{({ values }) => (
 																<CategoryIconDisplay

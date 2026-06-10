@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { listCategoriesQueryOptions } from "#/queries/categories.queries.ts";
 import { Route } from "#/routes/admin/categories";
 
@@ -26,10 +26,11 @@ export function useCategoriesPage() {
 		return () => clearTimeout(timer);
 	}, [inputValue, navigate]);
 
-	const { data, isLoading, isError } = useQuery(listCategoriesQueryOptions({ searching }));
+	const { data, isLoading, isError } = useQuery(
+		listCategoriesQueryOptions({ searching }),
+	);
 	const items = data?.data.items ?? [];
 
-	
 	return {
 		// search
 		inputValue,

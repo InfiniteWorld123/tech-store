@@ -8,13 +8,21 @@ type Props = {
 	onCreateClick: () => void;
 };
 
-export function CategoriesToolbar({ search, onSearchChange, totalCount, onCreateClick }: Props) {
+export function CategoriesToolbar({
+	search,
+	onSearchChange,
+	totalCount,
+	onCreateClick,
+}: Props) {
 	return (
 		<div className="flex items-center justify-between gap-3 flex-wrap">
 			{/* Left: search + count */}
 			<div className="flex items-center gap-3">
 				<div className="relative">
-					<Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none" />
+					<Search
+						size={15}
+						className="absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none"
+					/>
 					<input
 						type="text"
 						value={search}

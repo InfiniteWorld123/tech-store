@@ -1,11 +1,11 @@
 import { Button, Form, Modal } from "@heroui/react";
-import { X } from "lucide-react";
 import { useForm } from "@tanstack/react-form";
+import { X } from "lucide-react";
 import { InputField } from "#/components/ui/fields/input-field";
 import { useUpdateCategory } from "#/hooks/use-update-category";
+import { Route } from "#/routes/admin/categories";
 import { createCategorySchema } from "#/server/catalog/categories/categories.schemas";
 import type { CategoryWithCount } from "#/server/catalog/categories/categories.types";
-import { Route } from "#/routes/admin/categories";
 import { CategoryIconDisplay } from "../category-icon";
 
 type Props = {
@@ -88,7 +88,9 @@ function EditCategoryForm({
 								isRequired
 								value={field.state.value}
 								onChange={(v) => field.handleChange(v)}
-								errorText={field.state.meta.isTouched && error ? error : undefined}
+								errorText={
+									field.state.meta.isTouched && error ? error : undefined
+								}
 							/>
 						);
 					}}
@@ -105,7 +107,9 @@ function EditCategoryForm({
 								description="URL-friendly identifier. Lowercase, numbers, and hyphens only."
 								value={field.state.value}
 								onChange={(v) => field.handleChange(v)}
-								errorText={field.state.meta.isTouched && error ? error : undefined}
+								errorText={
+									field.state.meta.isTouched && error ? error : undefined
+								}
 							/>
 						);
 					}}
@@ -139,7 +143,9 @@ function EditCategoryForm({
 											<input
 												type="color"
 												value={colorField.state.value}
-												onChange={(e) => colorField.handleChange(e.target.value)}
+												onChange={(e) =>
+													colorField.handleChange(e.target.value)
+												}
 												className="size-6 rounded cursor-pointer border-0 bg-transparent p-0"
 											/>
 											<span className="text-sm text-muted font-mono">
