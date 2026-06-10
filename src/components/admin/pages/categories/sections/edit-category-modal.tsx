@@ -2,11 +2,11 @@ import { Button, Form, Modal } from "@heroui/react";
 import { useForm } from "@tanstack/react-form";
 import { X } from "lucide-react";
 import { InputField } from "#/components/ui/fields/input-field";
+import { CategoryIconDisplay } from "#/components/ui/icons/category-icon";
 import { useUpdateCategory } from "#/hooks/use-update-category";
 import { Route } from "#/routes/admin/categories";
-import { createCategorySchema } from "#/server/catalog/categories/categories.schemas";
 import type { CategoryWithCount } from "#/server/catalog/categories/categories.types";
-import { CategoryIconDisplay } from "../category-icon";
+import { categoryFormSchema } from "../category-form-schema";
 
 type Props = {
 	category: CategoryWithCount | null;
@@ -34,7 +34,7 @@ function EditCategoryForm({
 			iconBg: category.iconBg ?? "#eef2ff",
 		},
 		validators: {
-			onSubmit: createCategorySchema,
+			onSubmit: categoryFormSchema,
 		},
 		onSubmit: async ({ value }) => {
 			try {
@@ -213,7 +213,7 @@ function EditCategoryForm({
 								type="submit"
 								variant="primary"
 								size="sm"
-								isLoading={isSubmitting}
+								isPending={isSubmitting}
 							>
 								Save Changes
 							</Button>

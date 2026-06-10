@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useDeferredValue, useEffect, useState } from "react";
-import { listAllReviewsQueryOptions } from "#/queries";
+import { listAllReviewsQueryOptions } from "#/queries/reviews.queries";
 import { Route } from "#/routes/admin/reviews";
 
 export function useReviewsPanel() {

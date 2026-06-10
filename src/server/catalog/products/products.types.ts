@@ -34,7 +34,9 @@ export type AdminProductDetailsType = {
 		id: string;
 		name: string;
 		slug: string;
-		image: string | null;
+		icon: string | null;
+		iconColor: string | null;
+		iconBg: string | null;
 	};
 	name: string;
 	brand: string;

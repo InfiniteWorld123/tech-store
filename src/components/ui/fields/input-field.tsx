@@ -14,6 +14,7 @@ type Props = Omit<TextFieldProps, "children" | "className" | "type"> & {
 	errorText?: string;
 	label: string;
 	placeholder?: string;
+	description?: string;
 	type?: "text" | "email" | "password";
 	icon?: ReactNode;
 	className?: string;
@@ -24,6 +25,7 @@ export function InputField({
 	errorText,
 	label,
 	placeholder,
+	description,
 	autoFocus,
 	type = "text",
 	icon,
@@ -66,6 +68,9 @@ export function InputField({
 					</InputGroup.Suffix>
 				) : null}
 			</InputGroup>
+			{description && !errorText ? (
+				<p className="text-xs text-muted">{description}</p>
+			) : null}
 			{errorText ? <FieldError>{errorText}</FieldError> : null}
 		</TextField>
 	);

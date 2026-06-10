@@ -31,7 +31,7 @@ import {
 	productMetricsQueryOptions,
 	reviewMetricsQueryOptions,
 	shippingMetricsQueryOptions,
-} from "#/queries";
+} from "#/queries/analytics.queries";
 import { AnalyticsSection } from "./sections/analytics-section";
 import { DonutChart } from "./sections/donut-chart";
 import { HorizontalBarChart } from "./sections/horizontal-bar-chart";

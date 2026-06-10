@@ -235,7 +235,7 @@ export function CategoryDetailPage({ slug }: Props) {
 								{categoryName}
 							</h1>
 							<div className="flex items-center gap-2 mt-1">
-								<Chip size="sm" variant="flat" color="default">
+								<Chip size="sm" variant="soft" color="default">
 									{TOTAL_ITEMS} products
 								</Chip>
 							</div>

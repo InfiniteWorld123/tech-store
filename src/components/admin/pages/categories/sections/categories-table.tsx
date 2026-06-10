@@ -1,7 +1,7 @@
 import { Button, Chip } from "@heroui/react";
 import { Pencil, Tags, Trash2 } from "lucide-react";
+import { CategoryIconDisplay } from "#/components/ui/icons/category-icon";
 import type { CategoryWithCount } from "#/server/catalog/categories/categories.types";
-import { CategoryIconDisplay } from "../category-icon";
 
 type Props = {
 	categories: CategoryWithCount[];

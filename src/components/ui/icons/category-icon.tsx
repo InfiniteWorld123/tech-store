@@ -8,7 +8,7 @@ import type { ComponentType } from "react";
 export function DynamicIcon({
 	name,
 	...props
-}: LucideProps & { name: string | null }) {
+}: Omit<LucideProps, "name"> & { name: string | null }) {
 	if (name) {
 		const Icon = (LucideIcons as Record<string, unknown>)[name];
 		if (typeof Icon === "function") {

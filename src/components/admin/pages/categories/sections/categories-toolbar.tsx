@@ -31,7 +31,7 @@ export function CategoriesToolbar({
 						className="w-64 pl-9 pr-3 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all"
 					/>
 				</div>
-				<Chip size="sm" variant="flat" color="default">
+				<Chip size="sm" variant="soft" color="default">
 					{totalCount} {totalCount === 1 ? "category" : "categories"}
 				</Chip>
 			</div>

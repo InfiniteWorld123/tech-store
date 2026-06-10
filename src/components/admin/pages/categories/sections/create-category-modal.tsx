@@ -3,10 +3,10 @@ import { useForm } from "@tanstack/react-form";
 import { X } from "lucide-react";
 import { useRef } from "react";
 import { InputField } from "#/components/ui/fields/input-field";
+import { CategoryIconDisplay } from "#/components/ui/icons/category-icon";
 import { useCreateCategory } from "#/hooks/use-create-category";
 import { Route } from "#/routes/admin/categories";
-import { createCategorySchema } from "#/server/catalog/categories/categories.schemas";
-import { CategoryIconDisplay } from "../category-icon";
+import { categoryFormSchema } from "../category-form-schema";
 
 type Props = {
 	isOpen: boolean;
@@ -36,7 +36,7 @@ export function CreateCategoryModal({ isOpen, onClose }: Props) {
 			iconBg: "#eef2ff",
 		},
 		validators: {
-			onSubmit: createCategorySchema,
+			onSubmit: categoryFormSchema,
 		},
 		onSubmit: async ({ value }) => {
 			try {
@@ -233,7 +233,7 @@ export function CreateCategoryModal({ isOpen, onClose }: Props) {
 												type="submit"
 												variant="primary"
 												size="sm"
-												isLoading={isSubmitting}
+												isPending={isSubmitting}
 											>
 												Create Category
 											</Button>

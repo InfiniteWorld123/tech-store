@@ -3,7 +3,7 @@ import { BarChart2, Star } from "lucide-react";
 import { AnalyticsSection } from "#/components/admin/pages/analytics/sections/analytics-section";
 import { HorizontalBarChart } from "#/components/admin/pages/analytics/sections/horizontal-bar-chart";
 import { StatCard } from "#/components/admin/pages/analytics/sections/stat-card";
-import { reviewMetricsQueryOptions } from "#/queries";
+import { reviewMetricsQueryOptions } from "#/queries/analytics.queries";
 
 export function ReviewsOverview() {
 	const { data, isLoading, isError } = useQuery(reviewMetricsQueryOptions());

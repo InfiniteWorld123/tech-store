@@ -67,10 +67,9 @@ export function DeleteCategoryDialog({ category, onClose }: Props) {
 								Cancel
 							</Button>
 							<Button
-								variant="primary"
-								color="danger"
+								variant="danger"
 								size="sm"
-								isLoading={isPending}
+								isPending={isPending}
 								onPress={handleDelete}
 							>
 								Delete Category
