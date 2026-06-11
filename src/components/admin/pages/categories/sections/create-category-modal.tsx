@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { InputField } from "#/components/ui/fields/input-field";
 import { CategoryIconDisplay } from "#/components/ui/icons/category-icon";
 import { CategoryIconPicker } from "#/components/ui/icons/category-icon-picker";
-import { useCreateCategory } from "#/hooks/use-create-category";
+import { useCreateCategory } from "#/mutations/category/use-create-category";
 import { Route } from "#/routes/admin/categories";
 import { categoryFormSchema } from "../category-form-schema";
 

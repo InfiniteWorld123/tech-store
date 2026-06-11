@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { InputField } from "#/components/ui/fields/input-field";
 import { CategoryIconDisplay } from "#/components/ui/icons/category-icon";
 import { CategoryIconPicker } from "#/components/ui/icons/category-icon-picker";
-import { useUpdateCategory } from "#/hooks/use-update-category";
+import { useUpdateCategory } from "#/mutations/category/use-update-category";
 import { Route } from "#/routes/admin/categories";
 import type { CategoryWithCount } from "#/server/catalog/categories/categories.types";
 import { categoryFormSchema } from "../category-form-schema";
