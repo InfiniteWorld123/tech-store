@@ -3,6 +3,7 @@ import { ensureAdmin } from "#/server/auth/ensure-session.middleware";
 import { addTrackingNumber } from "./services/add-tracking-number.service";
 import { createShipping } from "./services/create-shipping.service";
 import { getShipping } from "./services/get-shipping.service";
+import { listShipments } from "./services/list-shipments.service";
 import { markOrderDelivered } from "./services/mark-order-delivered.service";
 import { markOrderShipped } from "./services/mark-order-shipped.service";
 import { updateShippingStatus } from "./services/update-shipping-status.service";
@@ -10,6 +11,7 @@ import {
 	addTrackingNumberSchema,
 	createShippingSchema,
 	getShippingSchema,
+	listShipmentsSchema,
 	markOrderDeliveredSchema,
 	markOrderShippedSchema,
 	updateShippingStatusSchema,
@@ -55,4 +57,11 @@ export const markOrderDeliveredAction = createServerFn({ method: "POST" })
 	.inputValidator(markOrderDeliveredSchema)
 	.handler(async ({ data }) => {
 		return markOrderDelivered(data);
+	});
+
+export const listShipmentsAction = createServerFn({ method: "GET" })
+	.middleware([ensureAdmin])
+	.inputValidator(listShipmentsSchema)
+	.handler(async ({ data }) => {
+		return listShipments(data);
 	});

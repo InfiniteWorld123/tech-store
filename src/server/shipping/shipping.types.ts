@@ -3,6 +3,7 @@ import type {
 	addTrackingNumberSchema,
 	createShippingSchema,
 	getShippingSchema,
+	listShipmentsSchema,
 	markOrderDeliveredSchema,
 	markOrderShippedSchema,
 	shippingCarrierSchema,
@@ -78,4 +79,41 @@ export type MarkOrderDeliveredOutputType = {
 	orderStatus: "pending" | "processing" | "completed" | "cancelled";
 	shippingStatus: ShippingStatusType;
 	deliveredAt: string;
+};
+
+export type ListShipmentsInputType = z.infer<typeof listShipmentsSchema>;
+
+export type ListShipmentsOutputType = {
+	items: ShippingListItemType[];
+	pagination: {
+		page: number;
+		limit: number;
+		total: number;
+		totalPages: number;
+		hasNextPage: boolean;
+		hasPreviousPage: boolean;
+	};
+	query: {
+		status?: ListShipmentsInputType["status"];
+		carrier?: ListShipmentsInputType["carrier"];
+		method?: ListShipmentsInputType["method"];
+		search?: string;
+		dateRange?: { from?: string; to?: string };
+		sortBy: ListShipmentsInputType["sortBy"];
+		sortOrder: ListShipmentsInputType["sortOrder"];
+	};
+};
+
+export type ShippingListItemType = {
+	id: string;
+	orderId: string;
+	orderNumber: string;
+	carrier: ShippingCarrierType;
+	method: ShippingMethodType;
+	trackingNumber: string | null;
+	status: ShippingStatusType;
+	shippedAt: string | null;
+	deliveredAt: string | null;
+	createdAt: string;
+	updatedAt: string;
 };

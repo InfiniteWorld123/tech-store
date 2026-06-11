@@ -2,6 +2,7 @@ import type { z } from "zod";
 import type {
 	createStripeCheckoutSessionSchema,
 	getPaymentSchema,
+	listPaymentsSchema,
 	refundPaymentSchema,
 } from "./payments.schemas";
 
@@ -56,4 +57,39 @@ export type GetPaymentOutputType = {
 export type RefundPaymentOutputType = {
 	payment: PaymentType;
 	refundId: string;
+};
+
+export type ListPaymentsInputType = z.infer<typeof listPaymentsSchema>;
+
+export type PaymentListItemType = {
+	id: string;
+	orderId: string;
+	orderNumber: string;
+	method: PaymentType["method"];
+	amount: number;
+	status: PaymentType["status"];
+	currency: string | null;
+	paidAt: string | null;
+	createdAt: string;
+	updatedAt: string;
+};
+
+export type ListPaymentsOutputType = {
+	items: PaymentListItemType[];
+	pagination: {
+		page: number;
+		limit: number;
+		total: number;
+		totalPages: number;
+		hasNextPage: boolean;
+		hasPreviousPage: boolean;
+	};
+	query: {
+		status?: ListPaymentsInputType["status"];
+		method?: ListPaymentsInputType["method"];
+		search?: string;
+		dateRange?: ListPaymentsInputType["dateRange"];
+		sortBy: ListPaymentsInputType["sortBy"];
+		sortOrder: ListPaymentsInputType["sortOrder"];
+	};
 };

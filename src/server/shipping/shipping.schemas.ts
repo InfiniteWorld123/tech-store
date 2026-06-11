@@ -41,3 +41,22 @@ export const markOrderShippedSchema = z.object({
 export const markOrderDeliveredSchema = z.object({
 	orderId: z.uuid("Order id must be a valid UUID"),
 });
+
+export const listShipmentsSchema = z.object({
+	status: shippingStatusSchema.optional(),
+	carrier: shippingCarrierSchema.optional(),
+	method: shippingMethodSchema.optional(),
+	search: z.string().trim().min(1).optional(),
+	dateRange: z
+		.object({
+			from: z.string().optional(),
+			to: z.string().optional(),
+		})
+		.optional(),
+	page: z.number().min(1).default(1),
+	limit: z.number().min(1).max(100).default(20),
+	sortBy: z
+		.enum(["createdAt", "shippedAt", "deliveredAt"])
+		.default("createdAt"),
+	sortOrder: z.enum(["asc", "desc"]).default("desc"),
+});

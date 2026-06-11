@@ -6,10 +6,12 @@ import {
 import {
 	createStripeCheckoutSessionSchema,
 	getPaymentSchema,
+	listPaymentsSchema,
 	refundPaymentSchema,
 } from "./payments.schemas";
 import { createStripeCheckoutSession } from "./services/create-payment.service";
 import { getPayment } from "./services/get-payment.service";
+import { listPayments } from "./services/list-payments.service";
 import { refundPayment } from "./services/refund-payment.service";
 
 export const createStripeCheckoutSessionAction = createServerFn({
@@ -39,4 +41,11 @@ export const refundPaymentAction = createServerFn({ method: "POST" })
 	.inputValidator(refundPaymentSchema)
 	.handler(async ({ data }) => {
 		return refundPayment(data);
+	});
+
+export const listPaymentsAction = createServerFn({ method: "GET" })
+	.middleware([ensureAdmin])
+	.inputValidator(listPaymentsSchema)
+	.handler(async ({ data }) => {
+		return listPayments(data);
 	});

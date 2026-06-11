@@ -12,7 +12,7 @@ export function useCategoriesPage() {
 
 	// Debounce: push the search value into the URL after 400ms of no typing
 	useEffect(() => {
-		const timer = setTimeout(() => {
+		const timer = window.setTimeout(() => {
 			navigate({
 				search: (prev) => ({
 					...prev,
@@ -23,7 +23,7 @@ export function useCategoriesPage() {
 				}),
 			});
 		}, 400);
-		return () => clearTimeout(timer);
+		return () => window.clearTimeout(timer);
 	}, [inputValue, navigate]);
 
 	const { data, isLoading, isError } = useQuery(
