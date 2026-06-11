@@ -1,11 +1,15 @@
 import { Package } from "lucide-react";
-import { useState } from "react";
-import { useReviewsPanel } from "#/hooks/use-reviews-panel";
-import type { ReviewWithCustomerAndProductType } from "#/server/reviews/reviews.types";
+import { DataError } from "#/components/ui/states/data-error";
+import { DataLoading } from "#/components/ui/states/data-loading";
+import {
+	usePersistedViewMode,
+	ViewModeToggle,
+} from "#/components/ui/view-mode-toggle";
+import type { ReviewListItem } from "../reviews.types";
+import { useReviewsPanel } from "../use-reviews-panel";
 import { ReviewsFilters } from "./reviews-filters";
 import { ReviewsPagination } from "./reviews-pagination";
 import { StarRating } from "./star-rating";
-import { type ViewMode, ViewToggle } from "./view-toggle";
 
 function Avatar({ name }: { name: string }) {
 	const initials = name
@@ -40,7 +44,7 @@ function EmptyState() {
 	);
 }
 
-function TableView({ items }: { items: ReviewWithCustomerAndProductType[] }) {
+function TableView({ items }: { items: ReviewListItem[] }) {
 	if (items.length === 0) return <EmptyState />;
 
 	return (
@@ -105,7 +109,7 @@ function TableView({ items }: { items: ReviewWithCustomerAndProductType[] }) {
 	);
 }
 
-function ListView({ items }: { items: ReviewWithCustomerAndProductType[] }) {
+function ListView({ items }: { items: ReviewListItem[] }) {
 	if (items.length === 0) return <EmptyState />;
 
 	return (
@@ -142,7 +146,7 @@ function ListView({ items }: { items: ReviewWithCustomerAndProductType[] }) {
 	);
 }
 
-function CardsView({ items }: { items: ReviewWithCustomerAndProductType[] }) {
+function CardsView({ items }: { items: ReviewListItem[] }) {
 	if (items.length === 0) return <EmptyState />;
 
 	return (
@@ -179,7 +183,9 @@ function CardsView({ items }: { items: ReviewWithCustomerAndProductType[] }) {
 }
 
 export function AllReviewsPanel() {
-	const [viewMode, setViewMode] = useState<ViewMode>("table");
+	const [viewMode, setViewMode] = usePersistedViewMode(
+		"admin:reviews:view-mode",
+	);
 	const {
 		inputValue,
 		setInputValue,
@@ -210,7 +216,7 @@ export function AllReviewsPanel() {
 					onRatingChange={setRating}
 					onPrefetchRating={prefetchRating}
 				/>
-				<ViewToggle value={viewMode} onChange={setViewMode} />
+				<ViewModeToggle value={viewMode} onChange={setViewMode} />
 			</div>
 
 			{/* Content */}
@@ -223,13 +229,9 @@ export function AllReviewsPanel() {
 			>
 				<div className="bg-surface border border-border rounded-2xl p-5 shadow-sm">
 					{isError ? (
-						<p className="text-sm text-danger py-8 text-center">
-							Failed to load reviews
-						</p>
+						<DataError title="Failed to load reviews" />
 					) : isLoading ? (
-						<p className="text-sm text-muted py-8 text-center">
-							Loading reviews...
-						</p>
+						<DataLoading label="Loading reviews..." />
 					) : (
 						<>
 							{viewMode === "table" && <TableView items={items} />}

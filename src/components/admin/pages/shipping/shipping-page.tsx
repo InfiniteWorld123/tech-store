@@ -1,17 +1,29 @@
-import { AlertTriangle, Loader2 } from "lucide-react";
 import { useState } from "react";
-import { useShippingPage } from "#/hooks/use-shipping-page";
-import type { ShippingListItemType } from "#/server/shipping/shipping.types";
+import { DataError } from "#/components/ui/states/data-error";
+import { DataLoading } from "#/components/ui/states/data-loading";
+import {
+	usePersistedViewMode,
+	ViewModeToggle,
+} from "#/components/ui/view-mode-toggle";
 import { AddTrackingModal } from "./sections/add-tracking-modal";
 import { CreateShipmentModal } from "./sections/create-shipment-modal";
 import { MarkShippedModal } from "./sections/mark-shipped-modal";
 import { ShippingDetailSheet } from "./sections/shipping-detail-sheet";
 import { ShippingPagination } from "./sections/shipping-pagination";
-import { ShippingTable } from "./sections/shipping-table";
+import {
+	ShippingCards,
+	ShippingList,
+	ShippingTable,
+} from "./sections/shipping-table";
 import { ShippingToolbar } from "./sections/shipping-toolbar";
 import { UpdateStatusModal } from "./sections/update-status-modal";
+import type { ShippingListItem } from "./shipping.types";
+import { useShippingPage } from "./use-shipping-page";
 
 export function ShippingPage() {
+	const [viewMode, setViewMode] = usePersistedViewMode(
+		"admin:shipping:view-mode",
+	);
 	const {
 		inputValue,
 		setInputValue,
@@ -33,17 +45,17 @@ export function ShippingPage() {
 	} = useShippingPage();
 
 	// UI state — detail sheet
-	const [selectedItem, setSelectedItem] = useState<ShippingListItemType | null>(
+	const [selectedItem, setSelectedItem] = useState<ShippingListItem | null>(
 		null,
 	);
 
 	// UI state — modals (non-null = open, mirrors categories pattern)
 	const [markShippedTarget, setMarkShippedTarget] =
-		useState<ShippingListItemType | null>(null);
+		useState<ShippingListItem | null>(null);
 	const [addTrackingTarget, setAddTrackingTarget] =
-		useState<ShippingListItemType | null>(null);
+		useState<ShippingListItem | null>(null);
 	const [updateStatusTarget, setUpdateStatusTarget] =
-		useState<ShippingListItemType | null>(null);
+		useState<ShippingListItem | null>(null);
 	const [isCreateOpen, setIsCreateOpen] = useState(false);
 
 	function handleMarkShipped(orderId: string) {
@@ -71,47 +83,63 @@ export function ShippingPage() {
 				</p>
 			</div>
 
-			{/* Toolbar */}
-			<ShippingToolbar
-				search={inputValue}
-				onSearchChange={setInputValue}
-				status={status}
-				onStatusChange={setStatus}
-				carrier={carrier}
-				onCarrierChange={setCarrier}
-				method={method}
-				onMethodChange={setMethod}
-				dateRange={dateRange ?? {}}
-				onDateRangeChange={setDateRange}
-				onCreateClick={() => setIsCreateOpen(true)}
-			/>
+			<div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+				<div className="min-w-0 flex-1">
+					<ShippingToolbar
+						search={inputValue}
+						onSearchChange={setInputValue}
+						status={status}
+						onStatusChange={setStatus}
+						carrier={carrier}
+						onCarrierChange={setCarrier}
+						method={method}
+						onMethodChange={setMethod}
+						dateRange={dateRange ?? {}}
+						onDateRangeChange={setDateRange}
+						onCreateClick={() => setIsCreateOpen(true)}
+					/>
+				</div>
+				<ViewModeToggle value={viewMode} onChange={setViewMode} />
+			</div>
 
-			{/* Table card */}
 			<div className="bg-surface border border-border rounded-2xl p-5 shadow-sm">
 				{isLoading ? (
-					<div className="py-16 flex flex-col items-center gap-3 text-center">
-						<Loader2 size={28} className="text-muted animate-spin" />
-						<p className="text-sm text-muted">Loading shipments…</p>
-					</div>
+					<DataLoading label="Loading shipments..." />
 				) : isError ? (
-					<div className="py-16 flex flex-col items-center gap-3 text-center">
-						<AlertTriangle size={28} className="text-danger" />
-						<div>
-							<p className="text-sm font-medium text-foreground">
-								Failed to load shipments
-							</p>
-							<p className="text-xs text-muted mt-1">Please try again.</p>
-						</div>
-					</div>
+					<DataError title="Failed to load shipments" />
 				) : (
-					<ShippingTable
-						items={items}
-						onRowClick={setSelectedItem}
-						onMarkShipped={handleMarkShipped}
-						onMarkDelivered={() => {}}
-						onStatusChange={() => {}}
-						onAddTracking={handleAddTracking}
-					/>
+					<>
+						{viewMode === "table" ? (
+							<ShippingTable
+								items={items}
+								onRowClick={setSelectedItem}
+								onMarkShipped={handleMarkShipped}
+								onMarkDelivered={() => {}}
+								onStatusChange={() => {}}
+								onAddTracking={handleAddTracking}
+							/>
+						) : null}
+						{viewMode === "list" ? (
+							<ShippingList
+								items={items}
+								onRowClick={setSelectedItem}
+								onMarkShipped={handleMarkShipped}
+								onMarkDelivered={() => {}}
+								onStatusChange={() => {}}
+								onAddTracking={handleAddTracking}
+							/>
+						) : null}
+						{viewMode === "cards" ? (
+							<ShippingCards
+								items={items}
+								onRowClick={setSelectedItem}
+								onMarkShipped={handleMarkShipped}
+								onMarkDelivered={() => {}}
+								onStatusChange={() => {}}
+								onAddTracking={handleAddTracking}
+							/>
+						) : null}
+					</>
 				)}
 
 				{pagination && (

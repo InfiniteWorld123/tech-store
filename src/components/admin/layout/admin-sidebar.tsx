@@ -16,7 +16,6 @@ import {
 	ShoppingBag,
 	Star,
 	Truck,
-	Users,
 	X,
 	Zap,
 } from "lucide-react";
@@ -36,7 +35,10 @@ type NavGroup = {
 const NAV_GROUPS: NavGroup[] = [
 	{
 		label: "Overview",
-		items: [{ label: "Dashboard", icon: LayoutDashboard, href: "/admin" }],
+		items: [
+			{ label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
+			{ label: "Analytics", icon: BarChart2, href: "/admin/analytics" },
+		],
 	},
 	{
 		label: "Catalog",
@@ -57,14 +59,7 @@ const NAV_GROUPS: NavGroup[] = [
 	},
 	{
 		label: "Community",
-		items: [
-			{ label: "Customers", icon: Users, href: "/admin/customers" },
-			{ label: "Reviews", icon: Star, href: "/admin/reviews" },
-		],
-	},
-	{
-		label: "Insights",
-		items: [{ label: "Analytics", icon: BarChart2, href: "/admin/analytics" }],
+		items: [{ label: "Reviews", icon: Star, href: "/admin/reviews" }],
 	},
 	{
 		label: "System",

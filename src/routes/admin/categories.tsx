@@ -1,14 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CategoriesError } from "#/components/admin/pages/categories/categories-error";
+import {
+	AdminRouteError,
+	AdminRouteLoading,
+} from "#/components/admin/layout/admin-route-states";
 import { CategoriesPage } from "#/components/admin/pages/categories/categories-page.tsx";
 import { listCategoriesSchema } from "#/server/catalog/categories/categories.schemas";
 import { listCategoriesQueryOptions } from "../../queries/categories.queries.ts";
 
 export const Route = createFileRoute("/admin/categories")({
 	validateSearch: listCategoriesSchema,
-	loaderDeps: ({ search }) => ({
-		searching: search.searching,
-	}),
+	loaderDeps: ({ search }) => search,
 	loader: ({ context, deps }) =>
 		context.queryClient.ensureQueryData(
 			listCategoriesQueryOptions({
@@ -16,5 +17,6 @@ export const Route = createFileRoute("/admin/categories")({
 			}),
 		),
 	component: CategoriesPage,
-	errorComponent: ({ error }) => <CategoriesError error={error as Error} />,
+	pendingComponent: AdminRouteLoading,
+	errorComponent: ({ error }) => <AdminRouteError error={error as Error} />,
 });

@@ -1,10 +1,7 @@
 import { Button, Modal } from "@heroui/react";
 import { X } from "lucide-react";
 import { useState } from "react";
-import type {
-	ShippingCarrierType,
-	ShippingMethodType,
-} from "#/server/shipping/shipping.types";
+import type { ShippingCarrier, ShippingMethod } from "../shipping.types";
 
 type Props = {
 	isOpen: boolean;
@@ -13,8 +10,8 @@ type Props = {
 
 export function CreateShipmentModal({ isOpen, onClose }: Props) {
 	const [orderId, setOrderId] = useState("");
-	const [carrier, setCarrier] = useState<ShippingCarrierType>("dhl");
-	const [method, setMethod] = useState<ShippingMethodType>("standard");
+	const [carrier, setCarrier] = useState<ShippingCarrier>("dhl");
+	const [method, setMethod] = useState<ShippingMethod>("standard");
 
 	const handleClose = () => {
 		setOrderId("");
@@ -66,7 +63,7 @@ export function CreateShipmentModal({ isOpen, onClose }: Props) {
 									id="create-carrier"
 									value={carrier}
 									onChange={(e) =>
-										setCarrier(e.target.value as ShippingCarrierType)
+										setCarrier(e.target.value as ShippingCarrier)
 									}
 									className="w-full appearance-none px-3 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer"
 								>
@@ -87,9 +84,7 @@ export function CreateShipmentModal({ isOpen, onClose }: Props) {
 								<select
 									id="create-method"
 									value={method}
-									onChange={(e) =>
-										setMethod(e.target.value as ShippingMethodType)
-									}
+									onChange={(e) => setMethod(e.target.value as ShippingMethod)}
 									className="w-full appearance-none px-3 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer"
 								>
 									<option value="standard">Standard</option>

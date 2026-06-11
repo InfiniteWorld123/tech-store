@@ -1,10 +1,10 @@
 import { Button, Modal } from "@heroui/react";
 import { X } from "lucide-react";
 import { useState } from "react";
-import type { ShippingListItemType } from "#/server/shipping/shipping.types";
+import type { ShippingListItem } from "../shipping.types";
 
 type Props = {
-	item: ShippingListItemType | null;
+	item: ShippingListItem | null;
 	onClose: () => void;
 };
 

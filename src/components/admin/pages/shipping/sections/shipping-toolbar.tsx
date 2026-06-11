@@ -3,21 +3,21 @@
 import { Button } from "@heroui/react";
 import { CalendarDays, Package, Plus, Search, Truck, Zap } from "lucide-react";
 import type {
-	ShippingCarrierType,
-	ShippingMethodType,
-	ShippingStatusType,
-} from "#/server/shipping/shipping.types";
+	ShippingCarrier,
+	ShippingMethod,
+	ShippingStatus,
+} from "../shipping.types";
 
 type DateRange = { from?: string; to?: string };
 
 type ShippingToolbarProps = {
 	search: string;
 	onSearchChange: (value: string) => void;
-	status: ShippingStatusType | undefined;
+	status: ShippingStatus | undefined;
 	onStatusChange: (value: string) => void;
-	carrier: ShippingCarrierType | undefined;
+	carrier: ShippingCarrier | undefined;
 	onCarrierChange: (value: string) => void;
-	method: ShippingMethodType | undefined;
+	method: ShippingMethod | undefined;
 	onMethodChange: (value: string) => void;
 	dateRange: DateRange;
 	onDateRangeChange: (value: DateRange) => void;

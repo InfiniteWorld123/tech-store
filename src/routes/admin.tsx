@@ -2,10 +2,18 @@
 
 import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import {
+	AdminRouteError,
+	AdminRouteLoading,
+} from "#/components/admin/layout/admin-route-states";
 import { AdminSidebar } from "#/components/admin/layout/admin-sidebar";
 import { AdminTopbar } from "#/components/admin/layout/admin-topbar";
 
-export const Route = createFileRoute("/admin")({ component: AdminLayout });
+export const Route = createFileRoute("/admin")({
+	component: AdminLayout,
+	pendingComponent: AdminRouteLoading,
+	errorComponent: ({ error }) => <AdminRouteError error={error as Error} />,
+});
 
 function AdminLayout() {
 	const [collapsed, setCollapsed] = useState<boolean>(() => {

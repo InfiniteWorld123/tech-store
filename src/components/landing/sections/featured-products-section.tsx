@@ -1,6 +1,8 @@
 import { Card, Link, Skeleton } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, PackageSearch } from "lucide-react";
+import { DataError } from "#/components/ui/states/data-error";
+import { EmptyState } from "#/components/ui/states/empty-state";
 import { featuredProductsQueryOptions } from "#/queries/products.queries.ts";
 import { ProductCard } from "../ui/product-card";
 
@@ -70,20 +72,17 @@ export function FeaturedProductsSection() {
 							/>
 						))}
 					</div>
+				) : isError ? (
+					<DataError
+						title="Failed to load featured products"
+						description="We couldn't load featured products right now. Please try again later."
+					/>
 				) : (
-					<Card className="items-center border-dashed px-6 py-12 text-center">
-						<PackageSearch size={26} className="text-muted" />
-						<Card.Header className="items-center">
-							<Card.Title className="text-base">
-								No featured products yet
-							</Card.Title>
-							<Card.Description className="max-w-md">
-								{isError
-									? "We couldn't load featured products right now. Please try again later."
-									: "There are no featured products available right now. Check back soon."}
-							</Card.Description>
-						</Card.Header>
-					</Card>
+					<EmptyState
+						icon={PackageSearch}
+						title="No featured products yet"
+						description="There are no featured products available right now. Check back soon."
+					/>
 				)}
 
 				{/* Mobile link */}

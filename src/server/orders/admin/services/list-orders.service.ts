@@ -14,7 +14,6 @@ import {
 	or,
 	sql,
 } from "drizzle-orm";
-import { alias } from "drizzle-orm/pg-core";
 import { HttpStatusCode } from "#/constants/http";
 import type { JsonOk } from "#/constants/json";
 import { jsonOk } from "#/constants/json";
@@ -29,8 +28,6 @@ type FilterType = NonNullable<ListOrdersInputType["filters"]>;
 type FlagType = NonNullable<ListOrdersInputType["flags"]>;
 type RangeType = NonNullable<ListOrdersInputType["ranges"]>;
 type PaginationType = ListOrdersInputType["pagination"];
-
-const orderItemForCount = alias(orderItem, "order_item_for_count");
 
 const buildSearchCondition = (searching: SearchType): SQL | undefined => {
 	const { search, searchType } = searching;
@@ -47,9 +44,19 @@ const buildSearchCondition = (searching: SearchType): SQL | undefined => {
 		case "customerEmail":
 			return ilike(user.email, `%${search}%`);
 		case "sku":
-			return ilike(orderItem.sku, `%${search}%`);
+			return sql`exists (
+				select 1
+				from ${orderItem}
+				where ${orderItem.orderId} = ${order.id}
+					and ${orderItem.sku} ilike ${`%${search}%`}
+			)`;
 		case "productName":
-			return ilike(orderItem.productName, `%${search}%`);
+			return sql`exists (
+				select 1
+				from ${orderItem}
+				where ${orderItem.orderId} = ${order.id}
+					and ${orderItem.productName} ilike ${`%${search}%`}
+			)`;
 		case "trackingNumber":
 			return ilike(shipping.trackingNumber, `%${search}%`);
 		default:
@@ -57,9 +64,16 @@ const buildSearchCondition = (searching: SearchType): SQL | undefined => {
 				ilike(order.orderNumber, `%${search}%`),
 				ilike(user.name, `%${search}%`),
 				ilike(user.email, `%${search}%`),
-				ilike(orderItem.sku, `%${search}%`),
-				ilike(orderItem.productName, `%${search}%`),
 				ilike(shipping.trackingNumber, `%${search}%`),
+				sql`exists (
+					select 1
+					from ${orderItem}
+					where ${orderItem.orderId} = ${order.id}
+						and (
+							${orderItem.sku} ilike ${`%${search}%`}
+							or ${orderItem.productName} ilike ${`%${search}%`}
+						)
+				)`,
 			);
 	}
 };
@@ -307,6 +321,14 @@ export const listOrders = async (
 		const orderByClause = sorting
 			? buildSortCondition(sorting)
 			: desc(order.placedAt);
+		const itemCounts = db
+			.select({
+				orderId: orderItem.orderId,
+				itemCount: sql<number>`count(*)`.mapWith(Number).as("item_count"),
+			})
+			.from(orderItem)
+			.groupBy(orderItem.orderId)
+			.as("item_counts");
 
 		const { page, limit, offset } = buildPagination(pagination);
 		const whereCondition =
@@ -320,7 +342,6 @@ export const listOrders = async (
 			.innerJoin(user, eq(user.id, order.userId))
 			.innerJoin(payment, eq(payment.orderId, order.id))
 			.innerJoin(shipping, eq(shipping.orderId, order.id))
-			.leftJoin(orderItem, eq(orderItem.orderId, order.id))
 			.where(whereCondition);
 
 		const rows = await db
@@ -351,48 +372,16 @@ export const listOrders = async (
 				shippingMethod: shipping.method,
 				shippingStatus: shipping.status,
 				shippingTrackingNumber: shipping.trackingNumber,
-				itemCount: sql<number>`(
-        			select count(*)
-        			from ${orderItemForCount}
-        			where ${orderItemForCount.orderId} = ${order.id}
-        		)`.mapWith(Number),
+				itemCount: sql<number>`coalesce(${itemCounts.itemCount}, 0)`.mapWith(
+					Number,
+				),
 			})
 			.from(order)
 			.innerJoin(user, eq(user.id, order.userId))
 			.innerJoin(payment, eq(payment.orderId, order.id))
 			.innerJoin(shipping, eq(shipping.orderId, order.id))
-			.leftJoin(orderItem, eq(orderItem.orderId, order.id))
+			.leftJoin(itemCounts, eq(itemCounts.orderId, order.id))
 			.where(whereCondition)
-			.groupBy(
-				order.id,
-				order.userId,
-				order.addressId,
-				order.orderNumber,
-				order.status,
-				order.subtotal,
-				order.shippingFee,
-				order.taxAmount,
-				order.totalAmount,
-				order.notes,
-				order.placedAt,
-				order.createdAt,
-				order.updatedAt,
-				user.id,
-				user.name,
-				user.email,
-				payment.id,
-				payment.method,
-				payment.status,
-				payment.amount,
-				payment.paidAt,
-				shipping.id,
-				shipping.carrier,
-				shipping.method,
-				shipping.status,
-				shipping.trackingNumber,
-				shipping.shippedAt,
-				shipping.deliveredAt,
-			)
 			.orderBy(orderByClause)
 			.limit(limit)
 			.offset(offset);

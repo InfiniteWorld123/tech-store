@@ -15,7 +15,7 @@ E-commerce app: TanStack Start (React 19) + TanStack Query/Form/Router, Drizzle 
 - **Package manager:** bun (`bun.lock`). Do not add other lockfiles.
 - **Import alias:** `#/*` → `src/*` (only alias; no `@/`). Relative imports only within the same domain/folder.
 - **File names:** kebab-case everywhere (enforced by Biome `useFilenamingConvention`).
-- **Hooks:** `src/hooks/use-<name>.ts`, exports named `useX`.
+- **Hooks:** page-owned hooks live beside their feature page, e.g. `components/admin/pages/orders/use-orders-page.ts`; shared cross-feature hooks live in `src/hooks/use-<name>.ts`. Export named `useX`.
 - **Query options:** `src/queries/<domain>.queries.ts` exporting `xQueryOptions`. No barrel files (import the file directly); the only barrel is `components/emails/index.ts`.
 - **Server domains:** `src/server/<domain>/` with `<domain>.actions.ts`, `<domain>.schemas.ts` (zod), `<domain>.types.ts`, and `services/<verb>-<noun>.service.ts`. Domain folder names use the domain's natural form (`cart`, `auth`, `orders`).
 - **Components:** organized by feature (`components/admin/pages/<feature>/`, `components/landing/sections/`, …) with kebab-case files suffixed by role: `-page.tsx`, `-section.tsx`, `-card.tsx`, `-modal.tsx`. Shared primitives live in `components/ui/`.

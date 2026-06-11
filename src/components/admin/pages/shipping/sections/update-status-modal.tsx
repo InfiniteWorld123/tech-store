@@ -1,17 +1,14 @@
 import { Button, Modal } from "@heroui/react";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
-import type {
-	ShippingListItemType,
-	ShippingStatusType,
-} from "#/server/shipping/shipping.types";
+import type { ShippingListItem, ShippingStatus } from "../shipping.types";
 
 type Props = {
-	item: ShippingListItemType | null;
+	item: ShippingListItem | null;
 	onClose: () => void;
 };
 
-const statusLabels: Record<ShippingStatusType, string> = {
+const statusLabels: Record<ShippingStatus, string> = {
 	pending: "Pending",
 	packed: "Packed",
 	shipped: "Shipped",
@@ -28,7 +25,7 @@ const ALL_STATUSES = [
 ] as const;
 
 export function UpdateStatusModal({ item, onClose }: Props) {
-	const [status, setStatus] = useState<ShippingStatusType>(
+	const [status, setStatus] = useState<ShippingStatus>(
 		item?.status ?? "pending",
 	);
 
@@ -64,9 +61,7 @@ export function UpdateStatusModal({ item, onClose }: Props) {
 								<select
 									id="update-status"
 									value={status}
-									onChange={(e) =>
-										setStatus(e.target.value as ShippingStatusType)
-									}
+									onChange={(e) => setStatus(e.target.value as ShippingStatus)}
 									className="w-full appearance-none px-3 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer"
 								>
 									{ALL_STATUSES.map((s) => (

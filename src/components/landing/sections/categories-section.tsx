@@ -2,6 +2,8 @@ import { Card, Skeleton } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Tags } from "lucide-react";
 import LinkAnchor from "#/components/ui/buttons/link-anchor";
+import { DataError } from "#/components/ui/states/data-error";
+import { EmptyState } from "#/components/ui/states/empty-state";
 import { listCategoriesQueryOptions } from "#/queries/categories.queries.ts";
 import { CategoryCard } from "../ui/category-card";
 
@@ -64,18 +66,17 @@ export function CategoriesSection() {
 							<CategoryCard key={category.id} category={category} />
 						))}
 					</div>
+				) : isError ? (
+					<DataError
+						title="Failed to load categories"
+						description="We couldn't load categories right now. Please try again later."
+					/>
 				) : (
-					<Card className="items-center border-dashed px-6 py-12 text-center">
-						<Tags size={26} className="text-muted" />
-						<Card.Header className="items-center">
-							<Card.Title className="text-base">No categories yet</Card.Title>
-							<Card.Description className="max-w-md">
-								{isError
-									? "We couldn't load categories right now. Please try again later."
-									: "There are no categories available right now. Check back soon."}
-							</Card.Description>
-						</Card.Header>
-					</Card>
+					<EmptyState
+						icon={Tags}
+						title="No categories yet"
+						description="There are no categories available right now. Check back soon."
+					/>
 				)}
 
 				{/* Mobile "view all" */}

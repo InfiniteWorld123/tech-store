@@ -1,10 +1,10 @@
 import { Chip } from "@heroui/react";
 import { Eye, Package } from "lucide-react";
-import type { AdminOrderListItemType } from "#/server/orders/admin/admin.types";
+import type { OrderListItem } from "../orders.types";
 
 type OrdersTableProps = {
-	items: AdminOrderListItemType[];
-	onRowClick: (item: AdminOrderListItemType) => void;
+	items: OrderListItem[];
+	onRowClick: (item: OrderListItem) => void;
 };
 
 type ChipColor = "default" | "accent" | "success" | "warning" | "danger";
@@ -177,6 +177,146 @@ export function OrdersTable({ items, onRowClick }: OrdersTableProps) {
 					))}
 				</tbody>
 			</table>
+		</div>
+	);
+}
+
+export function OrdersList({ items, onRowClick }: OrdersTableProps) {
+	if (items.length === 0) {
+		return (
+			<div className="py-16 flex flex-col items-center gap-3 text-center">
+				<Package size={28} className="text-muted" />
+				<div>
+					<p className="text-sm font-medium text-foreground">No orders found</p>
+					<p className="text-xs text-muted mt-1">
+						Try adjusting your filters or search term.
+					</p>
+				</div>
+			</div>
+		);
+	}
+
+	return (
+		<div className="divide-y divide-border">
+			{items.map((item) => (
+				<button
+					key={item.id}
+					type="button"
+					onClick={() => onRowClick(item)}
+					className="grid w-full gap-3 py-4 text-left transition-colors hover:bg-default/40 sm:grid-cols-[1fr_auto] sm:px-2"
+				>
+					<div className="min-w-0">
+						<div className="flex flex-wrap items-center gap-2">
+							<span className="font-mono text-xs font-medium text-foreground">
+								{item.orderNumber}
+							</span>
+							<Chip
+								variant="soft"
+								color={orderStatusColors[item.status]}
+								size="sm"
+							>
+								{orderStatusLabels[item.status]}
+							</Chip>
+						</div>
+						<p className="mt-1 text-sm font-medium text-foreground">
+							{item.customer.name}
+						</p>
+						<p className="text-xs text-muted">{item.customer.email}</p>
+					</div>
+					<div className="flex flex-wrap items-center gap-2 sm:justify-end">
+						<Chip
+							variant="soft"
+							color={paymentStatusColors[item.payment.status]}
+							size="sm"
+						>
+							{paymentStatusLabels[item.payment.status]}
+						</Chip>
+						<Chip
+							variant="soft"
+							color={shippingStatusColors[item.shipping.status]}
+							size="sm"
+						>
+							{shippingStatusLabels[item.shipping.status]}
+						</Chip>
+						<span className="text-sm font-semibold text-foreground">
+							{formatCurrency(item.totalAmount)}
+						</span>
+						<span className="text-xs text-muted">
+							{formatDate(item.placedAt)}
+						</span>
+					</div>
+				</button>
+			))}
+		</div>
+	);
+}
+
+export function OrdersCards({ items, onRowClick }: OrdersTableProps) {
+	if (items.length === 0) {
+		return (
+			<div className="py-16 flex flex-col items-center gap-3 text-center">
+				<Package size={28} className="text-muted" />
+				<div>
+					<p className="text-sm font-medium text-foreground">No orders found</p>
+					<p className="text-xs text-muted mt-1">
+						Try adjusting your filters or search term.
+					</p>
+				</div>
+			</div>
+		);
+	}
+
+	return (
+		<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+			{items.map((item) => (
+				<button
+					key={item.id}
+					type="button"
+					onClick={() => onRowClick(item)}
+					className="rounded-2xl border border-border bg-default/30 p-4 text-left transition-colors hover:border-accent/40 hover:bg-default/50"
+				>
+					<div className="flex items-start justify-between gap-3">
+						<div className="min-w-0">
+							<p className="font-mono text-xs font-medium text-muted">
+								{item.orderNumber}
+							</p>
+							<p className="mt-1 truncate text-sm font-semibold text-foreground">
+								{item.customer.name}
+							</p>
+						</div>
+						<span className="text-sm font-bold text-foreground">
+							{formatCurrency(item.totalAmount)}
+						</span>
+					</div>
+					<div className="mt-4 flex flex-wrap gap-2">
+						<Chip
+							variant="soft"
+							color={orderStatusColors[item.status]}
+							size="sm"
+						>
+							{orderStatusLabels[item.status]}
+						</Chip>
+						<Chip
+							variant="soft"
+							color={paymentStatusColors[item.payment.status]}
+							size="sm"
+						>
+							{paymentStatusLabels[item.payment.status]}
+						</Chip>
+						<Chip
+							variant="soft"
+							color={shippingStatusColors[item.shipping.status]}
+							size="sm"
+						>
+							{shippingStatusLabels[item.shipping.status]}
+						</Chip>
+					</div>
+					<div className="mt-4 flex items-center justify-between text-xs text-muted">
+						<span>{formatDate(item.placedAt)}</span>
+						<span>{item.itemCount} items</span>
+					</div>
+				</button>
+			))}
 		</div>
 	);
 }

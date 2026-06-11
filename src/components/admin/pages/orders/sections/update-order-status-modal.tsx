@@ -1,24 +1,22 @@
 import { Button, Modal } from "@heroui/react";
 import { Info, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import type {
-	AdminOrderListItemType,
-	OrderStatusType,
-} from "#/server/orders/admin/admin.types";
+import { useUpdateOrderStatus } from "#/mutations/orders/use-update-order-status";
+import type { OrderListItem, OrderStatus } from "../orders.types";
 
 type UpdateOrderStatusModalProps = {
-	item: AdminOrderListItemType | null;
+	item: OrderListItem | null;
 	onClose: () => void;
 };
 
-const NEXT_STATUSES: Record<string, OrderStatusType[]> = {
+const NEXT_STATUSES: Record<string, OrderStatus[]> = {
 	pending: ["processing", "cancelled"],
 	processing: ["completed", "cancelled"],
 	completed: [],
 	cancelled: [],
 };
 
-const STATUS_LABELS: Record<OrderStatusType, string> = {
+const STATUS_LABELS: Record<OrderStatus, string> = {
 	pending: "Pending",
 	processing: "Processing",
 	completed: "Completed",
@@ -30,7 +28,8 @@ export function UpdateOrderStatusModal({
 	onClose,
 }: UpdateOrderStatusModalProps) {
 	const [selectedStatus, setSelectedStatus] =
-		useState<OrderStatusType>("processing");
+		useState<OrderStatus>("processing");
+	const updateOrderStatus = useUpdateOrderStatus({ onSuccess: onClose });
 
 	useEffect(() => {
 		if (item) {
@@ -79,7 +78,7 @@ export function UpdateOrderStatusModal({
 										id="order-status-select"
 										value={selectedStatus}
 										onChange={(e) =>
-											setSelectedStatus(e.target.value as OrderStatusType)
+											setSelectedStatus(e.target.value as OrderStatus)
 										}
 										className="w-full appearance-none px-3 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer"
 									>
@@ -100,9 +99,15 @@ export function UpdateOrderStatusModal({
 							<Button
 								variant="primary"
 								size="sm"
-								isDisabled={isTerminal}
-								onPress={onClose}
-								// TODO: replace onPress with useUpdateOrderStatus({ onSuccess: onClose }).mutate({ orderId: item.id, orderStatus: selectedStatus })
+								isDisabled={isTerminal || !item}
+								isPending={updateOrderStatus.isPending}
+								onPress={() =>
+									item &&
+									updateOrderStatus.mutate({
+										orderId: item.id,
+										orderStatus: selectedStatus,
+									})
+								}
 							>
 								Update Status
 							</Button>

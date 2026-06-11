@@ -6,6 +6,7 @@ import {
 	Scripts,
 	useRouter,
 } from "@tanstack/react-router";
+import { PageLoading } from "#/components/ui/states/page-loading";
 import appCss from "../styles.css?url";
 
 interface MyRouterContext {
@@ -62,6 +63,13 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			},
 		],
 	}),
+	pendingComponent: () => (
+		<PageLoading
+			title="Loading TechStore"
+			description="Preparing the application."
+			className="min-h-screen"
+		/>
+	),
 	errorComponent: RootErrorComponent,
 	shellComponent: RootDocument,
 });

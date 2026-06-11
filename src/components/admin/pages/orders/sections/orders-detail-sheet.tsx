@@ -1,14 +1,14 @@
 import { Chip } from "@heroui/react";
 import { Archive, Package, RefreshCcw, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { AdminOrderListItemType } from "#/server/orders/admin/admin.types";
+import type { OrderListItem } from "../orders.types";
 
 type OrdersDetailSheetProps = {
-	item: AdminOrderListItemType | null;
+	item: OrderListItem | null;
 	isOpen: boolean;
 	onClose: () => void;
-	onArchive: (item: AdminOrderListItemType) => void;
-	onUpdateStatus: (item: AdminOrderListItemType) => void;
+	onArchive: (item: OrderListItem) => void;
+	onUpdateStatus: (item: OrderListItem) => void;
 };
 
 type ChipColor = "default" | "accent" | "success" | "warning" | "danger";
@@ -136,9 +136,7 @@ export function OrdersDetailSheet({
 	onArchive,
 	onUpdateStatus,
 }: OrdersDetailSheetProps) {
-	const [displayItem, setDisplayItem] = useState<AdminOrderListItemType | null>(
-		null,
-	);
+	const [displayItem, setDisplayItem] = useState<OrderListItem | null>(null);
 
 	useEffect(() => {
 		if (item) setDisplayItem(item);

@@ -3,7 +3,12 @@
 import { Tabs } from "@heroui/react";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { useOption } from "#/hooks/use-option";
+import { DataError } from "#/components/ui/states/data-error";
+import { DataLoading } from "#/components/ui/states/data-loading";
+import {
+	usePersistedViewMode,
+	ViewModeToggle,
+} from "#/components/ui/view-mode-toggle";
 import { Route } from "#/routes/admin/options";
 import {
 	OPTION_CONFIGS,
@@ -13,8 +18,13 @@ import {
 } from "./option-configs";
 import { DeleteOptionDialog } from "./sections/delete-option-dialog";
 import { OptionFormModal } from "./sections/option-form-modal";
-import { OptionsTable } from "./sections/options-table";
+import {
+	OptionsCards,
+	OptionsList,
+	OptionsTable,
+} from "./sections/options-table";
 import { OptionsToolbar } from "./sections/options-toolbar";
+import { useOptionsPage } from "./use-options-page";
 
 export function OptionsPage() {
 	// All filter state lives in the URL so the browser back button works.
@@ -24,10 +34,13 @@ export function OptionsPage() {
 	const [createOpen, setCreateOpen] = useState(false);
 	const [editTarget, setEditTarget] = useState<OptionRow | null>(null);
 	const [deleteTarget, setDeleteTarget] = useState<OptionRow | null>(null);
+	const [viewMode, setViewMode] = usePersistedViewMode(
+		"admin:options:view-mode",
+	);
 
 	const config = OPTION_CONFIGS[tab];
 
-	const { rows, isLoading, isError } = useOption(
+	const { rows, isLoading, isError } = useOptionsPage(
 		tab,
 		search ? { search, searchType } : undefined,
 	);
@@ -78,34 +91,59 @@ export function OptionsPage() {
 
 				{OPTION_TABS.map((t) => (
 					<Tabs.Panel key={t} id={t} className="space-y-4 pt-4">
-						<OptionsToolbar
-							config={OPTION_CONFIGS[t]}
-							search={t === tab ? (search ?? "") : ""}
-							onSearchChange={handleSearchChange}
-							searchType={searchType}
-							onSearchTypeChange={handleSearchTypeChange}
-							totalCount={t === tab ? rows.length : 0}
-							onCreateClick={() => setCreateOpen(true)}
-						/>
+						<div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+							<div className="min-w-0 flex-1">
+								<OptionsToolbar
+									config={OPTION_CONFIGS[t]}
+									search={t === tab ? (search ?? "") : ""}
+									onSearchChange={handleSearchChange}
+									searchType={searchType}
+									onSearchTypeChange={handleSearchTypeChange}
+									totalCount={t === tab ? rows.length : 0}
+									onCreateClick={() => setCreateOpen(true)}
+								/>
+							</div>
+							{t === tab ? (
+								<ViewModeToggle value={viewMode} onChange={setViewMode} />
+							) : null}
+						</div>
 
 						<div className="bg-surface border border-border rounded-2xl p-5 shadow-sm">
 							{t === tab &&
 								(isLoading ? (
-									<p className="py-16 text-center text-sm text-muted">
-										Loading {config.plural}…
-									</p>
+									<DataLoading label={`Loading ${config.plural}...`} />
 								) : isError ? (
-									<p className="py-16 text-center text-sm text-danger">
-										Failed to load {config.plural}. Please try again.
-									</p>
+									<DataError title={`Failed to load ${config.plural}`} />
 								) : (
-									<OptionsTable
-										config={config}
-										rows={rows}
-										hasSearch={Boolean(search)}
-										onEdit={setEditTarget}
-										onDelete={setDeleteTarget}
-									/>
+									<>
+										{viewMode === "table" ? (
+											<OptionsTable
+												config={config}
+												rows={rows}
+												hasSearch={Boolean(search)}
+												onEdit={setEditTarget}
+												onDelete={setDeleteTarget}
+											/>
+										) : null}
+										{viewMode === "list" ? (
+											<OptionsList
+												config={config}
+												rows={rows}
+												hasSearch={Boolean(search)}
+												onEdit={setEditTarget}
+												onDelete={setDeleteTarget}
+											/>
+										) : null}
+										{viewMode === "cards" ? (
+											<OptionsCards
+												config={config}
+												rows={rows}
+												hasSearch={Boolean(search)}
+												onEdit={setEditTarget}
+												onDelete={setDeleteTarget}
+											/>
+										) : null}
+									</>
 								))}
 						</div>
 					</Tabs.Panel>

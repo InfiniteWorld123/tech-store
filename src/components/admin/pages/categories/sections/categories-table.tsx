@@ -1,12 +1,12 @@
 import { Button, Chip } from "@heroui/react";
 import { Pencil, Tags, Trash2 } from "lucide-react";
 import { CategoryIconDisplay } from "#/components/ui/icons/category-icon";
-import type { CategoryWithCount } from "#/server/catalog/categories/categories.types";
+import type { CategoryItem } from "../categories.types";
 
 type Props = {
-	categories: CategoryWithCount[];
-	onEdit: (category: CategoryWithCount) => void;
-	onDelete: (category: CategoryWithCount) => void;
+	categories: CategoryItem[];
+	onEdit: (category: CategoryItem) => void;
+	onDelete: (category: CategoryItem) => void;
 };
 
 function EmptyState({ hasSearch }: { hasSearch: boolean }) {
@@ -131,6 +131,129 @@ export function CategoriesTable({ categories, onEdit, onDelete }: Props) {
 					))}
 				</tbody>
 			</table>
+		</div>
+	);
+}
+
+export function CategoriesList({ categories, onEdit, onDelete }: Props) {
+	if (categories.length === 0) {
+		return <EmptyState hasSearch={false} />;
+	}
+
+	return (
+		<div className="divide-y divide-border">
+			{categories.map((cat) => (
+				<div
+					key={cat.id}
+					className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between"
+				>
+					<div className="flex min-w-0 items-center gap-3">
+						<CategoryIconDisplay
+							icon={cat.icon}
+							iconColor={cat.iconColor}
+							iconBg={cat.iconBg}
+							name={cat.name}
+						/>
+						<div className="min-w-0">
+							<p className="truncate text-sm font-semibold text-foreground">
+								{cat.name}
+							</p>
+							<code className="mt-1 inline-flex rounded-md border border-border bg-default px-2 py-0.5 text-xs text-muted">
+								{cat.slug}
+							</code>
+						</div>
+					</div>
+					<div className="flex items-center justify-between gap-3 sm:justify-end">
+						<Chip size="sm" variant="soft" color="default">
+							{cat.totalProducts} products
+						</Chip>
+						<div className="flex items-center gap-1">
+							<Button
+								isIconOnly
+								size="sm"
+								variant="ghost"
+								onPress={() => onEdit(cat)}
+								aria-label={`Edit ${cat.name}`}
+								className="text-muted hover:text-foreground"
+							>
+								<Pencil size={15} />
+							</Button>
+							<Button
+								isIconOnly
+								size="sm"
+								variant="ghost"
+								onPress={() => onDelete(cat)}
+								aria-label={`Delete ${cat.name}`}
+								className="text-muted hover:text-danger"
+							>
+								<Trash2 size={15} />
+							</Button>
+						</div>
+					</div>
+				</div>
+			))}
+		</div>
+	);
+}
+
+export function CategoriesCards({ categories, onEdit, onDelete }: Props) {
+	if (categories.length === 0) {
+		return <EmptyState hasSearch={false} />;
+	}
+
+	return (
+		<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+			{categories.map((cat) => (
+				<div
+					key={cat.id}
+					className="rounded-2xl border border-border bg-default/30 p-4"
+				>
+					<div className="flex items-start justify-between gap-3">
+						<div className="flex min-w-0 items-center gap-3">
+							<CategoryIconDisplay
+								icon={cat.icon}
+								iconColor={cat.iconColor}
+								iconBg={cat.iconBg}
+								name={cat.name}
+							/>
+							<div className="min-w-0">
+								<p className="truncate text-sm font-semibold text-foreground">
+									{cat.name}
+								</p>
+								<p className="text-xs text-muted">{cat.slug}</p>
+							</div>
+						</div>
+						<Chip size="sm" variant="soft" color="default">
+							{cat.totalProducts}
+						</Chip>
+					</div>
+					<div className="mt-4 flex items-center justify-between text-xs text-muted">
+						<span>Updated {new Date(cat.updatedAt).toLocaleDateString()}</span>
+						<div className="flex items-center gap-1">
+							<Button
+								isIconOnly
+								size="sm"
+								variant="ghost"
+								onPress={() => onEdit(cat)}
+								aria-label={`Edit ${cat.name}`}
+								className="text-muted hover:text-foreground"
+							>
+								<Pencil size={15} />
+							</Button>
+							<Button
+								isIconOnly
+								size="sm"
+								variant="ghost"
+								onPress={() => onDelete(cat)}
+								aria-label={`Delete ${cat.name}`}
+								className="text-muted hover:text-danger"
+							>
+								<Trash2 size={15} />
+							</Button>
+						</div>
+					</div>
+				</div>
+			))}
 		</div>
 	);
 }

@@ -3,13 +3,10 @@
 import { Chip } from "@heroui/react";
 import { Copy, PackageCheck, RefreshCw, Tag, Truck } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type {
-	ShippingListItemType,
-	ShippingStatusType,
-} from "#/server/shipping/shipping.types";
+import type { ShippingListItem, ShippingStatus } from "../shipping.types";
 
 const statusColors: Record<
-	ShippingStatusType,
+	ShippingStatus,
 	"default" | "accent" | "success" | "warning" | "danger"
 > = {
 	pending: "default",
@@ -19,7 +16,7 @@ const statusColors: Record<
 	delivered: "success",
 };
 
-const statusLabels: Record<ShippingStatusType, string> = {
+const statusLabels: Record<ShippingStatus, string> = {
 	pending: "Pending",
 	packed: "Packed",
 	shipped: "Shipped",
@@ -27,20 +24,20 @@ const statusLabels: Record<ShippingStatusType, string> = {
 	delivered: "Delivered",
 };
 
-const carrierLabels: Record<ShippingListItemType["carrier"], string> = {
+const carrierLabels: Record<ShippingListItem["carrier"], string> = {
 	dhl: "DHL",
 	hermes: "Hermes",
 	ups: "UPS",
 	fedex: "FedEx",
 };
 
-const methodLabels: Record<ShippingListItemType["method"], string> = {
+const methodLabels: Record<ShippingListItem["method"], string> = {
 	standard: "Standard",
 	express: "Express",
 	same_day: "Same Day",
 };
 
-const allStatuses: ShippingStatusType[] = [
+const allStatuses: ShippingStatus[] = [
 	"pending",
 	"packed",
 	"shipped",
@@ -69,11 +66,11 @@ type StatusPopover = {
 } | null;
 
 type ShippingTableProps = {
-	items: ShippingListItemType[];
-	onRowClick: (item: ShippingListItemType) => void;
+	items: ShippingListItem[];
+	onRowClick: (item: ShippingListItem) => void;
 	onMarkShipped: (orderId: string) => void;
 	onMarkDelivered: (orderId: string) => void;
-	onStatusChange: (orderId: string, status: ShippingStatusType) => void;
+	onStatusChange: (orderId: string, status: ShippingStatus) => void;
 	onAddTracking: (orderId: string) => void;
 };
 
@@ -104,7 +101,7 @@ export function ShippingTable({
 
 	function openStatusPopover(
 		e: React.MouseEvent<HTMLButtonElement>,
-		item: ShippingListItemType,
+		item: ShippingListItem,
 	) {
 		e.stopPropagation();
 		const rect = e.currentTarget.getBoundingClientRect();
@@ -287,5 +284,198 @@ export function ShippingTable({
 				</div>
 			)}
 		</>
+	);
+}
+
+export function ShippingList({
+	items,
+	onRowClick,
+	onMarkShipped,
+	onMarkDelivered,
+	onAddTracking,
+}: ShippingTableProps) {
+	if (items.length === 0) {
+		return (
+			<div className="py-16 flex flex-col items-center gap-3 text-center">
+				<Truck size={28} className="text-muted" />
+				<div>
+					<p className="text-sm font-medium text-foreground">
+						No shipments found
+					</p>
+					<p className="text-xs text-muted mt-1">
+						Try a different filter or create a new shipment.
+					</p>
+				</div>
+			</div>
+		);
+	}
+
+	return (
+		<div className="divide-y divide-border">
+			{items.map((item) => (
+				<button
+					key={item.id}
+					type="button"
+					onClick={() => onRowClick(item)}
+					className="grid w-full gap-3 py-4 text-left transition-colors hover:bg-default/40 sm:grid-cols-[1fr_auto] sm:px-2"
+				>
+					<div className="min-w-0">
+						<div className="flex flex-wrap items-center gap-2">
+							<span className="font-mono text-xs font-medium text-foreground">
+								{item.orderNumber}
+							</span>
+							<Chip variant="soft" color={statusColors[item.status]} size="sm">
+								{statusLabels[item.status]}
+							</Chip>
+						</div>
+						<p className="mt-1 text-sm text-muted">
+							{carrierLabels[item.carrier]} • {methodLabels[item.method]}
+						</p>
+						<p className="mt-1 text-xs text-muted">
+							Tracking: {item.trackingNumber ?? "Not assigned"}
+						</p>
+					</div>
+					<div className="flex flex-wrap items-center gap-1 sm:justify-end">
+						<button
+							type="button"
+							title="Mark as shipped"
+							disabled={
+								item.status === "shipped" ||
+								item.status === "in_transit" ||
+								item.status === "delivered"
+							}
+							onClick={(e) => {
+								e.stopPropagation();
+								onMarkShipped(item.orderId);
+							}}
+							className={iconBtnClass}
+						>
+							<Truck size={13} />
+						</button>
+						<button
+							type="button"
+							title="Mark as delivered"
+							disabled={item.status === "delivered"}
+							onClick={(e) => {
+								e.stopPropagation();
+								onMarkDelivered(item.orderId);
+							}}
+							className={iconBtnClass}
+						>
+							<PackageCheck size={13} />
+						</button>
+						<button
+							type="button"
+							title="Add tracking number"
+							onClick={(e) => {
+								e.stopPropagation();
+								onAddTracking(item.orderId);
+							}}
+							className={iconBtnClass}
+						>
+							<Tag size={13} />
+						</button>
+					</div>
+				</button>
+			))}
+		</div>
+	);
+}
+
+export function ShippingCards({
+	items,
+	onRowClick,
+	onMarkShipped,
+	onMarkDelivered,
+	onAddTracking,
+}: ShippingTableProps) {
+	if (items.length === 0) {
+		return (
+			<div className="py-16 flex flex-col items-center gap-3 text-center">
+				<Truck size={28} className="text-muted" />
+				<div>
+					<p className="text-sm font-medium text-foreground">
+						No shipments found
+					</p>
+					<p className="text-xs text-muted mt-1">
+						Try a different filter or create a new shipment.
+					</p>
+				</div>
+			</div>
+		);
+	}
+
+	return (
+		<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+			{items.map((item) => (
+				<button
+					key={item.id}
+					type="button"
+					onClick={() => onRowClick(item)}
+					className="rounded-2xl border border-border bg-default/30 p-4 text-left transition-colors hover:border-accent/40 hover:bg-default/50"
+				>
+					<div className="flex items-start justify-between gap-3">
+						<div className="min-w-0">
+							<p className="font-mono text-xs font-medium text-muted">
+								{item.orderNumber}
+							</p>
+							<p className="mt-1 text-sm font-semibold text-foreground">
+								{carrierLabels[item.carrier]}
+							</p>
+						</div>
+						<Chip variant="soft" color={statusColors[item.status]} size="sm">
+							{statusLabels[item.status]}
+						</Chip>
+					</div>
+					<div className="mt-4 text-xs text-muted">
+						<p>{methodLabels[item.method]}</p>
+						<p className="mt-1 truncate">
+							Tracking: {item.trackingNumber ?? "Not assigned"}
+						</p>
+					</div>
+					<div className="mt-4 flex items-center justify-end gap-1">
+						<button
+							type="button"
+							title="Mark as shipped"
+							disabled={
+								item.status === "shipped" ||
+								item.status === "in_transit" ||
+								item.status === "delivered"
+							}
+							onClick={(e) => {
+								e.stopPropagation();
+								onMarkShipped(item.orderId);
+							}}
+							className={iconBtnClass}
+						>
+							<Truck size={13} />
+						</button>
+						<button
+							type="button"
+							title="Mark as delivered"
+							disabled={item.status === "delivered"}
+							onClick={(e) => {
+								e.stopPropagation();
+								onMarkDelivered(item.orderId);
+							}}
+							className={iconBtnClass}
+						>
+							<PackageCheck size={13} />
+						</button>
+						<button
+							type="button"
+							title="Add tracking number"
+							onClick={(e) => {
+								e.stopPropagation();
+								onAddTracking(item.orderId);
+							}}
+							className={iconBtnClass}
+						>
+							<Tag size={13} />
+						</button>
+					</div>
+				</button>
+			))}
+		</div>
 	);
 }

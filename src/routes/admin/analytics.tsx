@@ -1,4 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import {
+	AdminRouteError,
+	AdminRouteLoading,
+} from "#/components/admin/layout/admin-route-states";
 import { AnalyticsPage } from "#/components/admin/pages/analytics/analytics-page";
 import {
 	cartMetricsQueryOptions,
@@ -23,4 +27,6 @@ export const Route = createFileRoute("/admin/analytics")({
 			context.queryClient.ensureQueryData(shippingMetricsQueryOptions()),
 			context.queryClient.ensureQueryData(cartMetricsQueryOptions()),
 		]),
+	pendingComponent: AdminRouteLoading,
+	errorComponent: ({ error }) => <AdminRouteError error={error as Error} />,
 });

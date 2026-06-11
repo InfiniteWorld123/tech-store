@@ -3,13 +3,10 @@
 import { Chip } from "@heroui/react";
 import { Copy, PackageCheck, RefreshCw, Tag, Truck, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import type {
-	ShippingListItemType,
-	ShippingStatusType,
-} from "#/server/shipping/shipping.types";
+import type { ShippingListItem, ShippingStatus } from "../shipping.types";
 
 const statusColors: Record<
-	ShippingStatusType,
+	ShippingStatus,
 	"default" | "accent" | "success" | "warning" | "danger"
 > = {
 	pending: "default",
@@ -19,7 +16,7 @@ const statusColors: Record<
 	delivered: "success",
 };
 
-const statusLabels: Record<ShippingStatusType, string> = {
+const statusLabels: Record<ShippingStatus, string> = {
 	pending: "Pending",
 	packed: "Packed",
 	shipped: "Shipped",
@@ -27,14 +24,14 @@ const statusLabels: Record<ShippingStatusType, string> = {
 	delivered: "Delivered",
 };
 
-const carrierLabels: Record<ShippingListItemType["carrier"], string> = {
+const carrierLabels: Record<ShippingListItem["carrier"], string> = {
 	dhl: "DHL",
 	hermes: "Hermes",
 	ups: "UPS",
 	fedex: "FedEx",
 };
 
-const methodLabels: Record<ShippingListItemType["method"], string> = {
+const methodLabels: Record<ShippingListItem["method"], string> = {
 	standard: "Standard",
 	express: "Express",
 	same_day: "Same Day",
@@ -52,7 +49,7 @@ function formatDate(iso: string | null) {
 }
 
 type ShippingDetailSheetProps = {
-	item: ShippingListItemType | null;
+	item: ShippingListItem | null;
 	isOpen: boolean;
 	onClose: () => void;
 	onMarkShipped: (orderId: string) => void;
@@ -70,9 +67,7 @@ export function ShippingDetailSheet({
 	onStatusChange,
 	onAddTracking,
 }: ShippingDetailSheetProps) {
-	const [displayItem, setDisplayItem] = useState<ShippingListItemType | null>(
-		null,
-	);
+	const [displayItem, setDisplayItem] = useState<ShippingListItem | null>(null);
 
 	useEffect(() => {
 		if (item) setDisplayItem(item);

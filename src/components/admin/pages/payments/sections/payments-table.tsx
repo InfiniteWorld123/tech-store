@@ -2,9 +2,9 @@
 
 import { Button, Chip } from "@heroui/react";
 import { useRefundPayment } from "#/mutations/payments/use-refund-payment";
-import type { PaymentListItemType } from "#/server/payments/payments.types";
+import type { PaymentListItem } from "../payments.types";
 
-const methodLabels: Record<PaymentListItemType["method"], string> = {
+const methodLabels: Record<PaymentListItem["method"], string> = {
 	card: "Card",
 	paypal: "PayPal",
 	bank_transfer: "Bank Transfer",
@@ -12,7 +12,7 @@ const methodLabels: Record<PaymentListItemType["method"], string> = {
 };
 
 const statusColors: Record<
-	PaymentListItemType["status"],
+	PaymentListItem["status"],
 	"success" | "warning" | "danger" | "default"
 > = {
 	paid: "success",
@@ -41,7 +41,7 @@ const thClass = "text-left py-3 px-2 text-xs font-semibold text-muted";
 const tdClass = "py-3 px-2";
 
 type PaymentsTableProps = {
-	items: PaymentListItemType[];
+	items: PaymentListItem[];
 };
 
 export function PaymentsTable({ items }: PaymentsTableProps) {
@@ -111,6 +111,111 @@ export function PaymentsTable({ items }: PaymentsTableProps) {
 					))}
 				</tbody>
 			</table>
+		</div>
+	);
+}
+
+export function PaymentsList({ items }: PaymentsTableProps) {
+	const { mutate: refund, isPending, variables } = useRefundPayment();
+
+	if (items.length === 0) {
+		return (
+			<div className="py-12 text-center">
+				<p className="text-sm text-muted">No payments found.</p>
+			</div>
+		);
+	}
+
+	return (
+		<div className="divide-y divide-border">
+			{items.map((item) => (
+				<div
+					key={item.id}
+					className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between"
+				>
+					<div className="min-w-0">
+						<div className="flex flex-wrap items-center gap-2">
+							<p className="font-mono text-xs font-medium text-foreground">
+								{item.orderNumber}
+							</p>
+							<Chip variant="soft" color={statusColors[item.status]}>
+								{item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+							</Chip>
+						</div>
+						<p className="mt-1 text-sm text-muted">
+							{methodLabels[item.method]} • Created {formatDate(item.createdAt)}
+						</p>
+					</div>
+					<div className="flex items-center justify-between gap-3 sm:justify-end">
+						<span className="text-sm font-semibold text-foreground">
+							{formatAmount(item.amount, item.currency)}
+						</span>
+						{item.status === "paid" ? (
+							<Button
+								variant="danger-soft"
+								size="sm"
+								isPending={isPending && variables?.orderId === item.orderId}
+								onPress={() => refund({ orderId: item.orderId })}
+							>
+								Refund
+							</Button>
+						) : null}
+					</div>
+				</div>
+			))}
+		</div>
+	);
+}
+
+export function PaymentsCards({ items }: PaymentsTableProps) {
+	const { mutate: refund, isPending, variables } = useRefundPayment();
+
+	if (items.length === 0) {
+		return (
+			<div className="py-12 text-center">
+				<p className="text-sm text-muted">No payments found.</p>
+			</div>
+		);
+	}
+
+	return (
+		<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+			{items.map((item) => (
+				<div
+					key={item.id}
+					className="rounded-2xl border border-border bg-default/30 p-4"
+				>
+					<div className="flex items-start justify-between gap-3">
+						<div className="min-w-0">
+							<p className="font-mono text-xs font-medium text-muted">
+								{item.orderNumber}
+							</p>
+							<p className="mt-1 text-sm font-semibold text-foreground">
+								{methodLabels[item.method]}
+							</p>
+						</div>
+						<Chip variant="soft" color={statusColors[item.status]}>
+							{item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+						</Chip>
+					</div>
+					<p className="mt-4 text-xl font-bold text-foreground">
+						{formatAmount(item.amount, item.currency)}
+					</p>
+					<div className="mt-4 flex items-center justify-between gap-3 text-xs text-muted">
+						<span>Paid {formatDate(item.paidAt)}</span>
+						{item.status === "paid" ? (
+							<Button
+								variant="danger-soft"
+								size="sm"
+								isPending={isPending && variables?.orderId === item.orderId}
+								onPress={() => refund({ orderId: item.orderId })}
+							>
+								Refund
+							</Button>
+						) : null}
+					</div>
+				</div>
+			))}
 		</div>
 	);
 }

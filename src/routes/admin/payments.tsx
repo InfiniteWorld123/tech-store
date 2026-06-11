@@ -1,23 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
+import {
+	AdminRouteError,
+	AdminRouteLoading,
+} from "#/components/admin/layout/admin-route-states";
 import { PaymentsPage } from "#/components/admin/pages/payments/payments-page.tsx";
 import { listPaymentsQueryOptions } from "#/queries/payments.queries";
 import { listPaymentsSchema } from "#/server/payments/payments.schemas";
 
 export const Route = createFileRoute("/admin/payments")({
 	validateSearch: listPaymentsSchema,
-	loaderDeps: ({ search }) => ({
-		status: search.status,
-		method: search.method,
-		search: search.search,
-		dateRange: search.dateRange,
-		page: search.page,
-		limit: search.limit,
-		sortBy: search.sortBy,
-		sortOrder: search.sortOrder,
-	}),
+	loaderDeps: ({ search }) => search,
 	loader: ({ context, deps }) =>
 		context.queryClient.ensureQueryData(listPaymentsQueryOptions(deps)),
 	component: PaymentsPage,
-	pendingComponent: () => <div></div>,
-	errorComponent: () => <div></div>,
+	pendingComponent: AdminRouteLoading,
+	errorComponent: ({ error }) => <AdminRouteError error={error as Error} />,
 });

@@ -1,5 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LandingPage } from "#/components/landing/pages/landing-page";
+import {
+	PublicRouteError,
+	PublicRouteLoading,
+} from "#/components/layout/public-route-states";
 import { listCategoriesQueryOptions } from "../queries/categories.queries";
 import {
 	bestsellerProductsQueryOptions,
@@ -23,4 +27,6 @@ export const Route = createFileRoute("/")({
 				.catch(() => null),
 		]),
 	component: LandingPage,
+	pendingComponent: PublicRouteLoading,
+	errorComponent: ({ error }) => <PublicRouteError error={error as Error} />,
 });

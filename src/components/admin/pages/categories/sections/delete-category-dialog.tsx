@@ -2,10 +2,10 @@ import { AlertDialog, Button } from "@heroui/react";
 import { Trash2 } from "lucide-react";
 import { useDeleteCategory } from "#/mutations/category/use-delete-category";
 import { Route } from "#/routes/admin/categories";
-import type { CategoryWithCount } from "#/server/catalog/categories/categories.types";
+import type { CategoryItem } from "../categories.types";
 
 type Props = {
-	category: CategoryWithCount | null;
+	category: CategoryItem | null;
 	onClose: () => void;
 };
 

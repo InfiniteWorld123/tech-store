@@ -1,13 +1,16 @@
 import { Button, Modal } from "@heroui/react";
 import { X } from "lucide-react";
-import type { AdminOrderListItemType } from "#/server/orders/admin/admin.types";
+import { useArchiveOrder } from "#/mutations/orders/use-archive-order";
+import type { OrderListItem } from "../orders.types";
 
 type ArchiveOrderDialogProps = {
-	item: AdminOrderListItemType | null;
+	item: OrderListItem | null;
 	onClose: () => void;
 };
 
 export function ArchiveOrderDialog({ item, onClose }: ArchiveOrderDialogProps) {
+	const archiveOrder = useArchiveOrder({ onSuccess: onClose });
+
 	return (
 		<Modal.Root
 			isOpen={item !== null}
@@ -42,8 +45,11 @@ export function ArchiveOrderDialog({ item, onClose }: ArchiveOrderDialogProps) {
 							<Button
 								variant="danger"
 								size="sm"
-								onPress={onClose}
-								// TODO: replace onPress with useArchiveOrder({ onSuccess: onClose }).mutate({ orderId: item.id })
+								isDisabled={!item}
+								isPending={archiveOrder.isPending}
+								onPress={() =>
+									item && archiveOrder.mutate({ orderId: item.id })
+								}
 							>
 								Archive
 							</Button>

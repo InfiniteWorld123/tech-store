@@ -6,11 +6,11 @@ import { CategoryIconDisplay } from "#/components/ui/icons/category-icon";
 import { CategoryIconPicker } from "#/components/ui/icons/category-icon-picker";
 import { useUpdateCategory } from "#/mutations/category/use-update-category";
 import { Route } from "#/routes/admin/categories";
-import type { CategoryWithCount } from "#/server/catalog/categories/categories.types";
+import type { CategoryItem } from "../categories.types";
 import { categoryFormSchema } from "../category-form-schema";
 
 type Props = {
-	category: CategoryWithCount | null;
+	category: CategoryItem | null;
 	onClose: () => void;
 };
 
@@ -20,7 +20,7 @@ function EditCategoryForm({
 	category,
 	onClose,
 }: {
-	category: CategoryWithCount;
+	category: CategoryItem;
 	onClose: () => void;
 }) {
 	const { searching } = Route.useSearch();

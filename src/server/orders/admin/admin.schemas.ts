@@ -145,15 +145,17 @@ export const listOrdersSchema = z.object({
 		})
 		.optional(),
 
-	pagination: z.object({
-		page: z.number().int().min(1).default(1),
-		limit: z
-			.number()
-			.int()
-			.min(1, "Limit must be at least 1")
-			.max(100, "Limit cannot be greater than 100")
-			.default(10),
-	}),
+	pagination: z
+		.object({
+			page: z.number().int().min(1).default(1),
+			limit: z
+				.number()
+				.int()
+				.min(1, "Limit must be at least 1")
+				.max(100, "Limit cannot be greater than 100")
+				.default(10),
+		})
+		.default({ page: 1, limit: 10 }),
 });
 
 export const getOrderDetailSchema = z.object({

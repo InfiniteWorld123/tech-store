@@ -1,6 +1,8 @@
 import { Card, Link, Skeleton } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, PackageSearch, TrendingUp } from "lucide-react";
+import { DataError } from "#/components/ui/states/data-error";
+import { EmptyState } from "#/components/ui/states/empty-state";
 import { bestsellerProductsQueryOptions } from "#/queries/products.queries";
 import { ProductCard } from "../ui/product-card";
 
@@ -73,18 +75,17 @@ export function BestsellersSection() {
 							/>
 						))}
 					</div>
+				) : isError ? (
+					<DataError
+						title="Failed to load best sellers"
+						description="We couldn't load best-selling products right now. Please try again later."
+					/>
 				) : (
-					<Card className="items-center border-dashed px-6 py-12 text-center">
-						<PackageSearch size={26} className="text-muted" />
-						<Card.Header className="items-center">
-							<Card.Title className="text-base">No best sellers yet</Card.Title>
-							<Card.Description className="max-w-md">
-								{isError
-									? "We couldn't load best-selling products right now. Please try again later."
-									: "There are no best-selling products available right now. Check back soon."}
-							</Card.Description>
-						</Card.Header>
-					</Card>
+					<EmptyState
+						icon={PackageSearch}
+						title="No best sellers yet"
+						description="There are no best-selling products available right now. Check back soon."
+					/>
 				)}
 
 				{/* Mobile link */}

@@ -1,12 +1,12 @@
 import { CreditCard, Search } from "lucide-react";
-import type { ListPaymentsInputType } from "#/server/payments/payments.types";
+import type { PaymentMethod, PaymentStatus } from "../payments.types";
 
 type PaymentsToolbarProps = {
 	search: string;
 	onSearchChange: (value: string) => void;
-	status: ListPaymentsInputType["status"];
+	status: PaymentStatus | undefined;
 	onStatusChange: (value: string) => void;
-	method: ListPaymentsInputType["method"];
+	method: PaymentMethod | undefined;
 	onMethodChange: (value: string) => void;
 };
 

@@ -1,5 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ResetPasswordPage } from "#/components/auth/pages/reset-password-page";
+import {
+	AuthRouteError,
+	AuthRouteLoading,
+} from "#/components/auth/sections/auth-route-states";
 
 export const Route = createFileRoute("/_auth/reset-password")({
 	validateSearch: (search: Record<string, unknown>) => ({
@@ -7,6 +11,8 @@ export const Route = createFileRoute("/_auth/reset-password")({
 		error: typeof search.error === "string" ? search.error : undefined,
 	}),
 	component: ResetPassword,
+	pendingComponent: AuthRouteLoading,
+	errorComponent: ({ error }) => <AuthRouteError error={error as Error} />,
 });
 
 function ResetPassword() {

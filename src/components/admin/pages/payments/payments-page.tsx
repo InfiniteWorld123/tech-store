@@ -3,16 +3,29 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { DataError } from "#/components/ui/states/data-error";
+import { DataLoading } from "#/components/ui/states/data-loading";
+import {
+	usePersistedViewMode,
+	ViewModeToggle,
+} from "#/components/ui/view-mode-toggle";
 import { listPaymentsQueryOptions } from "#/queries/payments.queries";
 import { Route } from "#/routes/admin/payments";
 import { PaymentsPagination } from "./sections/payments-pagination";
-import { PaymentsTable } from "./sections/payments-table";
+import {
+	PaymentsCards,
+	PaymentsList,
+	PaymentsTable,
+} from "./sections/payments-table";
 import { PaymentsToolbar } from "./sections/payments-toolbar";
 
 export function PaymentsPage() {
 	const search = Route.useSearch();
 	const navigate = useNavigate({ from: Route.fullPath });
 	const queryClient = useQueryClient();
+	const [viewMode, setViewMode] = usePersistedViewMode(
+		"admin:payments:view-mode",
+	);
 
 	const [inputValue, setInputValue] = useState(search.search ?? "");
 
@@ -77,34 +90,42 @@ export function PaymentsPage() {
 				</p>
 			</div>
 
-			<PaymentsToolbar
-				search={inputValue}
-				onSearchChange={setInputValue}
-				status={search.status}
-				onStatusChange={setStatus}
-				method={search.method}
-				onMethodChange={setMethod}
-			/>
-
-			{isLoading && <p className="text-sm text-muted">Loading payments…</p>}
-			{isError && (
-				<p className="text-sm text-danger">
-					Failed to load payments. Please try again.
-				</p>
-			)}
+			<div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+				<div className="min-w-0 flex-1">
+					<PaymentsToolbar
+						search={inputValue}
+						onSearchChange={setInputValue}
+						status={search.status}
+						onStatusChange={setStatus}
+						method={search.method}
+						onMethodChange={setMethod}
+					/>
+				</div>
+				<ViewModeToggle value={viewMode} onChange={setViewMode} />
+			</div>
 
 			<div className="bg-surface border border-border rounded-2xl p-5 shadow-sm">
-				<PaymentsTable items={items} />
+				{isLoading ? (
+					<DataLoading label="Loading payments..." />
+				) : isError ? (
+					<DataError title="Failed to load payments" />
+				) : (
+					<>
+						{viewMode === "table" ? <PaymentsTable items={items} /> : null}
+						{viewMode === "list" ? <PaymentsList items={items} /> : null}
+						{viewMode === "cards" ? <PaymentsCards items={items} /> : null}
 
-				{pagination && (
-					<PaymentsPagination
-						currentPage={search.page}
-						totalPages={pagination.totalPages}
-						totalItems={pagination.total}
-						limit={search.limit}
-						onPageChange={setPage}
-						onPrefetchPage={prefetchPage}
-					/>
+						{pagination && (
+							<PaymentsPagination
+								currentPage={search.page}
+								totalPages={pagination.totalPages}
+								totalItems={pagination.total}
+								limit={search.limit}
+								onPageChange={setPage}
+								onPrefetchPage={prefetchPage}
+							/>
+						)}
+					</>
 				)}
 			</div>
 		</div>
