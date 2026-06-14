@@ -57,140 +57,133 @@ export const createVariant = async (
 
 		ensureCompareAtPrice(price, compareAtPrice);
 
-		const payload = await db.transaction(async (tx) => {
-			const existingProduct = await tx
-				.select({ id: product.id })
-				.from(product)
-				.where(eq(product.id, productId));
+		const existingProduct = await db
+			.select({ id: product.id })
+			.from(product)
+			.where(eq(product.id, productId));
 
-			if (existingProduct.length === 0) {
-				throw notFoundError("Product not found");
+		if (existingProduct.length === 0) {
+			throw notFoundError("Product not found");
+		}
+
+		const existingSku = await db
+			.select({ id: variant.id })
+			.from(variant)
+			.where(eq(variant.sku, sku));
+
+		if (existingSku.length > 0) {
+			throw conflictError("Variant SKU already exists");
+		}
+
+		if (colorId != null) {
+			const existingColor = await db
+				.select({ id: color.id })
+				.from(color)
+				.where(eq(color.id, colorId));
+
+			if (existingColor.length === 0) {
+				throw notFoundError("Color not found");
 			}
+		}
 
-			const existingSku = await tx
-				.select({ id: variant.id })
-				.from(variant)
-				.where(eq(variant.sku, sku));
+		if (storageId != null) {
+			const existingStorage = await db
+				.select({ id: storage.id })
+				.from(storage)
+				.where(eq(storage.id, storageId));
 
-			if (existingSku.length > 0) {
-				throw conflictError("Variant SKU already exists");
+			if (existingStorage.length === 0) {
+				throw notFoundError("Storage option not found");
 			}
+		}
 
-			if (colorId != null) {
-				const existingColor = await tx
-					.select({ id: color.id })
-					.from(color)
-					.where(eq(color.id, colorId));
+		if (ramId != null) {
+			const existingRam = await db
+				.select({ id: ram.id })
+				.from(ram)
+				.where(eq(ram.id, ramId));
 
-				if (existingColor.length === 0) {
-					throw notFoundError("Color not found");
-				}
+			if (existingRam.length === 0) {
+				throw notFoundError("RAM option not found");
 			}
+		}
 
-			if (storageId != null) {
-				const existingStorage = await tx
-					.select({ id: storage.id })
-					.from(storage)
-					.where(eq(storage.id, storageId));
+		if (screenSizeId != null) {
+			const existingScreenSize = await db
+				.select({ id: screenSize.id })
+				.from(screenSize)
+				.where(eq(screenSize.id, screenSizeId));
 
-				if (existingStorage.length === 0) {
-					throw notFoundError("Storage option not found");
-				}
+			if (existingScreenSize.length === 0) {
+				throw notFoundError("Screen size option not found");
 			}
+		}
 
-			if (ramId != null) {
-				const existingRam = await tx
-					.select({ id: ram.id })
-					.from(ram)
-					.where(eq(ram.id, ramId));
+		const existingVariants = await db
+			.select({ id: variant.id })
+			.from(variant)
+			.where(eq(variant.productId, productId));
 
-				if (existingRam.length === 0) {
-					throw notFoundError("RAM option not found");
-				}
-			}
+		const shouldBeDefault = isDefault || existingVariants.length === 0;
 
-			if (screenSizeId != null) {
-				const existingScreenSize = await tx
-					.select({ id: screenSize.id })
-					.from(screenSize)
-					.where(eq(screenSize.id, screenSizeId));
-
-				if (existingScreenSize.length === 0) {
-					throw notFoundError("Screen size option not found");
-				}
-			}
-
-			const existingVariants = await tx
-				.select({ id: variant.id })
-				.from(variant)
+		if (shouldBeDefault) {
+			await db
+				.update(variant)
+				.set({ isDefault: false })
 				.where(eq(variant.productId, productId));
+		}
 
-			const shouldBeDefault = isDefault || existingVariants.length === 0;
+		const [createdVariant] = await db
+			.insert(variant)
+			.values({
+				productId,
+				sku,
+				price: price.toString(),
+				compareAtPrice:
+					compareAtPrice == null ? null : compareAtPrice.toString(),
+				stockQuantity,
+				colorId: colorId ?? null,
+				storageId: storageId ?? null,
+				ramId: ramId ?? null,
+				screenSizeId: screenSizeId ?? null,
+				isDefault: shouldBeDefault,
+			})
+			.returning();
 
-			if (shouldBeDefault) {
-				await tx
-					.update(variant)
-					.set({ isDefault: false })
-					.where(eq(variant.productId, productId));
-			}
+		if (!createdVariant) {
+			throw badRequestError("Variant creation failed");
+		}
 
-			const [createdVariant] = await tx
-				.insert(variant)
-				.values({
-					productId,
-					sku,
-					price: price.toString(),
-					compareAtPrice:
-						compareAtPrice == null ? null : compareAtPrice.toString(),
-					stockQuantity,
-					colorId: colorId ?? null,
-					storageId: storageId ?? null,
-					ramId: ramId ?? null,
-					screenSizeId: screenSizeId ?? null,
-					isDefault: shouldBeDefault,
-				})
-				.returning();
+		const variantImageRows = images.map((image, imageIndex) => ({
+			variantId: createdVariant.id,
+			image,
+			sortOrder: imageIndex,
+		}));
 
-			if (!createdVariant) {
-				throw badRequestError("Variant creation failed");
-			}
-
-			const variantImageRows = images.map((image, imageIndex) => ({
-				variantId: createdVariant.id,
-				image,
-				sortOrder: imageIndex,
-			}));
-
-			await tx.insert(variantImage).values(variantImageRows);
-
-			return {
-				variant: createdVariant,
-				images,
-			};
-		});
+		await db.insert(variantImage).values(variantImageRows);
 
 		return jsonOk<CreateVariantOutputType>({
 			status: HttpStatusCode.CREATED,
 			message: "Variant created successfully",
 			data: {
 				variant: {
-					id: payload.variant.id,
-					productId: payload.variant.productId,
-					sku: payload.variant.sku,
-					price: Number(payload.variant.price),
+					id: createdVariant.id,
+					productId: createdVariant.productId,
+					sku: createdVariant.sku,
+					price: Number(createdVariant.price),
 					compareAtPrice:
-						payload.variant.compareAtPrice == null
+						createdVariant.compareAtPrice == null
 							? null
-							: Number(payload.variant.compareAtPrice),
-					stockQuantity: payload.variant.stockQuantity,
-					colorId: payload.variant.colorId,
-					storageId: payload.variant.storageId,
-					ramId: payload.variant.ramId,
-					screenSizeId: payload.variant.screenSizeId,
-					isDefault: payload.variant.isDefault,
-					images: payload.images,
-					createdAt: payload.variant.createdAt.toISOString(),
-					updatedAt: payload.variant.updatedAt.toISOString(),
+							: Number(createdVariant.compareAtPrice),
+					stockQuantity: createdVariant.stockQuantity,
+					colorId: createdVariant.colorId,
+					storageId: createdVariant.storageId,
+					ramId: createdVariant.ramId,
+					screenSizeId: createdVariant.screenSizeId,
+					isDefault: createdVariant.isDefault,
+					images,
+					createdAt: createdVariant.createdAt.toISOString(),
+					updatedAt: createdVariant.updatedAt.toISOString(),
 				},
 			},
 		});

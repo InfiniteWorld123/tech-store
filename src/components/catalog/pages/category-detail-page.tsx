@@ -1,40 +1,41 @@
 "use client";
 
-import { Card, Chip, Pagination, Skeleton } from "@heroui/react";
+import { Button, Card, Chip, Skeleton } from "@heroui/react";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import {
 	ArrowRight,
-	Gamepad2,
-	Headphones,
 	ImageOff,
-	Laptop,
-	Plug,
-	Smartphone,
-	Tablet,
+	Search,
+	SlidersHorizontal,
 	Tags,
 } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ProductCard } from "#/components/landing/ui/product-card";
 import { Footer } from "#/components/layout/footer";
 import { Header } from "#/components/layout/header";
 import LinkAnchor from "#/components/ui/buttons/link-anchor";
+import { CategoryIconDisplay } from "#/components/ui/icons/category-icon";
+import { WindowedPagination } from "#/components/ui/pagination/windowed-pagination";
+import { useDebouncedSearchParam } from "#/hooks/use-debounced-search-param";
+import { useQueryIntentPrefetch } from "#/hooks/use-query-intent-prefetch";
+import { listCategoriesQueryOptions } from "#/queries/categories.queries";
+import {
+	listColorsQueryOptions,
+	listRamsQueryOptions,
+	listScreensQueryOptions,
+	listStoragesQueryOptions,
+} from "#/queries/options.queries";
+import { listProductsQueryOptions } from "#/queries/products.queries";
+import { Route } from "#/routes/categories/$slug";
+import type { GetProductsInputType } from "#/server/catalog/products/products.types";
+import {
+	ProductFilterDrawer,
+	ProductFilterSidebar,
+	type ProductFilterValues,
+} from "../sections/product-filter-sidebar";
 
-const CATEGORY_ICONS: Record<string, React.ElementType> = {
-	laptops: Laptop,
-	smartphones: Smartphone,
-	tablets: Tablet,
-	audio: Headphones,
-	accessories: Plug,
-	gaming: Gamepad2,
-};
-
-const CATEGORY_COLORS: Record<string, string> = {
-	laptops: "bg-blue-100 text-blue-600",
-	smartphones: "bg-purple-100 text-purple-600",
-	tablets: "bg-cyan-100 text-cyan-600",
-	audio: "bg-orange-100 text-orange-600",
-	accessories: "bg-green-100 text-green-600",
-	gaming: "bg-red-100 text-red-600",
-};
+const LIMIT = 12;
 
 const SORT_OPTIONS = [
 	{ value: "createdAt:desc", label: "Newest" },
@@ -43,167 +44,214 @@ const SORT_OPTIONS = [
 	{ value: "rating:desc", label: "Top Rated" },
 	{ value: "reviews:desc", label: "Most Reviewed" },
 	{ value: "name:asc", label: "Name A–Z" },
-];
+] as const;
 
-const MOCK_PRODUCTS = [
-	{
-		id: "1",
-		name: 'MacBook Pro 16"',
-		brand: "Apple",
-		slug: "macbook-pro-16",
-		image: null,
-		price: 2499,
-		compareAtPrice: 2799,
-		ratingAvg: 4.8,
-		reviewsCount: 342,
-	},
-	{
-		id: "2",
-		name: "Dell XPS 15",
-		brand: "Dell",
-		slug: "dell-xps-15",
-		image: null,
-		price: 1799,
-		compareAtPrice: null,
-		ratingAvg: 4.5,
-		reviewsCount: 218,
-	},
-	{
-		id: "3",
-		name: "ThinkPad X1 Carbon",
-		brand: "Lenovo",
-		slug: "thinkpad-x1-carbon",
-		image: null,
-		price: 1599,
-		compareAtPrice: 1899,
-		ratingAvg: 4.6,
-		reviewsCount: 187,
-	},
-	{
-		id: "4",
-		name: "Surface Laptop 5",
-		brand: "Microsoft",
-		slug: "surface-laptop-5",
-		image: null,
-		price: 1299,
-		compareAtPrice: null,
-		ratingAvg: 4.3,
-		reviewsCount: 94,
-	},
-	{
-		id: "5",
-		name: "Galaxy Book3 Pro",
-		brand: "Samsung",
-		slug: "galaxy-book3-pro",
-		image: null,
-		price: 1399,
-		compareAtPrice: 1599,
-		ratingAvg: 4.4,
-		reviewsCount: 112,
-	},
-	{
-		id: "6",
-		name: "HP Spectre x360",
-		brand: "HP",
-		slug: "hp-spectre-x360",
-		image: null,
-		price: 1449,
-		compareAtPrice: null,
-		ratingAvg: 4.2,
-		reviewsCount: 76,
-	},
-	{
-		id: "7",
-		name: "ASUS ZenBook 14",
-		brand: "ASUS",
-		slug: "asus-zenbook-14",
-		image: null,
-		price: 999,
-		compareAtPrice: 1199,
-		ratingAvg: 4.1,
-		reviewsCount: 155,
-	},
-	{
-		id: "8",
-		name: "Razer Blade 15",
-		brand: "Razer",
-		slug: "razer-blade-15",
-		image: null,
-		price: 2199,
-		compareAtPrice: null,
-		ratingAvg: 4.7,
-		reviewsCount: 203,
-	},
-	{
-		id: "9",
-		name: "MacBook Air M2",
-		brand: "Apple",
-		slug: "macbook-air-m2",
-		image: null,
-		price: 1099,
-		compareAtPrice: 1299,
-		ratingAvg: 4.9,
-		reviewsCount: 521,
-	},
-	{
-		id: "10",
-		name: "Acer Swift 5",
-		brand: "Acer",
-		slug: "acer-swift-5",
-		image: null,
-		price: 849,
-		compareAtPrice: null,
-		ratingAvg: 3.9,
-		reviewsCount: 63,
-	},
-	{
-		id: "11",
-		name: "LG Gram 16",
-		brand: "LG",
-		slug: "lg-gram-16",
-		image: null,
-		price: 1349,
-		compareAtPrice: 1499,
-		ratingAvg: 4.4,
-		reviewsCount: 88,
-	},
-	{
-		id: "12",
-		name: "MSI Creator Z16",
-		brand: "MSI",
-		slug: "msi-creator-z16",
-		image: null,
-		price: 2699,
-		compareAtPrice: null,
-		ratingAvg: 4.6,
-		reviewsCount: 47,
-	},
-];
-
-const TOTAL_PAGES = 4;
-const TOTAL_ITEMS = 48;
+const SKELETON_IDS = Array.from({ length: 12 }, (_, i) => `skel-${i}`);
 
 type Props = { slug: string };
-
-function slugToLabel(slug: string) {
-	return slug
-		.split("-")
-		.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-		.join(" ");
-}
-
-const PRODUCT_SKELETON_IDS = Array.from({ length: 12 }, (_, i) => `skel-${i}`);
+type SortBy = NonNullable<GetProductsInputType["sorting"]>["sortBy"];
+type SortOrder = NonNullable<GetProductsInputType["sorting"]>["sortOrder"];
+type SortValue = (typeof SORT_OPTIONS)[number]["value"];
 
 export function CategoryDetailPage({ slug }: Props) {
-	const [sort, setSort] = useState("createdAt:desc");
-	const [page, setPage] = useState(1);
+	const search = Route.useSearch();
+	const navigate = useNavigate({ from: Route.fullPath });
+	const { prefetch } = useQueryIntentPrefetch();
+	const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-	const categoryName = slugToLabel(slug);
-	const Icon = CATEGORY_ICONS[slug] ?? Tags;
-	const iconColor = CATEGORY_COLORS[slug] ?? "bg-default text-muted";
+	const {
+		page,
+		sort,
+		colorIds,
+		storageIds,
+		ramIds,
+		screenSizeIds,
+		minPrice,
+		maxPrice,
+		inStock,
+		onSale,
+		minRating,
+	} = search;
 
-	const isLoading = false;
-	const hasProducts = MOCK_PRODUCTS.length > 0;
+	const { data: categoriesData, isLoading: isCategoryLoading } = useQuery(
+		listCategoriesQueryOptions({
+			searching: { search: slug, searchType: "slug" },
+		}),
+	);
+	const category =
+		categoriesData?.data?.items?.find((item) => item.slug === slug) ?? null;
+	const isCategoryNotFound = !isCategoryLoading && !category;
+	const { data: colorsData } = useQuery(listColorsQueryOptions({}));
+	const { data: storagesData } = useQuery(listStoragesQueryOptions({}));
+	const { data: ramsData } = useQuery(listRamsQueryOptions({}));
+	const { data: screensData } = useQuery(listScreensQueryOptions({}));
+
+	const buildProductsInput = useCallback(
+		(nextSearch: typeof search, categoryId?: string): GetProductsInputType => {
+			const [sortBy = "createdAt", sortOrder = "desc"] =
+				nextSearch.sort.split(":");
+
+			return {
+				pagination: { page: nextSearch.page, limit: LIMIT },
+				searching: nextSearch.search
+					? { search: nextSearch.search, searchType: "name" }
+					: undefined,
+				filters: categoryId
+					? {
+							categoryIds: [categoryId],
+							colorIds: nextSearch.colorIds,
+							storageIds: nextSearch.storageIds,
+							ramIds: nextSearch.ramIds,
+							screenSizeIds: nextSearch.screenSizeIds,
+						}
+					: undefined,
+				sorting: {
+					sortBy: sortBy as SortBy,
+					sortOrder: sortOrder as SortOrder,
+				},
+				ranges: {
+					priceRange:
+						nextSearch.minPrice !== undefined ||
+						nextSearch.maxPrice !== undefined
+							? {
+									minPrice: nextSearch.minPrice,
+									maxPrice: nextSearch.maxPrice,
+								}
+							: undefined,
+					ratingRange:
+						nextSearch.minRating !== undefined
+							? { minRating: nextSearch.minRating }
+							: undefined,
+				},
+				flags: {
+					isActive: true,
+					inStock: nextSearch.inStock ? true : undefined,
+					isSale: nextSearch.onSale ? true : undefined,
+				},
+			};
+		},
+		[],
+	);
+
+	const { data: productsData, isLoading: isProductsLoading } = useQuery({
+		...listProductsQueryOptions({
+			data: buildProductsInput(search, category?.id),
+		}),
+		enabled: !!category,
+	});
+
+	const prefetchProducts = useCallback(
+		(nextSearch: typeof search) => {
+			if (!category) return;
+			prefetch(
+				listProductsQueryOptions({
+					data: buildProductsInput(nextSearch, category.id),
+				}),
+			);
+		},
+		[buildProductsInput, category, prefetch],
+	);
+
+	const setSearch = useCallback(
+		(partial: Partial<typeof search>) =>
+			navigate({ search: (prev) => ({ ...prev, ...partial }) }),
+		[navigate],
+	);
+
+	const commitSearch = useCallback(
+		(value: string | undefined) => {
+			navigate({
+				search: (prev) => ({
+					...prev,
+					search: value,
+					page: 1,
+				}),
+			});
+		},
+		[navigate],
+	);
+	const { inputValue, setInputValue } = useDebouncedSearchParam({
+		committedValue: search.search,
+		onCommit: commitSearch,
+	});
+
+	const prefetchCategories = () => prefetch(listCategoriesQueryOptions({}));
+
+	const setPage = (nextPage: number) => {
+		prefetchProducts({ ...search, page: nextPage });
+		setSearch({ page: nextPage });
+	};
+
+	const prefetchPage = (nextPage: number) => {
+		if (nextPage === page) return;
+		prefetchProducts({ ...search, page: nextPage });
+	};
+
+	const setSort = (nextSort: SortValue) => {
+		prefetchProducts({ ...search, sort: nextSort, page: 1 });
+		setSearch({ sort: nextSort, page: 1 });
+	};
+
+	const warmSortOptions = () => {
+		for (const option of SORT_OPTIONS) {
+			prefetchProducts({ ...search, sort: option.value, page: 1 });
+		}
+	};
+
+	const prefetchFilters = (values: ProductFilterValues) => {
+		prefetchProducts({ ...search, ...values, page: 1 });
+	};
+
+	const setFilters = (values: ProductFilterValues) => {
+		setSearch({ ...values, page: 1 });
+	};
+
+	const items = productsData?.data?.items ?? [];
+	const pagination = productsData?.data?.pagination;
+	const categoryName = category?.name ?? slug;
+	const isLoading = isCategoryLoading || (!!category && isProductsLoading);
+	const filterValues: ProductFilterValues = {
+		colorIds,
+		storageIds,
+		ramIds,
+		screenSizeIds,
+		minPrice,
+		maxPrice,
+		inStock,
+		onSale,
+		minRating,
+	};
+	const filterOptions = {
+		colors: colorsData?.data.items ?? [],
+		storages: storagesData?.data.items ?? [],
+		rams: ramsData?.data.items ?? [],
+		screens: screensData?.data.items ?? [],
+	};
+	const activeFilterCount =
+		colorIds.length +
+		storageIds.length +
+		ramIds.length +
+		screenSizeIds.length +
+		(minPrice !== undefined ? 1 : 0) +
+		(maxPrice !== undefined ? 1 : 0) +
+		(inStock ? 1 : 0) +
+		(onSale ? 1 : 0) +
+		(minRating !== undefined ? 1 : 0);
+
+	useEffect(() => {
+		if (
+			!pagination ||
+			pagination.total === 0 ||
+			page <= pagination.totalPages
+		) {
+			return;
+		}
+
+		navigate({
+			replace: true,
+			search: (prev) => ({ ...prev, page: pagination.totalPages }),
+		});
+	}, [navigate, page, pagination]);
 
 	return (
 		<div className="min-h-screen flex flex-col">
@@ -211,11 +259,12 @@ export function CategoryDetailPage({ slug }: Props) {
 
 			<main className="flex-1 pt-24 pb-20">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-					{/* Breadcrumb */}
 					<nav className="flex items-center gap-2 text-sm text-muted mb-8">
 						<LinkAnchor
 							to="/categories"
 							className="hover:text-foreground transition-colors"
+							onFocus={prefetchCategories}
+							onMouseEnter={prefetchCategories}
 						>
 							All categories
 						</LinkAnchor>
@@ -223,125 +272,159 @@ export function CategoryDetailPage({ slug }: Props) {
 						<span className="text-foreground font-medium">{categoryName}</span>
 					</nav>
 
-					{/* Category hero */}
-					<div className="flex items-center gap-4 mb-10">
-						<div
-							className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${iconColor}`}
-						>
-							<Icon size={26} />
-						</div>
-						<div>
-							<h1 className="text-3xl sm:text-4xl font-bold text-foreground">
-								{categoryName}
-							</h1>
-							<div className="flex items-center gap-2 mt-1">
-								<Chip size="sm" variant="soft" color="default">
-									{TOTAL_ITEMS} products
-								</Chip>
-							</div>
-						</div>
-					</div>
-
-					{/* Toolbar */}
-					<div className="flex items-center justify-between mb-6">
-						<p className="text-sm text-muted hidden sm:block">
-							Page {page} of {TOTAL_PAGES}
-						</p>
-						<div className="relative ml-auto">
-							<select
-								value={sort}
-								onChange={(e) => {
-									setSort(e.target.value);
-									setPage(1);
-								}}
-								className="appearance-none pl-3 pr-8 py-2 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer"
-							>
-								{SORT_OPTIONS.map((opt) => (
-									<option key={opt.value} value={opt.value}>
-										{opt.label}
-									</option>
-								))}
-							</select>
-						</div>
-					</div>
-
-					{/* Product grid */}
-					{isLoading ? (
-						<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-							{PRODUCT_SKELETON_IDS.map((id) => (
-								<Card key={id} className="overflow-hidden">
-									<Skeleton className="aspect-square w-full" />
-									<Card.Content className="p-4 flex flex-col gap-2">
-										<Skeleton className="h-3 w-16 rounded" />
-										<Skeleton className="h-4 w-full rounded" />
-										<Skeleton className="h-3 w-24 rounded" />
-										<Skeleton className="h-4 w-20 rounded" />
-									</Card.Content>
-								</Card>
-							))}
-						</div>
-					) : hasProducts ? (
-						<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-							{MOCK_PRODUCTS.map((product) => (
-								<ProductCard key={product.id} product={product} />
-							))}
-						</div>
-					) : (
+					{isCategoryNotFound ? (
 						<Card className="items-center border-dashed px-6 py-16 text-center">
-							<ImageOff size={28} className="text-muted" />
+							<Tags size={28} className="text-muted" />
 							<Card.Header className="items-center">
-								<Card.Title className="text-base">No products found</Card.Title>
+								<Card.Title className="text-base">
+									Category not found
+								</Card.Title>
 								<Card.Description className="max-w-md">
-									There are no products in this category yet. Check back soon.
+									This category does not exist or is no longer available.
 								</Card.Description>
 							</Card.Header>
 						</Card>
-					)}
+					) : (
+						<>
+							<div className="flex items-center gap-4 mb-10">
+								{category ? (
+									<CategoryIconDisplay
+										icon={category.icon}
+										iconColor={category.iconColor}
+										iconBg={category.iconBg}
+										name={category.name}
+										iconSize={24}
+										className="w-14 h-14 rounded-2xl flex-shrink-0"
+									/>
+								) : null}
+								<div>
+									<h1 className="text-3xl sm:text-4xl font-bold text-foreground">
+										{categoryName}
+									</h1>
+									<div className="flex items-center gap-2 mt-1">
+										<Chip size="sm" variant="soft" color="default">
+											{pagination?.total ?? "..."} products
+										</Chip>
+									</div>
+								</div>
+							</div>
 
-					{/* Pagination */}
-					{hasProducts && (
-						<div className="mt-10 pt-6 border-t border-border">
-							<Pagination className="w-full">
-								<Pagination.Summary>
-									Showing {(page - 1) * 12 + 1}–
-									{Math.min(page * 12, TOTAL_ITEMS)} of {TOTAL_ITEMS} products
-								</Pagination.Summary>
-								<Pagination.Content>
-									<Pagination.Item>
-										<Pagination.Previous
-											isDisabled={page === 1}
-											onPress={() => setPage((p) => p - 1)}
-										>
-											<Pagination.PreviousIcon />
-											<span>Previous</span>
-										</Pagination.Previous>
-									</Pagination.Item>
+							<div className="flex gap-8">
+								<div className="hidden lg:block w-52 flex-shrink-0">
+									<ProductFilterSidebar
+										values={filterValues}
+										options={filterOptions}
+										onChange={setFilters}
+										onPrefetchChange={prefetchFilters}
+									/>
+								</div>
 
-									{Array.from({ length: TOTAL_PAGES }, (_, i) => i + 1).map(
-										(p) => (
-											<Pagination.Item key={p}>
-												<Pagination.Link
-													isActive={p === page}
-													onPress={() => setPage(p)}
+								<div className="flex-1 min-w-0">
+									<div className="flex flex-col gap-3 mb-6 sm:flex-row sm:items-center sm:justify-between">
+										<div className="relative min-w-0 flex-1 sm:max-w-sm">
+											<Search
+												size={14}
+												className="absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none"
+											/>
+											<input
+												type="text"
+												value={inputValue}
+												onChange={(e) => setInputValue(e.target.value)}
+												placeholder={`Search ${categoryName}...`}
+												className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-border bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all"
+											/>
+										</div>
+										<div className="flex items-center justify-between gap-3 sm:justify-end">
+											<Button
+												size="sm"
+												variant="outline"
+												className="lg:hidden"
+												onPress={() => setIsFilterOpen(true)}
+											>
+												<SlidersHorizontal size={14} />
+												Filters
+												{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+											</Button>
+											<p className="text-sm text-muted hidden sm:block">
+												{pagination
+													? `Page ${page} of ${pagination.totalPages}`
+													: ""}
+											</p>
+											<div className="relative">
+												<select
+													value={sort}
+													onChange={(e) => setSort(e.target.value as SortValue)}
+													onFocus={warmSortOptions}
+													onMouseEnter={warmSortOptions}
+													className="appearance-none pl-3 pr-8 py-2 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer"
 												>
-													{p}
-												</Pagination.Link>
-											</Pagination.Item>
-										),
+													{SORT_OPTIONS.map((opt) => (
+														<option key={opt.value} value={opt.value}>
+															{opt.label}
+														</option>
+													))}
+												</select>
+											</div>
+										</div>
+									</div>
+
+									{isLoading ? (
+										<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+											{SKELETON_IDS.map((id) => (
+												<Card key={id} className="overflow-hidden">
+													<Skeleton className="aspect-square w-full" />
+													<Card.Content className="p-4 flex flex-col gap-2">
+														<Skeleton className="h-3 w-16 rounded" />
+														<Skeleton className="h-4 w-full rounded" />
+														<Skeleton className="h-3 w-24 rounded" />
+														<Skeleton className="h-4 w-20 rounded" />
+													</Card.Content>
+												</Card>
+											))}
+										</div>
+									) : items.length > 0 ? (
+										<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+											{items.map((product) => (
+												<ProductCard key={product.id} product={product} />
+											))}
+										</div>
+									) : (
+										<Card className="items-center border-dashed px-6 py-16 text-center">
+											<ImageOff size={28} className="text-muted" />
+											<Card.Header className="items-center">
+												<Card.Title className="text-base">
+													No products found
+												</Card.Title>
+												<Card.Description className="max-w-md">
+													There are no matching products in this category yet.
+												</Card.Description>
+											</Card.Header>
+										</Card>
 									)}
 
-									<Pagination.Item>
-										<Pagination.Next
-											isDisabled={page >= TOTAL_PAGES}
-											onPress={() => setPage((p) => p + 1)}
-										>
-											<span>Next</span>
-											<Pagination.NextIcon />
-										</Pagination.Next>
-									</Pagination.Item>
-								</Pagination.Content>
-							</Pagination>
-						</div>
+									{pagination ? (
+										<WindowedPagination
+											className="mt-10 pt-6 border-t border-border"
+											currentPage={page}
+											totalPages={pagination.totalPages}
+											totalItems={pagination.total}
+											limit={LIMIT}
+											itemLabel="product"
+											onPageChange={setPage}
+											onPrefetchPage={prefetchPage}
+										/>
+									) : null}
+								</div>
+							</div>
+							<ProductFilterDrawer
+								isOpen={isFilterOpen}
+								onClose={() => setIsFilterOpen(false)}
+								values={filterValues}
+								options={filterOptions}
+								onChange={setFilters}
+								onPrefetchChange={prefetchFilters}
+							/>
+						</>
 					)}
 				</div>
 			</main>

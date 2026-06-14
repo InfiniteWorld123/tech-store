@@ -1,6 +1,7 @@
 import { Button, Form, Modal } from "@heroui/react";
 import { useForm } from "@tanstack/react-form";
 import { X } from "lucide-react";
+import { getAdminFieldError } from "#/components/admin/ui/admin-form-errors";
 import { InputField } from "#/components/ui/fields/input-field";
 import { CategoryIconDisplay } from "#/components/ui/icons/category-icon";
 import { CategoryIconPicker } from "#/components/ui/icons/category-icon-picker";
@@ -80,40 +81,30 @@ function EditCategoryForm({
 			<Modal.Body className="space-y-4">
 				{/* Name */}
 				<Field name="name">
-					{(field) => {
-						const error = field.state.meta.errors[0]?.message;
-						return (
-							<InputField
-								label="Name"
-								placeholder="e.g. Laptops"
-								isRequired
-								value={field.state.value}
-								onChange={(v) => field.handleChange(v)}
-								errorText={
-									field.state.meta.isTouched && error ? error : undefined
-								}
-							/>
-						);
-					}}
+					{(field) => (
+						<InputField
+							label="Name"
+							placeholder="e.g. Laptops"
+							isRequired
+							value={field.state.value}
+							onChange={(v) => field.handleChange(v)}
+							errorText={getAdminFieldError(field, form)}
+						/>
+					)}
 				</Field>
 
 				{/* Slug */}
 				<Field name="slug">
-					{(field) => {
-						const error = field.state.meta.errors[0]?.message;
-						return (
-							<InputField
-								label="Slug"
-								placeholder="e.g. laptops"
-								description="URL-friendly identifier. Lowercase, numbers, and hyphens only."
-								value={field.state.value}
-								onChange={(v) => field.handleChange(v)}
-								errorText={
-									field.state.meta.isTouched && error ? error : undefined
-								}
-							/>
-						);
-					}}
+					{(field) => (
+						<InputField
+							label="Slug"
+							placeholder="e.g. laptops"
+							description="URL-friendly identifier. Lowercase, numbers, and hyphens only."
+							value={field.state.value}
+							onChange={(v) => field.handleChange(v)}
+							errorText={getAdminFieldError(field, form)}
+						/>
+					)}
 				</Field>
 
 				{/* Icon picker */}

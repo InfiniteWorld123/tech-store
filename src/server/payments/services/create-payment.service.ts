@@ -83,8 +83,8 @@ export const createStripeCheckoutSession = async (
 					},
 				},
 			],
-			success_url: `${env.BASE_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-			cancel_url: `${env.BASE_URL}/checkout/cancel`,
+			success_url: `${env.BASE_URL}/account/orders/${row.orderId}?paid=true`,
+			cancel_url: `${env.BASE_URL}/account/orders/${row.orderId}`,
 			metadata: {
 				orderId: row.orderId,
 				paymentId: row.paymentId,

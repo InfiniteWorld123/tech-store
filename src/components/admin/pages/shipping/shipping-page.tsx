@@ -5,8 +5,10 @@ import {
 	usePersistedViewMode,
 	ViewModeToggle,
 } from "#/components/ui/view-mode-toggle";
+import { useUpdateShippingStatus } from "#/mutations/shipping/use-update-shipping-status";
 import { AddTrackingModal } from "./sections/add-tracking-modal";
 import { CreateShipmentModal } from "./sections/create-shipment-modal";
+import { MarkDeliveredModal } from "./sections/mark-delivered-modal";
 import { MarkShippedModal } from "./sections/mark-shipped-modal";
 import { ShippingDetailSheet } from "./sections/shipping-detail-sheet";
 import { ShippingPagination } from "./sections/shipping-pagination";
@@ -38,6 +40,11 @@ export function ShippingPage() {
 		page,
 		limit,
 		setPage,
+		prefetchPage,
+		prefetchStatus,
+		prefetchCarrier,
+		prefetchMethod,
+		prefetchDateRange,
 		items,
 		pagination,
 		isLoading,
@@ -52,11 +59,14 @@ export function ShippingPage() {
 	// UI state — modals (non-null = open, mirrors categories pattern)
 	const [markShippedTarget, setMarkShippedTarget] =
 		useState<ShippingListItem | null>(null);
+	const [markDeliveredTarget, setMarkDeliveredTarget] =
+		useState<ShippingListItem | null>(null);
 	const [addTrackingTarget, setAddTrackingTarget] =
 		useState<ShippingListItem | null>(null);
 	const [updateStatusTarget, setUpdateStatusTarget] =
 		useState<ShippingListItem | null>(null);
 	const [isCreateOpen, setIsCreateOpen] = useState(false);
+	const updateShippingStatus = useUpdateShippingStatus();
 
 	function handleMarkShipped(orderId: string) {
 		const item = items.find((i) => i.orderId === orderId) ?? selectedItem;
@@ -68,9 +78,21 @@ export function ShippingPage() {
 		if (item) setAddTrackingTarget(item);
 	}
 
+	function handleMarkDelivered(orderId: string) {
+		const item = items.find((i) => i.orderId === orderId) ?? selectedItem;
+		if (item) setMarkDeliveredTarget(item);
+	}
+
 	function handleUpdateStatus(orderId: string) {
 		const item = items.find((i) => i.orderId === orderId) ?? selectedItem;
 		if (item) setUpdateStatusTarget(item);
+	}
+
+	function handleInlineStatusChange(
+		orderId: string,
+		shippingStatus: ShippingListItem["status"],
+	) {
+		updateShippingStatus.mutate({ orderId, shippingStatus });
 	}
 
 	return (
@@ -90,12 +112,16 @@ export function ShippingPage() {
 						onSearchChange={setInputValue}
 						status={status}
 						onStatusChange={setStatus}
+						onPrefetchStatus={prefetchStatus}
 						carrier={carrier}
 						onCarrierChange={setCarrier}
+						onPrefetchCarrier={prefetchCarrier}
 						method={method}
 						onMethodChange={setMethod}
+						onPrefetchMethod={prefetchMethod}
 						dateRange={dateRange ?? {}}
 						onDateRangeChange={setDateRange}
+						onPrefetchDateRange={prefetchDateRange}
 						onCreateClick={() => setIsCreateOpen(true)}
 					/>
 				</div>
@@ -114,8 +140,8 @@ export function ShippingPage() {
 								items={items}
 								onRowClick={setSelectedItem}
 								onMarkShipped={handleMarkShipped}
-								onMarkDelivered={() => {}}
-								onStatusChange={() => {}}
+								onMarkDelivered={handleMarkDelivered}
+								onStatusChange={handleInlineStatusChange}
 								onAddTracking={handleAddTracking}
 							/>
 						) : null}
@@ -124,8 +150,8 @@ export function ShippingPage() {
 								items={items}
 								onRowClick={setSelectedItem}
 								onMarkShipped={handleMarkShipped}
-								onMarkDelivered={() => {}}
-								onStatusChange={() => {}}
+								onMarkDelivered={handleMarkDelivered}
+								onStatusChange={handleInlineStatusChange}
 								onAddTracking={handleAddTracking}
 							/>
 						) : null}
@@ -134,8 +160,8 @@ export function ShippingPage() {
 								items={items}
 								onRowClick={setSelectedItem}
 								onMarkShipped={handleMarkShipped}
-								onMarkDelivered={() => {}}
-								onStatusChange={() => {}}
+								onMarkDelivered={handleMarkDelivered}
+								onStatusChange={handleInlineStatusChange}
 								onAddTracking={handleAddTracking}
 							/>
 						) : null}
@@ -149,6 +175,7 @@ export function ShippingPage() {
 						totalItems={pagination.total}
 						limit={limit}
 						onPageChange={setPage}
+						onPrefetchPage={prefetchPage}
 					/>
 				)}
 			</div>
@@ -159,7 +186,7 @@ export function ShippingPage() {
 				isOpen={selectedItem !== null}
 				onClose={() => setSelectedItem(null)}
 				onMarkShipped={handleMarkShipped}
-				onMarkDelivered={() => {}}
+				onMarkDelivered={handleMarkDelivered}
 				onStatusChange={handleUpdateStatus}
 				onAddTracking={handleAddTracking}
 			/>
@@ -168,6 +195,10 @@ export function ShippingPage() {
 			<MarkShippedModal
 				item={markShippedTarget}
 				onClose={() => setMarkShippedTarget(null)}
+			/>
+			<MarkDeliveredModal
+				item={markDeliveredTarget}
+				onClose={() => setMarkDeliveredTarget(null)}
 			/>
 			<AddTrackingModal
 				item={addTrackingTarget}

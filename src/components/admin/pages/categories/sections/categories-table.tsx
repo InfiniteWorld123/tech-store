@@ -5,6 +5,7 @@ import type { CategoryItem } from "../categories.types";
 
 type Props = {
 	categories: CategoryItem[];
+	onView: (category: CategoryItem) => void;
 	onEdit: (category: CategoryItem) => void;
 	onDelete: (category: CategoryItem) => void;
 };
@@ -27,7 +28,12 @@ function EmptyState({ hasSearch }: { hasSearch: boolean }) {
 	);
 }
 
-export function CategoriesTable({ categories, onEdit, onDelete }: Props) {
+export function CategoriesTable({
+	categories,
+	onView,
+	onEdit,
+	onDelete,
+}: Props) {
 	if (categories.length === 0) {
 		return <EmptyState hasSearch={false} />;
 	}
@@ -61,7 +67,8 @@ export function CategoriesTable({ categories, onEdit, onDelete }: Props) {
 					{categories.map((cat) => (
 						<tr
 							key={cat.id}
-							className="border-b border-border last:border-0 hover:bg-default/50 transition-colors"
+							onClick={() => onView(cat)}
+							className="cursor-pointer border-b border-border last:border-0 hover:bg-default/50 transition-colors"
 						>
 							{/* Category */}
 							<td className="py-3 px-2">
@@ -109,6 +116,7 @@ export function CategoriesTable({ categories, onEdit, onDelete }: Props) {
 										isIconOnly
 										size="sm"
 										variant="ghost"
+										onClick={(event) => event.stopPropagation()}
 										onPress={() => onEdit(cat)}
 										aria-label={`Edit ${cat.name}`}
 										className="text-muted hover:text-foreground"
@@ -119,6 +127,7 @@ export function CategoriesTable({ categories, onEdit, onDelete }: Props) {
 										isIconOnly
 										size="sm"
 										variant="ghost"
+										onClick={(event) => event.stopPropagation()}
 										onPress={() => onDelete(cat)}
 										aria-label={`Delete ${cat.name}`}
 										className="text-muted hover:text-danger"
@@ -135,7 +144,12 @@ export function CategoriesTable({ categories, onEdit, onDelete }: Props) {
 	);
 }
 
-export function CategoriesList({ categories, onEdit, onDelete }: Props) {
+export function CategoriesList({
+	categories,
+	onView,
+	onEdit,
+	onDelete,
+}: Props) {
 	if (categories.length === 0) {
 		return <EmptyState hasSearch={false} />;
 	}
@@ -147,7 +161,11 @@ export function CategoriesList({ categories, onEdit, onDelete }: Props) {
 					key={cat.id}
 					className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between"
 				>
-					<div className="flex min-w-0 items-center gap-3">
+					<button
+						type="button"
+						onClick={() => onView(cat)}
+						className="flex min-w-0 flex-1 items-center gap-3 text-left"
+					>
 						<CategoryIconDisplay
 							icon={cat.icon}
 							iconColor={cat.iconColor}
@@ -162,7 +180,7 @@ export function CategoriesList({ categories, onEdit, onDelete }: Props) {
 								{cat.slug}
 							</code>
 						</div>
-					</div>
+					</button>
 					<div className="flex items-center justify-between gap-3 sm:justify-end">
 						<Chip size="sm" variant="soft" color="default">
 							{cat.totalProducts} products
@@ -172,6 +190,7 @@ export function CategoriesList({ categories, onEdit, onDelete }: Props) {
 								isIconOnly
 								size="sm"
 								variant="ghost"
+								onClick={(event) => event.stopPropagation()}
 								onPress={() => onEdit(cat)}
 								aria-label={`Edit ${cat.name}`}
 								className="text-muted hover:text-foreground"
@@ -182,6 +201,7 @@ export function CategoriesList({ categories, onEdit, onDelete }: Props) {
 								isIconOnly
 								size="sm"
 								variant="ghost"
+								onClick={(event) => event.stopPropagation()}
 								onPress={() => onDelete(cat)}
 								aria-label={`Delete ${cat.name}`}
 								className="text-muted hover:text-danger"
@@ -196,7 +216,12 @@ export function CategoriesList({ categories, onEdit, onDelete }: Props) {
 	);
 }
 
-export function CategoriesCards({ categories, onEdit, onDelete }: Props) {
+export function CategoriesCards({
+	categories,
+	onView,
+	onEdit,
+	onDelete,
+}: Props) {
 	if (categories.length === 0) {
 		return <EmptyState hasSearch={false} />;
 	}
@@ -209,7 +234,11 @@ export function CategoriesCards({ categories, onEdit, onDelete }: Props) {
 					className="rounded-2xl border border-border bg-default/30 p-4"
 				>
 					<div className="flex items-start justify-between gap-3">
-						<div className="flex min-w-0 items-center gap-3">
+						<button
+							type="button"
+							onClick={() => onView(cat)}
+							className="flex min-w-0 flex-1 items-center gap-3 text-left"
+						>
 							<CategoryIconDisplay
 								icon={cat.icon}
 								iconColor={cat.iconColor}
@@ -222,7 +251,7 @@ export function CategoriesCards({ categories, onEdit, onDelete }: Props) {
 								</p>
 								<p className="text-xs text-muted">{cat.slug}</p>
 							</div>
-						</div>
+						</button>
 						<Chip size="sm" variant="soft" color="default">
 							{cat.totalProducts}
 						</Chip>
@@ -234,6 +263,7 @@ export function CategoriesCards({ categories, onEdit, onDelete }: Props) {
 								isIconOnly
 								size="sm"
 								variant="ghost"
+								onClick={(event) => event.stopPropagation()}
 								onPress={() => onEdit(cat)}
 								aria-label={`Edit ${cat.name}`}
 								className="text-muted hover:text-foreground"
@@ -244,6 +274,7 @@ export function CategoriesCards({ categories, onEdit, onDelete }: Props) {
 								isIconOnly
 								size="sm"
 								variant="ghost"
+								onClick={(event) => event.stopPropagation()}
 								onPress={() => onDelete(cat)}
 								aria-label={`Delete ${cat.name}`}
 								className="text-muted hover:text-danger"

@@ -6,6 +6,7 @@ type OrdersPaginationProps = {
 	totalItems: number;
 	limit: number;
 	onPageChange: (page: number) => void;
+	onPrefetchPage: (page: number) => void;
 };
 
 function getPageNumbers(
@@ -38,6 +39,7 @@ export function OrdersPagination({
 	totalItems,
 	limit,
 	onPageChange,
+	onPrefetchPage,
 }: OrdersPaginationProps) {
 	if (totalItems === 0) return null;
 
@@ -56,6 +58,10 @@ export function OrdersPagination({
 						<Pagination.Previous
 							isDisabled={currentPage === 1}
 							onPress={() => onPageChange(currentPage - 1)}
+							onFocus={() => currentPage > 1 && onPrefetchPage(currentPage - 1)}
+							onMouseEnter={() =>
+								currentPage > 1 && onPrefetchPage(currentPage - 1)
+							}
 						>
 							<Pagination.PreviousIcon />
 							<span>Previous</span>
@@ -72,6 +78,8 @@ export function OrdersPagination({
 								<Pagination.Link
 									isActive={p === currentPage}
 									onPress={() => onPageChange(p)}
+									onFocus={() => p !== currentPage && onPrefetchPage(p)}
+									onMouseEnter={() => p !== currentPage && onPrefetchPage(p)}
 								>
 									{p}
 								</Pagination.Link>
@@ -83,6 +91,12 @@ export function OrdersPagination({
 						<Pagination.Next
 							isDisabled={currentPage >= totalPages}
 							onPress={() => onPageChange(currentPage + 1)}
+							onFocus={() =>
+								currentPage < totalPages && onPrefetchPage(currentPage + 1)
+							}
+							onMouseEnter={() =>
+								currentPage < totalPages && onPrefetchPage(currentPage + 1)
+							}
 						>
 							<span>Next</span>
 							<Pagination.NextIcon />

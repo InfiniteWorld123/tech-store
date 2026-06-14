@@ -12,11 +12,21 @@ import LinkAnchor from "#/components/ui/buttons/link-anchor";
 import { SubmitButton } from "#/components/ui/buttons/submit-button";
 import { InputField } from "#/components/ui/fields/input-field";
 import { useSignIn } from "#/hooks/use-auth";
+import { Route } from "#/routes/_auth/sign-in";
 import { SignInSchema } from "#/server/auth/auth.schemas";
+
+const getSafeInternalRedirect = (redirect?: string) => {
+	if (!redirect) return undefined;
+	if (!redirect.startsWith("/") || redirect.startsWith("//")) return undefined;
+	if (redirect.includes("://")) return undefined;
+	return redirect;
+};
 
 export function SignInPage() {
 	const navigate = useNavigate();
+	const search = Route.useSearch();
 	const { signInError, submitSignIn } = useSignIn();
+	const safeRedirect = getSafeInternalRedirect(search.redirect);
 
 	const { reset, Field, Subscribe, handleSubmit } = useForm({
 		defaultValues: {
@@ -28,7 +38,9 @@ export function SignInPage() {
 
 			if (result.success) {
 				reset();
-				navigate({ to: result.isAdmin ? "/admin" : "/" });
+				navigate({
+					to: (safeRedirect ?? (result.isAdmin ? "/admin" : "/")) as "/",
+				});
 			}
 		},
 		validators: {
@@ -44,7 +56,7 @@ export function SignInPage() {
 				subtitle="Sign in to your account to continue"
 			/>
 
-			<SocialProviders />
+			<SocialProviders redirectTo={safeRedirect ?? "/"} />
 
 			<DividerWithText text="or" />
 

@@ -7,7 +7,10 @@ import {
 	gte,
 	ilike,
 	inArray,
+	isNull,
 	lte,
+	or,
+	sql,
 } from "drizzle-orm";
 import { HttpStatusCode } from "#/constants/http";
 import { type JsonOk, jsonOk } from "#/constants/json";
@@ -19,6 +22,15 @@ import type {
 	GetProductsOutputType,
 } from "../products.types";
 
+const zUuidRegex =
+	/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+const sqlIn = (values: string[]) =>
+	sql.join(
+		values.map((value) => sql`${value}`),
+		sql`, `,
+	);
+
 export const getProducts = async (
 	data: GetProductsInputType,
 ): Promise<JsonOk<GetProductsOutputType>> => {
@@ -26,7 +38,7 @@ export const getProducts = async (
 		const { searching, sorting, filters, flags, ranges, pagination } = data;
 
 		const search = searching?.search;
-		const searchType = searching?.searchType;
+		const searchType = searching?.searchType ?? "all";
 
 		const sortBy = sorting?.sortBy;
 		const sortOrder = sorting?.sortOrder;
@@ -40,6 +52,7 @@ export const getProducts = async (
 		const isFeatured = flags?.isFeatured;
 		const isBestseller = flags?.isBestseller;
 		const isActive = flags?.isActive;
+		const isSale = flags?.isSale;
 		const inStock = flags?.inStock;
 		const hasReviews = flags?.hasReviews;
 
@@ -55,6 +68,7 @@ export const getProducts = async (
 		const offset = (page - 1) * limit;
 
 		const conditions = [];
+		const variantFilters = [];
 		let orderByClause = desc(product.createdAt);
 
 		if (categoryIds.length > 0) {
@@ -74,27 +88,47 @@ export const getProducts = async (
 		}
 
 		if (minPrice !== undefined) {
-			conditions.push(gte(variant.price, minPrice.toString()));
+			variantFilters.push(sql`vf.price >= ${minPrice.toString()}`);
 		}
 
 		if (maxPrice !== undefined) {
-			conditions.push(lte(variant.price, maxPrice.toString()));
+			variantFilters.push(sql`vf.price <= ${maxPrice.toString()}`);
 		}
 
 		if (minStock !== undefined) {
-			conditions.push(gte(variant.stockQuantity, minStock));
+			variantFilters.push(sql`vf.stock_quantity >= ${minStock}`);
 		}
 
 		if (maxStock !== undefined) {
-			conditions.push(lte(variant.stockQuantity, maxStock));
+			variantFilters.push(sql`vf.stock_quantity <= ${maxStock}`);
 		}
 
 		if (inStock === true) {
-			conditions.push(gte(variant.stockQuantity, 1));
+			variantFilters.push(sql`vf.stock_quantity >= 1`);
+		}
+
+		if (inStock === false) {
+			conditions.push(or(isNull(variant.id), lte(variant.stockQuantity, 0)));
+		}
+
+		if (isSale === true) {
+			variantFilters.push(
+				sql`vf.compare_at_price is not null and vf.compare_at_price > vf.price`,
+			);
+		}
+
+		if (isSale === false) {
+			variantFilters.push(
+				sql`vf.compare_at_price is null or vf.compare_at_price <= vf.price`,
+			);
 		}
 
 		if (hasReviews === true) {
 			conditions.push(gte(product.reviewsCount, 1));
+		}
+
+		if (hasReviews === false) {
+			conditions.push(eq(product.reviewsCount, 0));
 		}
 
 		if (minRating !== undefined) {
@@ -106,28 +140,60 @@ export const getProducts = async (
 		}
 
 		if (colorIds.length > 0) {
-			conditions.push(inArray(variant.colorId, colorIds));
+			variantFilters.push(sql`vf.color_id in (${sqlIn(colorIds)})`);
 		}
 
 		if (storageIds.length > 0) {
-			conditions.push(inArray(variant.storageId, storageIds));
+			variantFilters.push(sql`vf.storage_id in (${sqlIn(storageIds)})`);
 		}
 
 		if (ramIds.length > 0) {
-			conditions.push(inArray(variant.ramId, ramIds));
+			variantFilters.push(sql`vf.ram_id in (${sqlIn(ramIds)})`);
 		}
 
 		if (screenSizeIds.length > 0) {
-			conditions.push(inArray(variant.screenSizeId, screenSizeIds));
+			variantFilters.push(sql`vf.screen_size_id in (${sqlIn(screenSizeIds)})`);
+		}
+
+		if (variantFilters.length > 0) {
+			conditions.push(
+				sql`exists (
+					select 1
+					from "variant" vf
+					where vf.product_id = ${product.id}
+					and ${sql.join(variantFilters, sql` and `)}
+				)`,
+			);
 		}
 
 		if (search) {
-			if (searchType === "slug") {
+			const isUuid = zUuidRegex.test(search);
+
+			if (searchType === "id") {
+				conditions.push(
+					eq(
+						product.id,
+						isUuid ? search : "00000000-0000-0000-0000-000000000000",
+					),
+				);
+			} else if (searchType === "slug") {
 				conditions.push(ilike(product.slug, `%${search}%`));
 			} else if (searchType === "brand") {
 				conditions.push(ilike(product.brand, `%${search}%`));
-			} else {
+			} else if (searchType === "name") {
 				conditions.push(ilike(product.name, `%${search}%`));
+			} else {
+				const searchConditions = [
+					ilike(product.name, `%${search}%`),
+					ilike(product.brand, `%${search}%`),
+					ilike(product.slug, `%${search}%`),
+				];
+
+				if (isUuid) {
+					searchConditions.push(eq(product.id, search));
+				}
+
+				conditions.push(or(...searchConditions));
 			}
 		}
 
@@ -169,6 +235,7 @@ export const getProducts = async (
 				slug: product.slug,
 				brand: product.brand,
 				sku: variant.sku,
+				defaultVariantId: variant.id,
 				price: variant.price,
 				compareAtPrice: variant.compareAtPrice,
 				stockQuantity: variant.stockQuantity,

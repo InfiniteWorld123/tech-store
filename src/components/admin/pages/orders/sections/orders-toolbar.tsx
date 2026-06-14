@@ -21,9 +21,33 @@ type OrdersToolbarProps = {
 	setCarrier: (v: string) => void;
 	dateFrom: string;
 	setDateFrom: (v: string) => void;
+	prefetchDateFrom: (v: string) => void;
 	dateTo: string;
 	setDateTo: (v: string) => void;
+	prefetchDateTo: (v: string) => void;
+	prefetchOrderStatus: (v: string) => void;
+	prefetchPaymentStatus: (v: string) => void;
+	prefetchShippingStatus: (v: string) => void;
+	prefetchCarrier: (v: string) => void;
 };
+
+const orderStatusOptions = [
+	"",
+	"pending",
+	"processing",
+	"completed",
+	"cancelled",
+];
+const paymentStatusOptions = ["", "pending", "paid", "failed", "refunded"];
+const shippingStatusOptions = [
+	"",
+	"pending",
+	"packed",
+	"shipped",
+	"in_transit",
+	"delivered",
+];
+const carrierOptions = ["", "dhl", "hermes", "ups", "fedex"];
 
 const selectClass =
 	"appearance-none pl-9 pr-8 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer";
@@ -47,9 +71,36 @@ export function OrdersToolbar({
 	setCarrier,
 	dateFrom,
 	setDateFrom,
+	prefetchDateFrom,
 	dateTo,
 	setDateTo,
+	prefetchDateTo,
+	prefetchOrderStatus,
+	prefetchPaymentStatus,
+	prefetchShippingStatus,
+	prefetchCarrier,
 }: OrdersToolbarProps) {
+	const warmOrderStatuses = () => {
+		for (const value of orderStatusOptions) {
+			prefetchOrderStatus(value);
+		}
+	};
+	const warmPaymentStatuses = () => {
+		for (const value of paymentStatusOptions) {
+			prefetchPaymentStatus(value);
+		}
+	};
+	const warmShippingStatuses = () => {
+		for (const value of shippingStatusOptions) {
+			prefetchShippingStatus(value);
+		}
+	};
+	const warmCarriers = () => {
+		for (const value of carrierOptions) {
+			prefetchCarrier(value);
+		}
+	};
+
 	return (
 		<div className="flex flex-wrap items-center gap-3">
 			{/* Search */}
@@ -70,6 +121,8 @@ export function OrdersToolbar({
 				<select
 					value={orderStatus}
 					onChange={(e) => setOrderStatus(e.target.value)}
+					onFocus={warmOrderStatuses}
+					onMouseEnter={warmOrderStatuses}
 					className={selectClass}
 				>
 					<option value="">All Statuses</option>
@@ -87,6 +140,8 @@ export function OrdersToolbar({
 				<select
 					value={paymentStatus}
 					onChange={(e) => setPaymentStatus(e.target.value)}
+					onFocus={warmPaymentStatuses}
+					onMouseEnter={warmPaymentStatuses}
 					className={selectClass}
 				>
 					<option value="">All Payments</option>
@@ -104,6 +159,8 @@ export function OrdersToolbar({
 				<select
 					value={shippingStatus}
 					onChange={(e) => setShippingStatus(e.target.value)}
+					onFocus={warmShippingStatuses}
+					onMouseEnter={warmShippingStatuses}
 					className={selectClass}
 				>
 					<option value="">All Shipping</option>
@@ -122,6 +179,8 @@ export function OrdersToolbar({
 				<select
 					value={carrier}
 					onChange={(e) => setCarrier(e.target.value)}
+					onFocus={warmCarriers}
+					onMouseEnter={warmCarriers}
 					className={selectClass}
 				>
 					<option value="">All Carriers</option>
@@ -140,7 +199,11 @@ export function OrdersToolbar({
 					<input
 						type="date"
 						value={dateFrom}
-						onChange={(e) => setDateFrom(e.target.value)}
+						onChange={(e) => {
+							prefetchDateFrom(e.target.value);
+							setDateFrom(e.target.value);
+						}}
+						onFocus={() => prefetchDateFrom(dateFrom)}
 						className={`${dateClass} pl-9 pr-3`}
 					/>
 				</div>
@@ -148,7 +211,11 @@ export function OrdersToolbar({
 				<input
 					type="date"
 					value={dateTo}
-					onChange={(e) => setDateTo(e.target.value)}
+					onChange={(e) => {
+						prefetchDateTo(e.target.value);
+						setDateTo(e.target.value);
+					}}
+					onFocus={() => prefetchDateTo(dateTo)}
 					className={`${dateClass} px-3`}
 				/>
 			</div>

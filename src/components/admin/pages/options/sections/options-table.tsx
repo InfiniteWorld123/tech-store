@@ -7,6 +7,7 @@ type Props = {
 	config: OptionConfig;
 	rows: OptionRow[];
 	hasSearch: boolean;
+	onView: (row: OptionRow) => void;
 	onEdit: (row: OptionRow) => void;
 	onDelete: (row: OptionRow) => void;
 };
@@ -19,6 +20,7 @@ export function OptionsTable({
 	config,
 	rows,
 	hasSearch,
+	onView,
 	onEdit,
 	onDelete,
 }: Props) {
@@ -53,7 +55,11 @@ export function OptionsTable({
 					</Table.Header>
 					<Table.Body items={rows}>
 						{(row) => (
-							<Table.Row id={row.id}>
+							<Table.Row
+								id={row.id}
+								onClick={() => onView(row)}
+								className="cursor-pointer"
+							>
 								<Table.Cell className="font-medium text-foreground">
 									{row.name}
 								</Table.Cell>
@@ -70,6 +76,7 @@ export function OptionsTable({
 											isIconOnly
 											size="sm"
 											variant="ghost"
+											onClick={(event) => event.stopPropagation()}
 											onPress={() => onEdit(row)}
 											aria-label={`Edit ${row.name}`}
 											className="text-muted hover:text-foreground"
@@ -80,6 +87,7 @@ export function OptionsTable({
 											isIconOnly
 											size="sm"
 											variant="ghost"
+											onClick={(event) => event.stopPropagation()}
 											onPress={() => onDelete(row)}
 											aria-label={`Delete ${row.name}`}
 											className="text-muted hover:text-danger"
@@ -101,6 +109,7 @@ export function OptionsList({
 	config,
 	rows,
 	hasSearch,
+	onView,
 	onEdit,
 	onDelete,
 }: Props) {
@@ -129,14 +138,18 @@ export function OptionsList({
 					key={row.id}
 					className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between"
 				>
-					<div className="min-w-0">
+					<button
+						type="button"
+						onClick={() => onView(row)}
+						className="min-w-0 flex-1 text-left"
+					>
 						<p className="truncate text-sm font-semibold text-foreground">
 							{row.name}
 						</p>
 						<div className="mt-1 text-sm text-muted">
 							{config.renderValue(row)}
 						</div>
-					</div>
+					</button>
 					<div className="flex items-center justify-between gap-3 sm:justify-end">
 						<span className="text-xs text-muted">
 							Updated {formatDate(row.updatedAt)}
@@ -146,6 +159,7 @@ export function OptionsList({
 								isIconOnly
 								size="sm"
 								variant="ghost"
+								onClick={(event) => event.stopPropagation()}
 								onPress={() => onEdit(row)}
 								aria-label={`Edit ${row.name}`}
 								className="text-muted hover:text-foreground"
@@ -156,6 +170,7 @@ export function OptionsList({
 								isIconOnly
 								size="sm"
 								variant="ghost"
+								onClick={(event) => event.stopPropagation()}
 								onPress={() => onDelete(row)}
 								aria-label={`Delete ${row.name}`}
 								className="text-muted hover:text-danger"
@@ -174,6 +189,7 @@ export function OptionsCards({
 	config,
 	rows,
 	hasSearch,
+	onView,
 	onEdit,
 	onDelete,
 }: Props) {
@@ -203,19 +219,24 @@ export function OptionsCards({
 					className="rounded-2xl border border-border bg-default/30 p-4"
 				>
 					<div className="flex items-start justify-between gap-3">
-						<div className="min-w-0">
+						<button
+							type="button"
+							onClick={() => onView(row)}
+							className="min-w-0 flex-1 text-left"
+						>
 							<p className="truncate text-sm font-semibold text-foreground">
 								{row.name}
 							</p>
 							<div className="mt-2 text-sm text-muted">
 								{config.renderValue(row)}
 							</div>
-						</div>
+						</button>
 						<div className="flex items-center gap-1">
 							<Button
 								isIconOnly
 								size="sm"
 								variant="ghost"
+								onClick={(event) => event.stopPropagation()}
 								onPress={() => onEdit(row)}
 								aria-label={`Edit ${row.name}`}
 								className="text-muted hover:text-foreground"
@@ -226,6 +247,7 @@ export function OptionsCards({
 								isIconOnly
 								size="sm"
 								variant="ghost"
+								onClick={(event) => event.stopPropagation()}
 								onPress={() => onDelete(row)}
 								aria-label={`Delete ${row.name}`}
 								className="text-muted hover:text-danger"

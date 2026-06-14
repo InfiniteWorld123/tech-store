@@ -57,8 +57,14 @@ export function OrdersPage() {
 						setCarrier={hook.setCarrier}
 						dateFrom={hook.dateFrom}
 						setDateFrom={hook.setDateFrom}
+						prefetchDateFrom={hook.prefetchDateFrom}
 						dateTo={hook.dateTo}
 						setDateTo={hook.setDateTo}
+						prefetchDateTo={hook.prefetchDateTo}
+						prefetchOrderStatus={hook.prefetchOrderStatus}
+						prefetchPaymentStatus={hook.prefetchPaymentStatus}
+						prefetchShippingStatus={hook.prefetchShippingStatus}
+						prefetchCarrier={hook.prefetchCarrier}
 					/>
 				</div>
 				<ViewModeToggle value={viewMode} onChange={setViewMode} />
@@ -86,6 +92,7 @@ export function OrdersPage() {
 							totalItems={hook.pagination.total}
 							limit={hook.pagination.limit}
 							onPageChange={hook.setPage}
+							onPrefetchPage={hook.prefetchPage}
 						/>
 					</>
 				)}

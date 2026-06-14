@@ -1,62 +1,17 @@
-import { Card } from "@heroui/react";
+import { Card, Skeleton } from "@heroui/react";
+import { useQuery } from "@tanstack/react-query";
 import { Tags } from "lucide-react";
 import { CategoryCard } from "#/components/landing/ui/category-card";
 import { Footer } from "#/components/layout/footer";
 import { Header } from "#/components/layout/header";
+import { listCategoriesQueryOptions } from "#/queries/categories.queries";
 
-const MOCK_CATEGORIES = [
-	{
-		id: "1",
-		name: "Laptops",
-		slug: "laptops",
-		icon: null,
-		iconColor: null,
-		iconBg: null,
-	},
-	{
-		id: "2",
-		name: "Smartphones",
-		slug: "smartphones",
-		icon: null,
-		iconColor: null,
-		iconBg: null,
-	},
-	{
-		id: "3",
-		name: "Tablets",
-		slug: "tablets",
-		icon: null,
-		iconColor: null,
-		iconBg: null,
-	},
-	{
-		id: "4",
-		name: "Audio",
-		slug: "audio",
-		icon: null,
-		iconColor: null,
-		iconBg: null,
-	},
-	{
-		id: "5",
-		name: "Accessories",
-		slug: "accessories",
-		icon: null,
-		iconColor: null,
-		iconBg: null,
-	},
-	{
-		id: "6",
-		name: "Gaming",
-		slug: "gaming",
-		icon: null,
-		iconColor: null,
-		iconBg: null,
-	},
-];
+const SKELETON_IDS = Array.from({ length: 6 }, (_, i) => `category-skel-${i}`);
 
 export function CategoriesPage() {
-	const hasCategories = MOCK_CATEGORIES.length > 0;
+	const { data, isLoading } = useQuery(listCategoriesQueryOptions({}));
+	const categories = data?.data.items ?? [];
+	const hasCategories = categories.length > 0;
 
 	return (
 		<div className="min-h-screen flex flex-col">
@@ -78,10 +33,20 @@ export function CategoriesPage() {
 					</div>
 
 					{/* Grid */}
-					{hasCategories ? (
+					{isLoading ? (
 						<div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-							{MOCK_CATEGORIES.map((category) => (
-								<CategoryCard key={category.id} category={category} />
+							{SKELETON_IDS.map((id) => (
+								<Card key={id} className="h-40 p-6">
+									<Skeleton className="mx-auto h-14 w-14 rounded-2xl" />
+									<Skeleton className="mx-auto mt-5 h-4 w-20 rounded" />
+									<Skeleton className="mx-auto mt-2 h-3 w-16 rounded" />
+								</Card>
+							))}
+						</div>
+					) : hasCategories ? (
+						<div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+							{categories.map((category) => (
+								<CategoryCard key={category.id} category={category} showCount />
 							))}
 						</div>
 					) : (

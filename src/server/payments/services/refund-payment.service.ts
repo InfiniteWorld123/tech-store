@@ -67,47 +67,45 @@ export const refundPayment = async (
 		const nextPaymentStatus =
 			refund.status === "succeeded" ? "refunded" : row.status;
 
-		const [updatedRow] = await db.transaction(async (tx) => {
-			await tx
-				.update(payment)
-				.set({
-					// Some refunds are pending at Stripe first, so keep the payment paid
-					// until Stripe confirms the refund succeeded.
-					status: nextPaymentStatus,
-				})
-				.where(eq(payment.id, row.paymentId));
+		await db
+			.update(payment)
+			.set({
+				// Some refunds are pending at Stripe first, so keep the payment paid
+				// until Stripe confirms the refund succeeded.
+				status: nextPaymentStatus,
+			})
+			.where(eq(payment.id, row.paymentId));
 
-			await tx
-				.update(stripePayment)
-				.set({
-					status: refund.status ?? "refunded",
-				})
-				.where(eq(stripePayment.paymentId, row.paymentId));
+		await db
+			.update(stripePayment)
+			.set({
+				status: refund.status ?? "refunded",
+			})
+			.where(eq(stripePayment.paymentId, row.paymentId));
 
-			return tx
-				.select({
-					paymentId: payment.id,
-					orderId: payment.orderId,
-					method: payment.method,
-					amount: payment.amount,
-					status: payment.status,
-					paidAt: payment.paidAt,
-					paymentCreatedAt: payment.createdAt,
-					paymentUpdatedAt: payment.updatedAt,
-					stripePaymentId: stripePayment.id,
-					checkoutSessionId: stripePayment.checkoutSessionId,
-					paymentIntentId: stripePayment.paymentIntentId,
-					customerId: stripePayment.customerId,
-					currency: stripePayment.currency,
-					checkoutUrl: stripePayment.checkoutUrl,
-					stripeStatus: stripePayment.status,
-					stripeCreatedAt: stripePayment.createdAt,
-					stripeUpdatedAt: stripePayment.updatedAt,
-				})
-				.from(payment)
-				.leftJoin(stripePayment, eq(stripePayment.paymentId, payment.id))
-				.where(eq(payment.id, row.paymentId));
-		});
+		const [updatedRow] = await db
+			.select({
+				paymentId: payment.id,
+				orderId: payment.orderId,
+				method: payment.method,
+				amount: payment.amount,
+				status: payment.status,
+				paidAt: payment.paidAt,
+				paymentCreatedAt: payment.createdAt,
+				paymentUpdatedAt: payment.updatedAt,
+				stripePaymentId: stripePayment.id,
+				checkoutSessionId: stripePayment.checkoutSessionId,
+				paymentIntentId: stripePayment.paymentIntentId,
+				customerId: stripePayment.customerId,
+				currency: stripePayment.currency,
+				checkoutUrl: stripePayment.checkoutUrl,
+				stripeStatus: stripePayment.status,
+				stripeCreatedAt: stripePayment.createdAt,
+				stripeUpdatedAt: stripePayment.updatedAt,
+			})
+			.from(payment)
+			.leftJoin(stripePayment, eq(stripePayment.paymentId, payment.id))
+			.where(eq(payment.id, row.paymentId));
 
 		return jsonOk<RefundPaymentOutputType>({
 			status: HttpStatusCode.OK,

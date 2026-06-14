@@ -2,6 +2,7 @@ import { Button, Form, Modal } from "@heroui/react";
 import { useForm } from "@tanstack/react-form";
 import { X } from "lucide-react";
 import { useRef } from "react";
+import { getAdminFieldError } from "#/components/admin/ui/admin-form-errors";
 import { InputField } from "#/components/ui/fields/input-field";
 import { CategoryIconDisplay } from "#/components/ui/icons/category-icon";
 import { CategoryIconPicker } from "#/components/ui/icons/category-icon-picker";
@@ -86,52 +87,38 @@ export function CreateCategoryModal({ isOpen, onClose }: Props) {
 							<Modal.Body className="space-y-4">
 								{/* Name — auto-fills slug */}
 								<Field name="name">
-									{(field) => {
-										const error = field.state.meta.errors[0]?.message;
-										return (
-											<InputField
-												label="Name"
-												placeholder="e.g. Laptops"
-												isRequired
-												value={field.state.value}
-												onChange={(v) => {
-													field.handleChange(v);
-													if (!slugEditedRef.current) {
-														form.setFieldValue("slug", toSlug(v));
-													}
-												}}
-												errorText={
-													field.state.meta.isTouched && error
-														? error
-														: undefined
+									{(field) => (
+										<InputField
+											label="Name"
+											placeholder="e.g. Laptops"
+											isRequired
+											value={field.state.value}
+											onChange={(v) => {
+												field.handleChange(v);
+												if (!slugEditedRef.current) {
+													form.setFieldValue("slug", toSlug(v));
 												}
-											/>
-										);
-									}}
+											}}
+											errorText={getAdminFieldError(field, form)}
+										/>
+									)}
 								</Field>
 
 								{/* Slug */}
 								<Field name="slug">
-									{(field) => {
-										const error = field.state.meta.errors[0]?.message;
-										return (
-											<InputField
-												label="Slug"
-												placeholder="e.g. laptops"
-												description="Auto-generated from name. Lowercase, numbers and hyphens only."
-												value={field.state.value}
-												onChange={(v) => {
-													slugEditedRef.current = true;
-													field.handleChange(toSlug(v));
-												}}
-												errorText={
-													field.state.meta.isTouched && error
-														? error
-														: undefined
-												}
-											/>
-										);
-									}}
+									{(field) => (
+										<InputField
+											label="Slug"
+											placeholder="e.g. laptops"
+											description="Auto-generated from name. Lowercase, numbers and hyphens only."
+											value={field.state.value}
+											onChange={(v) => {
+												slugEditedRef.current = true;
+												field.handleChange(toSlug(v));
+											}}
+											errorText={getAdminFieldError(field, form)}
+										/>
+									)}
 								</Field>
 
 								{/* Icon picker */}

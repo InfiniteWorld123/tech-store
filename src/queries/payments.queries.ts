@@ -1,6 +1,15 @@
 import { queryOptions } from "@tanstack/react-query";
-import { listPaymentsAction } from "#/server/payments/payments.actions";
+import {
+	getPaymentAction,
+	listPaymentsAction,
+} from "#/server/payments/payments.actions";
 import type { ListPaymentsInputType } from "#/server/payments/payments.types";
+
+export const getPaymentQueryOptions = (data: { orderId: string }) =>
+	queryOptions({
+		queryKey: ["payments", "detail", data.orderId],
+		queryFn: () => getPaymentAction({ data }),
+	});
 
 export const listPaymentsQueryOptions = (data: ListPaymentsInputType) =>
 	queryOptions({

@@ -4,6 +4,7 @@ import type {
 	createProductSchema,
 	deleteProductSchema,
 	deleteProductsSchema,
+	getProductBySlugSchema,
 	getProductSchema,
 	getProductsSchema,
 	updateProductSchema,
@@ -16,6 +17,7 @@ export type AdminProductListItemType = {
 	slug: string;
 	brand: string;
 	sku: string | null;
+	defaultVariantId: string | null;
 	price: number | null;
 	compareAtPrice: number | null;
 	stockQuantity: number | null;
@@ -57,6 +59,7 @@ export type AdminProductDetailsType = {
 
 // input types
 export type GetProductInputType = z.infer<typeof getProductSchema>;
+export type GetProductBySlugInputType = z.infer<typeof getProductBySlugSchema>;
 export type GetProductsInputType = z.infer<typeof getProductsSchema>;
 export type CreateProductInputType = z.infer<typeof createProductSchema>;
 export type UpdateProductInputType = z.infer<typeof updateProductSchema>;

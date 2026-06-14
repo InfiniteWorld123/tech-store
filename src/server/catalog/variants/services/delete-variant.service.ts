@@ -16,54 +16,47 @@ export const deleteVariant = async (
 	try {
 		const { variantId } = data;
 
-		const payload = await db.transaction(async (tx) => {
-			const [existingVariant] = await tx
-				.select({
-					id: variant.id,
-					productId: variant.productId,
-					isDefault: variant.isDefault,
-				})
+		const [existingVariant] = await db
+			.select({
+				id: variant.id,
+				productId: variant.productId,
+				isDefault: variant.isDefault,
+			})
+			.from(variant)
+			.where(eq(variant.id, variantId));
+
+		if (!existingVariant) {
+			throw notFoundError("Variant not found");
+		}
+
+		await db.delete(variant).where(eq(variant.id, variantId));
+
+		let promotedVariantId: string | null = null;
+
+		if (existingVariant.isDefault) {
+			const [replacementDefault] = await db
+				.select({ id: variant.id })
 				.from(variant)
-				.where(eq(variant.id, variantId));
+				.where(eq(variant.productId, existingVariant.productId))
+				.orderBy(asc(variant.createdAt))
+				.limit(1);
 
-			if (!existingVariant) {
-				throw notFoundError("Variant not found");
+			if (replacementDefault) {
+				await db
+					.update(variant)
+					.set({ isDefault: true })
+					.where(eq(variant.id, replacementDefault.id));
+				promotedVariantId = replacementDefault.id;
 			}
-
-			await tx.delete(variant).where(eq(variant.id, variantId));
-
-			let promotedVariantId: string | null = null;
-
-			if (existingVariant.isDefault) {
-				const [replacementDefault] = await tx
-					.select({ id: variant.id })
-					.from(variant)
-					.where(eq(variant.productId, existingVariant.productId))
-					.orderBy(asc(variant.createdAt))
-					.limit(1);
-
-				if (replacementDefault) {
-					await tx
-						.update(variant)
-						.set({ isDefault: true })
-						.where(eq(variant.id, replacementDefault.id));
-					promotedVariantId = replacementDefault.id;
-				}
-			}
-
-			return {
-				productId: existingVariant.productId,
-				promotedVariantId,
-			};
-		});
+		}
 
 		return jsonOk<DeleteVariantOutputType>({
 			status: HttpStatusCode.OK,
 			message: "Variant deleted successfully",
 			data: {
 				variantId,
-				productId: payload.productId,
-				promotedVariantId: payload.promotedVariantId,
+				productId: existingVariant.productId,
+				promotedVariantId,
 			},
 		});
 	} catch (error) {

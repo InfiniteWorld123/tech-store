@@ -8,6 +8,7 @@ type ShippingPaginationProps = {
 	totalItems: number;
 	limit: number;
 	onPageChange: (page: number) => void;
+	onPrefetchPage: (page: number) => void;
 };
 
 export function ShippingPagination({
@@ -16,6 +17,7 @@ export function ShippingPagination({
 	totalItems,
 	limit,
 	onPageChange,
+	onPrefetchPage,
 }: ShippingPaginationProps) {
 	const startItem = (currentPage - 1) * limit + 1;
 	const endItem = Math.min(currentPage * limit, totalItems);
@@ -55,6 +57,10 @@ export function ShippingPagination({
 						<Pagination.Previous
 							isDisabled={currentPage === 1}
 							onPress={() => onPageChange(currentPage - 1)}
+							onFocus={() => currentPage > 1 && onPrefetchPage(currentPage - 1)}
+							onMouseEnter={() =>
+								currentPage > 1 && onPrefetchPage(currentPage - 1)
+							}
 						>
 							<Pagination.PreviousIcon />
 							<span>Previous</span>
@@ -71,6 +77,8 @@ export function ShippingPagination({
 								<Pagination.Link
 									isActive={p === currentPage}
 									onPress={() => onPageChange(p)}
+									onFocus={() => p !== currentPage && onPrefetchPage(p)}
+									onMouseEnter={() => p !== currentPage && onPrefetchPage(p)}
 								>
 									{p}
 								</Pagination.Link>
@@ -82,6 +90,12 @@ export function ShippingPagination({
 						<Pagination.Next
 							isDisabled={currentPage >= totalPages}
 							onPress={() => onPageChange(currentPage + 1)}
+							onFocus={() =>
+								currentPage < totalPages && onPrefetchPage(currentPage + 1)
+							}
+							onMouseEnter={() =>
+								currentPage < totalPages && onPrefetchPage(currentPage + 1)
+							}
 						>
 							<span>Next</span>
 							<Pagination.NextIcon />

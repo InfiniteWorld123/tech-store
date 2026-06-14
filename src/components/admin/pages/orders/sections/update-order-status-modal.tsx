@@ -1,6 +1,9 @@
-import { Button, Modal } from "@heroui/react";
+import { Button, Form, Modal } from "@heroui/react";
+import { useForm } from "@tanstack/react-form";
 import { Info, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { z } from "zod";
+import { getAdminFieldError } from "#/components/admin/ui/admin-form-errors";
 import { useUpdateOrderStatus } from "#/mutations/orders/use-update-order-status";
 import type { OrderListItem, OrderStatus } from "../orders.types";
 
@@ -23,95 +26,143 @@ const STATUS_LABELS: Record<OrderStatus, string> = {
 	cancelled: "Cancelled",
 };
 
+const orderStatusSchema = z.object({
+	orderId: z.uuid("Order id must be valid"),
+	orderStatus: z.enum(["pending", "processing", "completed", "cancelled"]),
+});
+
 export function UpdateOrderStatusModal({
 	item,
 	onClose,
 }: UpdateOrderStatusModalProps) {
-	const [selectedStatus, setSelectedStatus] =
-		useState<OrderStatus>("processing");
-	const updateOrderStatus = useUpdateOrderStatus({ onSuccess: onClose });
+	const updateOrderStatus = useUpdateOrderStatus();
+	const form = useForm({
+		defaultValues: {
+			orderId: "",
+			orderStatus: "processing" as OrderStatus,
+		},
+		validators: {
+			onSubmit: orderStatusSchema,
+		},
+		onSubmit: async ({ value }) => {
+			await updateOrderStatus.mutateAsync({
+				orderId: value.orderId,
+				orderStatus: value.orderStatus,
+			});
+			onClose();
+		},
+	});
+	const { Field, Subscribe, handleSubmit, reset, setFieldValue } = form;
 
 	useEffect(() => {
-		if (item) {
-			const next = NEXT_STATUSES[item.status];
-			if (next.length > 0) setSelectedStatus(next[0]);
+		if (!item) {
+			reset();
+			return;
 		}
-	}, [item]);
+		const next = NEXT_STATUSES[item.status];
+		setFieldValue("orderId", item.id);
+		setFieldValue("orderStatus", next[0] ?? item.status);
+	}, [item, reset, setFieldValue]);
 
 	const nextStatuses = item ? NEXT_STATUSES[item.status] : [];
 	const isTerminal = nextStatuses.length === 0;
 
+	function handleClose() {
+		reset();
+		onClose();
+	}
+
 	return (
 		<Modal.Root
 			isOpen={item !== null}
-			onOpenChange={(open) => !open && onClose()}
+			onOpenChange={(open) => !open && handleClose()}
 		>
 			<Modal.Backdrop>
 				<Modal.Container>
 					<Modal.Dialog>
-						<Modal.Header>
-							<Modal.Heading className="text-base font-semibold text-foreground">
-								Update Order Status
-							</Modal.Heading>
-							<Modal.CloseTrigger className="text-muted hover:text-foreground">
-								<X size={18} />
-							</Modal.CloseTrigger>
-						</Modal.Header>
+						<Form
+							onSubmit={(event) => {
+								event.preventDefault();
+								event.stopPropagation();
+								handleSubmit();
+							}}
+						>
+							<Modal.Header>
+								<Modal.Heading className="text-base font-semibold text-foreground">
+									Update Order Status
+								</Modal.Heading>
+								<Modal.CloseTrigger className="text-muted hover:text-foreground">
+									<X size={18} />
+								</Modal.CloseTrigger>
+							</Modal.Header>
 
-						<Modal.Body className="space-y-4">
-							{isTerminal ? (
-								<div className="flex items-center gap-2.5 p-3 rounded-xl bg-default/50">
-									<Info size={15} className="text-muted flex-shrink-0" />
-									<p className="text-sm text-muted">
-										This order status is final and cannot be changed.
-									</p>
-								</div>
-							) : (
-								<div className="flex flex-col gap-1.5">
-									<label
-										htmlFor="order-status-select"
-										className="text-sm font-medium text-foreground"
-									>
-										New Status
-									</label>
-									<select
-										id="order-status-select"
-										value={selectedStatus}
-										onChange={(e) =>
-											setSelectedStatus(e.target.value as OrderStatus)
-										}
-										className="w-full appearance-none px-3 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer"
-									>
-										{nextStatuses.map((s) => (
-											<option key={s} value={s}>
-												{STATUS_LABELS[s]}
-											</option>
-										))}
-									</select>
-								</div>
-							)}
-						</Modal.Body>
+							<Modal.Body className="space-y-4">
+								{isTerminal ? (
+									<div className="flex items-center gap-2.5 rounded-xl bg-default/50 p-3">
+										<Info size={15} className="flex-shrink-0 text-muted" />
+										<p className="text-sm text-muted">
+											This order status is final and cannot be changed.
+										</p>
+									</div>
+								) : (
+									<Field name="orderStatus">
+										{(field) => (
+											<label className="flex flex-col gap-1.5">
+												<span className="text-sm font-medium text-foreground">
+													New Status
+												</span>
+												<select
+													value={field.state.value}
+													onChange={(event) =>
+														field.handleChange(
+															event.target.value as OrderStatus,
+														)
+													}
+													className="w-full cursor-pointer appearance-none rounded-xl border border-border bg-surface px-3 py-2.5 text-sm text-foreground transition-all focus:outline-none focus:ring-2 focus:ring-accent/40"
+												>
+													{nextStatuses.map((status) => (
+														<option key={status} value={status}>
+															{STATUS_LABELS[status]}
+														</option>
+													))}
+												</select>
+												{getAdminFieldError(field, form) ? (
+													<span className="text-xs text-danger">
+														{getAdminFieldError(field, form)}
+													</span>
+												) : null}
+											</label>
+										)}
+									</Field>
+								)}
+							</Modal.Body>
 
-						<Modal.Footer className="gap-2">
-							<Button variant="outline" size="sm" onPress={onClose}>
-								Cancel
-							</Button>
-							<Button
-								variant="primary"
-								size="sm"
-								isDisabled={isTerminal || !item}
-								isPending={updateOrderStatus.isPending}
-								onPress={() =>
-									item &&
-									updateOrderStatus.mutate({
-										orderId: item.id,
-										orderStatus: selectedStatus,
-									})
-								}
-							>
-								Update Status
-							</Button>
-						</Modal.Footer>
+							<Modal.Footer className="gap-2">
+								<Subscribe>
+									{({ isSubmitting }) => (
+										<>
+											<Button
+												variant="outline"
+												size="sm"
+												onPress={handleClose}
+												isDisabled={isSubmitting}
+											>
+												Cancel
+											</Button>
+											<Button
+												type="submit"
+												variant="primary"
+												size="sm"
+												isDisabled={isTerminal || !item || isSubmitting}
+												isPending={isSubmitting}
+											>
+												Update Status
+											</Button>
+										</>
+									)}
+								</Subscribe>
+							</Modal.Footer>
+						</Form>
 					</Modal.Dialog>
 				</Modal.Container>
 			</Modal.Backdrop>

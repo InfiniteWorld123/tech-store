@@ -1,6 +1,11 @@
-import { Button, Modal } from "@heroui/react";
+import { Button, Form, Modal } from "@heroui/react";
+import { useForm } from "@tanstack/react-form";
 import { X } from "lucide-react";
-import { useState } from "react";
+import type { ReactNode } from "react";
+import { z } from "zod";
+import { getAdminFieldError } from "#/components/admin/ui/admin-form-errors";
+import { InputField } from "#/components/ui/fields/input-field";
+import { useCreateShipping } from "#/mutations/shipping/use-create-shipping";
 import type { ShippingCarrier, ShippingMethod } from "../shipping.types";
 
 type Props = {
@@ -8,108 +13,185 @@ type Props = {
 	onClose: () => void;
 };
 
-export function CreateShipmentModal({ isOpen, onClose }: Props) {
-	const [orderId, setOrderId] = useState("");
-	const [carrier, setCarrier] = useState<ShippingCarrier>("dhl");
-	const [method, setMethod] = useState<ShippingMethod>("standard");
+const carrierOptions = [
+	{ value: "dhl", label: "DHL" },
+	{ value: "hermes", label: "Hermes" },
+	{ value: "ups", label: "UPS" },
+	{ value: "fedex", label: "FedEx" },
+] as const;
 
-	const handleClose = () => {
-		setOrderId("");
-		setCarrier("dhl");
-		setMethod("standard");
+const methodOptions = [
+	{ value: "standard", label: "Standard" },
+	{ value: "express", label: "Express" },
+	{ value: "same_day", label: "Same Day" },
+] as const;
+
+const createShipmentSchema = z.object({
+	orderId: z.uuid("Order id must be a valid UUID"),
+	carrier: z.enum(["dhl", "hermes", "ups", "fedex"]),
+	method: z.enum(["standard", "express", "same_day"]),
+});
+
+export function CreateShipmentModal({ isOpen, onClose }: Props) {
+	const createShipping = useCreateShipping();
+	const form = useForm({
+		defaultValues: {
+			orderId: "",
+			carrier: "dhl" as ShippingCarrier,
+			method: "standard" as ShippingMethod,
+		},
+		validators: {
+			onSubmit: createShipmentSchema,
+		},
+		onSubmit: async ({ value }) => {
+			await createShipping.mutateAsync({
+				orderId: value.orderId,
+				carrier: value.carrier,
+				method: value.method,
+			});
+			onClose();
+		},
+	});
+	const { Field, Subscribe, handleSubmit, reset } = form;
+
+	function handleClose() {
+		reset();
 		onClose();
-	};
+	}
 
 	return (
 		<Modal.Root isOpen={isOpen} onOpenChange={(open) => !open && handleClose()}>
 			<Modal.Backdrop>
 				<Modal.Container>
 					<Modal.Dialog>
-						<Modal.Header>
-							<Modal.Heading className="text-base font-semibold text-foreground">
-								New Shipment
-							</Modal.Heading>
-							<Modal.CloseTrigger className="text-muted hover:text-foreground">
-								<X size={18} />
-							</Modal.CloseTrigger>
-						</Modal.Header>
+						<Form
+							onSubmit={(event) => {
+								event.preventDefault();
+								event.stopPropagation();
+								handleSubmit();
+							}}
+						>
+							<Modal.Header>
+								<Modal.Heading className="text-base font-semibold text-foreground">
+									New Shipment
+								</Modal.Heading>
+								<Modal.CloseTrigger className="text-muted hover:text-foreground">
+									<X size={18} />
+								</Modal.CloseTrigger>
+							</Modal.Header>
 
-						<Modal.Body className="space-y-4">
-							<div className="flex flex-col gap-1.5">
-								<label
-									htmlFor="create-order-id"
-									className="text-sm font-medium text-foreground"
-								>
-									Order ID
-								</label>
-								<input
-									id="create-order-id"
-									type="text"
-									value={orderId}
-									onChange={(e) => setOrderId(e.target.value)}
-									placeholder="e.g. 018e1234-abcd-…"
-									className="w-full px-3 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all"
-								/>
-							</div>
+							<Modal.Body className="space-y-4">
+								<Field name="orderId">
+									{(field) => (
+										<InputField
+											label="Order ID"
+											placeholder="e.g. 018e1234-abcd-4567-89ab-0123456789ab"
+											value={field.state.value}
+											onChange={(value) => field.handleChange(value)}
+											onBlur={field.handleBlur}
+											errorText={getAdminFieldError(field, form)}
+										/>
+									)}
+								</Field>
 
-							<div className="flex flex-col gap-1.5">
-								<label
-									htmlFor="create-carrier"
-									className="text-sm font-medium text-foreground"
-								>
-									Carrier
-								</label>
-								<select
-									id="create-carrier"
-									value={carrier}
-									onChange={(e) =>
-										setCarrier(e.target.value as ShippingCarrier)
-									}
-									className="w-full appearance-none px-3 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer"
-								>
-									<option value="dhl">DHL</option>
-									<option value="hermes">Hermes</option>
-									<option value="ups">UPS</option>
-									<option value="fedex">FedEx</option>
-								</select>
-							</div>
+								<Field name="carrier">
+									{(field) => (
+										<SelectField
+											label="Carrier"
+											value={field.state.value}
+											onChange={(value) =>
+												field.handleChange(value as ShippingCarrier)
+											}
+											errorText={getAdminFieldError(field, form)}
+										>
+											{carrierOptions.map((option) => (
+												<option key={option.value} value={option.value}>
+													{option.label}
+												</option>
+											))}
+										</SelectField>
+									)}
+								</Field>
 
-							<div className="flex flex-col gap-1.5">
-								<label
-									htmlFor="create-method"
-									className="text-sm font-medium text-foreground"
-								>
-									Method
-								</label>
-								<select
-									id="create-method"
-									value={method}
-									onChange={(e) => setMethod(e.target.value as ShippingMethod)}
-									className="w-full appearance-none px-3 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer"
-								>
-									<option value="standard">Standard</option>
-									<option value="express">Express</option>
-									<option value="same_day">Same Day</option>
-								</select>
-							</div>
-						</Modal.Body>
+								<Field name="method">
+									{(field) => (
+										<SelectField
+											label="Method"
+											value={field.state.value}
+											onChange={(value) =>
+												field.handleChange(value as ShippingMethod)
+											}
+											errorText={getAdminFieldError(field, form)}
+										>
+											{methodOptions.map((option) => (
+												<option key={option.value} value={option.value}>
+													{option.label}
+												</option>
+											))}
+										</SelectField>
+									)}
+								</Field>
+							</Modal.Body>
 
-						<Modal.Footer className="gap-2">
-							<Button variant="outline" size="sm" onPress={handleClose}>
-								Cancel
-							</Button>
-							<Button
-								variant="primary"
-								size="sm"
-								isDisabled={!orderId.trim()}
-								onPress={handleClose}
-							>
-								Create Shipment
-							</Button>
-						</Modal.Footer>
+							<Modal.Footer className="gap-2">
+								<Subscribe>
+									{({ isSubmitting }) => (
+										<>
+											<Button
+												variant="outline"
+												size="sm"
+												onPress={handleClose}
+												isDisabled={isSubmitting}
+											>
+												Cancel
+											</Button>
+											<Button
+												type="submit"
+												variant="primary"
+												size="sm"
+												isPending={isSubmitting}
+												isDisabled={isSubmitting}
+											>
+												Create Shipment
+											</Button>
+										</>
+									)}
+								</Subscribe>
+							</Modal.Footer>
+						</Form>
 					</Modal.Dialog>
 				</Modal.Container>
 			</Modal.Backdrop>
 		</Modal.Root>
+	);
+}
+
+function SelectField({
+	label,
+	value,
+	onChange,
+	children,
+	errorText,
+}: {
+	label: string;
+	value: string;
+	onChange: (value: string) => void;
+	children: ReactNode;
+	errorText?: string;
+}) {
+	return (
+		<label className="flex flex-col gap-1.5">
+			<span className="text-sm font-medium text-foreground">{label}</span>
+			<select
+				value={value}
+				onChange={(event) => onChange(event.target.value)}
+				className="w-full cursor-pointer appearance-none rounded-xl border border-border bg-surface px-3 py-2.5 text-sm text-foreground transition-all focus:outline-none focus:ring-2 focus:ring-accent/40"
+			>
+				{children}
+			</select>
+			{errorText ? (
+				<span className="text-xs text-danger">{errorText}</span>
+			) : null}
+		</label>
 	);
 }

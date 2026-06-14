@@ -1,6 +1,13 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getProductsAction } from "#/server/catalog/products/products.actions";
-import type { GetProductsInputType } from "#/server/catalog/products/products.types";
+import {
+	getProductAction,
+	getProductBySlugAction,
+	getProductsAction,
+} from "#/server/catalog/products/products.actions";
+import type {
+	GetProductInputType,
+	GetProductsInputType,
+} from "#/server/catalog/products/products.types";
 
 export const defaultProductsInput = {
 	pagination: {
@@ -39,4 +46,16 @@ export const listProductsQueryOptions = ({
 	queryOptions({
 		queryKey: ["products", data],
 		queryFn: () => getProductsAction({ data }),
+	});
+
+export const getProductQueryOptions = (data: GetProductInputType) =>
+	queryOptions({
+		queryKey: ["products", "detail", data.productId],
+		queryFn: () => getProductAction({ data }),
+	});
+
+export const getProductBySlugQueryOptions = ({ slug }: { slug: string }) =>
+	queryOptions({
+		queryKey: ["products", "detail-by-slug", slug],
+		queryFn: () => getProductBySlugAction({ data: { slug } }),
 	});

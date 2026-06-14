@@ -12,11 +12,22 @@ import { db } from "#/db/drizzle";
 import * as schema from "#/db/schema";
 import { sendEmail } from "./mailer";
 
+const googleProvider =
+	env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
+		? {
+				google: {
+					clientId: env.GOOGLE_CLIENT_ID,
+					clientSecret: env.GOOGLE_CLIENT_SECRET,
+				},
+			}
+		: undefined;
+
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
 		provider: "pg",
 		schema,
 	}),
+	socialProviders: googleProvider,
 	user: {
 		additionalFields: {
 			role: {

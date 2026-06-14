@@ -17,38 +17,34 @@ export const createShipping = async (
 	try {
 		const { carrier, method, orderId } = data;
 
-		const createdShipping = await db.transaction(async (tx) => {
-			const [existingOrder] = await tx
-				.select({ id: order.id })
-				.from(order)
-				.where(eq(order.id, orderId));
+		const [existingOrder] = await db
+			.select({ id: order.id })
+			.from(order)
+			.where(eq(order.id, orderId));
 
-			if (!existingOrder) {
-				throw notFoundError("Order not found");
-			}
+		if (!existingOrder) {
+			throw notFoundError("Order not found");
+		}
 
-			const [existingShipping] = await tx
-				.select({ id: shipping.id })
-				.from(shipping)
-				.where(eq(shipping.orderId, orderId));
+		const [existingShipping] = await db
+			.select({ id: shipping.id })
+			.from(shipping)
+			.where(eq(shipping.orderId, orderId));
 
-			if (existingShipping) {
-				throw conflictError("Order already has shipping");
-			}
+		if (existingShipping) {
+			throw conflictError("Order already has shipping");
+		}
 
-			const [row] = await tx
-				.insert(shipping)
-				.values({
-					orderId,
-					carrier,
-					method,
-					status: "pending",
-					trackingNumber: null,
-				})
-				.returning();
-
-			return row;
-		});
+		const [createdShipping] = await db
+			.insert(shipping)
+			.values({
+				orderId,
+				carrier,
+				method,
+				status: "pending",
+				trackingNumber: null,
+			})
+			.returning();
 
 		return jsonOk<CreateShippingOutputType>({
 			status: HttpStatusCode.CREATED,

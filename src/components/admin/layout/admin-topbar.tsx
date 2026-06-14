@@ -13,11 +13,10 @@ const PAGE_TITLES: Record<string, string> = {
 	"/admin/variants": "Variants",
 	"/admin/categories": "Categories",
 	"/admin/analytics": "Analytics",
-	"/admin/customers": "Customers",
 	"/admin/payments": "Payments",
 	"/admin/shipping": "Shipping",
 	"/admin/reviews": "Reviews",
-	"/admin/inventory": "Options",
+	"/admin/options": "Options",
 	"/admin/settings": "Settings",
 };
 

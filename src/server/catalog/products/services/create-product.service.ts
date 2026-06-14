@@ -32,48 +32,44 @@ export const createProduct = async (
 			isActive,
 		} = data;
 
-		const createdProduct = await db.transaction(async (tx) => {
-			const existingProductSlug = await tx
-				.select({ id: product.id })
-				.from(product)
-				.where(eq(product.slug, slug));
+		const existingProductSlug = await db
+			.select({ id: product.id })
+			.from(product)
+			.where(eq(product.slug, slug));
 
-			if (existingProductSlug.length > 0) {
-				throw conflictError("Product slug already exists");
-			}
+		if (existingProductSlug.length > 0) {
+			throw conflictError("Product slug already exists");
+		}
 
-			const existingCategory = await tx
-				.select({ id: category.id })
-				.from(category)
-				.where(eq(category.id, categoryId));
+		const existingCategory = await db
+			.select({ id: category.id })
+			.from(category)
+			.where(eq(category.id, categoryId));
 
-			if (existingCategory.length === 0) {
-				throw notFoundError("Category not found");
-			}
+		if (existingCategory.length === 0) {
+			throw notFoundError("Category not found");
+		}
 
-			const [nextProduct] = await tx
-				.insert(product)
-				.values({
-					categoryId,
-					name,
-					brand,
-					slug,
-					shortDescription,
-					description,
-					warrantyInfo,
-					image,
-					isFeatured,
-					isBestseller,
-					isActive,
-				})
-				.returning();
+		const [createdProduct] = await db
+			.insert(product)
+			.values({
+				categoryId,
+				name,
+				brand,
+				slug,
+				shortDescription,
+				description,
+				warrantyInfo,
+				image,
+				isFeatured,
+				isBestseller,
+				isActive,
+			})
+			.returning();
 
-			if (!nextProduct) {
-				throw badRequestError("Product creation failed");
-			}
-
-			return nextProduct;
-		});
+		if (!createdProduct) {
+			throw badRequestError("Product creation failed");
+		}
 
 		return jsonOk<CreateProductOutputType>({
 			status: HttpStatusCode.CREATED,

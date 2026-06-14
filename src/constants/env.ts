@@ -20,6 +20,8 @@ export const env = {
 	RESEND: getEnvVar("RESEND"),
 	CONTACT_EMAIL:
 		getOptionalEnvVar("CONTACT_EMAIL") ?? "support@techstore-demo.de",
+	GOOGLE_CLIENT_ID: getOptionalEnvVar("GOOGLE_CLIENT_ID"),
+	GOOGLE_CLIENT_SECRET: getOptionalEnvVar("GOOGLE_CLIENT_SECRET"),
 	STRIPE_SECRET_KEY: getEnvVar("STRIPE_SECRET_KEY"),
 	STRIPE_WEBHOOK_SECRET: getEnvVar("STRIPE_WEBHOOK_SECRET"),
 	STRIPE_CURRENCY: getOptionalEnvVar("STRIPE_CURRENCY") ?? "eur",

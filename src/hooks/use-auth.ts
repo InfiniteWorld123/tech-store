@@ -9,6 +9,7 @@ import {
 	signUp,
 } from "#/lib/auth-client";
 import type { SignUpType } from "#/server/auth/auth.types";
+import { mergeCartAction } from "#/server/cart/cart.actions";
 
 type OtpType =
 	| "sign-in"
@@ -118,6 +119,12 @@ export const useSignIn = () => {
 			setSignInError(errMsg);
 			toast.danger(errMsg);
 			return { success: false };
+		}
+
+		try {
+			await mergeCartAction({ data: {} });
+		} catch {
+			// cart merge is best-effort
 		}
 
 		toast.success("Signed in successfully");

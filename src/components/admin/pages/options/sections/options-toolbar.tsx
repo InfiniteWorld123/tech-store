@@ -9,6 +9,7 @@ type Props = {
 	onSearchChange: (value: string) => void;
 	searchType: string;
 	onSearchTypeChange: (value: string) => void;
+	onPrefetchSearchType: (value: string) => void;
 	totalCount: number;
 	onCreateClick: () => void;
 };
@@ -19,6 +20,7 @@ export function OptionsToolbar({
 	onSearchChange,
 	searchType,
 	onSearchTypeChange,
+	onPrefetchSearchType,
 	totalCount,
 	onCreateClick,
 }: Props) {
@@ -26,6 +28,11 @@ export function OptionsToolbar({
 		key,
 		label: key === "name" ? "Name" : config.valueField.label,
 	}));
+	const warmSearchTypes = () => {
+		for (const { key } of searchTypeOptions) {
+			onPrefetchSearchType(key);
+		}
+	};
 
 	return (
 		<div className="flex items-center justify-between gap-3 flex-wrap">
@@ -36,7 +43,11 @@ export function OptionsToolbar({
 					onSelectionChange={(key) => onSearchTypeChange(key as string)}
 					aria-label="Search by"
 				>
-					<Select.Trigger className="flex items-center gap-1.5 h-9 px-3 text-sm rounded-xl border border-border bg-surface hover:bg-default/50 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-primary/50 min-w-24">
+					<Select.Trigger
+						onFocus={warmSearchTypes}
+						onMouseEnter={warmSearchTypes}
+						className="flex items-center gap-1.5 h-9 px-3 text-sm rounded-xl border border-border bg-surface hover:bg-default/50 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-primary/50 min-w-24"
+					>
 						<Select.Value className="text-foreground" />
 						<Select.Indicator>
 							<ChevronDown size={13} className="text-muted" />
@@ -48,6 +59,8 @@ export function OptionsToolbar({
 								<ListBox.Item
 									key={key}
 									id={key}
+									onFocus={() => onPrefetchSearchType(key)}
+									onMouseEnter={() => onPrefetchSearchType(key)}
 									className="flex items-center px-2.5 py-1.5 text-sm rounded-lg cursor-pointer outline-none data-[focused]:bg-default/60 data-[selected]:font-medium data-[selected]:text-primary"
 								>
 									{label}

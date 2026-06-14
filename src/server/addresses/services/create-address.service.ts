@@ -25,31 +25,27 @@ export const createAddress = async (
 			userId,
 		} = data;
 
-		const createdAddress = await db.transaction(async (tx) => {
-			if (isDefault) {
-				await tx
-					.update(address)
-					.set({ isDefault: false })
-					.where(eq(address.userId, userId));
-			}
+		if (isDefault) {
+			await db
+				.update(address)
+				.set({ isDefault: false })
+				.where(eq(address.userId, userId));
+		}
 
-			const [row] = await tx
-				.insert(address)
-				.values({
-					userId,
-					fullName,
-					phone,
-					street,
-					postalCode,
-					city,
-					state: state ?? null,
-					country,
-					isDefault,
-				})
-				.returning();
-
-			return row;
-		});
+		const [createdAddress] = await db
+			.insert(address)
+			.values({
+				userId,
+				fullName,
+				phone,
+				street,
+				postalCode,
+				city,
+				state: state ?? null,
+				country,
+				isDefault,
+			})
+			.returning();
 
 		return jsonOk<CreateAddressOutputType>({
 			status: HttpStatusCode.CREATED,

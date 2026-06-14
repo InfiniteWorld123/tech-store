@@ -1,9 +1,31 @@
+import { eq } from "drizzle-orm";
 import type { FileRouter } from "uploadthing/server";
 import { createUploadthing, UploadThingError } from "uploadthing/server";
+import { db } from "#/db/drizzle";
+import { user } from "#/db/schema";
+import { auth } from "#/lib/auth-server";
+import { isAdminRole } from "./auth/user-roles";
 
 const f = createUploadthing();
 
-const auth = (_req: Request) => ({ id: "fakeId" }); // Fake auth function
+async function requireAdminUpload(req: Request) {
+	const session = await auth.api.getSession({ headers: req.headers });
+
+	if (!session) {
+		throw new UploadThingError("Unauthorized");
+	}
+
+	const [currentUser] = await db
+		.select({ id: user.id, role: user.role })
+		.from(user)
+		.where(eq(user.id, session.user.id));
+
+	if (!isAdminRole(currentUser?.role)) {
+		throw new UploadThingError("Admin access is required");
+	}
+
+	return { id: currentUser.id };
+}
 
 // FileRouter for your app, can contain multiple FileRoutes
 export const uploadRouter = {
@@ -20,14 +42,10 @@ export const uploadRouter = {
 	})
 		// Set permissions and file types for this FileRoute
 		.middleware(async ({ req }) => {
-			// This code runs on your server before upload
-			const user = await auth(req);
-
-			// If you throw, the user will not be able to upload
-			if (!user) throw new UploadThingError("Unauthorized");
+			const admin = await requireAdminUpload(req);
 
 			// Whatever is returned here is accessible in onUploadComplete as `metadata`
-			return { userId: user.id };
+			return { userId: admin.id };
 		})
 		.onUploadComplete(async ({ metadata, file }) => {
 			// This code RUNS ON YOUR SERVER after upload

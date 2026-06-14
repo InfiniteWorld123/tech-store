@@ -28,7 +28,7 @@ export function PublicPageLayout({
 }: PublicPageLayoutProps) {
 	return (
 		<div className="min-h-screen flex flex-col bg-background">
-			<Header />
+			<Header variant="hero" />
 			<main className="flex-1 pt-16">
 				<section className="relative overflow-hidden bg-foreground text-white">
 					<div

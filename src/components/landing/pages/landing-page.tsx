@@ -9,7 +9,7 @@ import { TrustSection } from "../sections/trust-section";
 export function LandingPage() {
 	return (
 		<div className="min-h-screen flex flex-col">
-			<Header />
+			<Header variant="hero" />
 			<main className="flex-1">
 				<HeroSection />
 				<CategoriesSection />

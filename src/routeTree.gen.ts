@@ -9,12 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as CartRouteImport } from './routes/cart'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductsIndexRouteImport } from './routes/products/index'
 import { Route as CategoriesIndexRouteImport } from './routes/categories/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AccountIndexRouteImport } from './routes/account/index'
+import { Route as ProductsSlugRouteImport } from './routes/products/$slug'
 import { Route as CategoriesSlugRouteImport } from './routes/categories/$slug'
 import { Route as ApiUploadthingRouteImport } from './routes/api/uploadthing'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
@@ -26,10 +31,11 @@ import { Route as AdminProductsRouteImport } from './routes/admin/products'
 import { Route as AdminPaymentsRouteImport } from './routes/admin/payments'
 import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
 import { Route as AdminOptionsRouteImport } from './routes/admin/options'
-import { Route as AdminInventoryRouteImport } from './routes/admin/inventory'
-import { Route as AdminCustomersRouteImport } from './routes/admin/customers'
 import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin/analytics'
+import { Route as AccountReviewsRouteImport } from './routes/account/reviews'
+import { Route as AccountOrdersRouteImport } from './routes/account/orders'
+import { Route as AccountAddressesRouteImport } from './routes/account/addresses'
 import { Route as LandingWithdrawalRouteImport } from './routes/_landing/withdrawal'
 import { Route as LandingTrackRouteImport } from './routes/_landing/track'
 import { Route as LandingTermsRouteImport } from './routes/_landing/terms'
@@ -47,10 +53,26 @@ import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-pass
 import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-password'
 import { Route as ApiWebhooksStripeRouteImport } from './routes/api/webhooks/stripe'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AccountOrdersOrderIdRouteImport } from './routes/account/orders/$orderId'
 
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -76,6 +98,16 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
+} as any)
+const AccountIndexRoute = AccountIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AccountRoute,
+} as any)
+const ProductsSlugRoute = ProductsSlugRouteImport.update({
+  id: '/products/$slug',
+  path: '/products/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CategoriesSlugRoute = CategoriesSlugRouteImport.update({
   id: '/categories/$slug',
@@ -132,16 +164,6 @@ const AdminOptionsRoute = AdminOptionsRouteImport.update({
   path: '/options',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminInventoryRoute = AdminInventoryRouteImport.update({
-  id: '/inventory',
-  path: '/inventory',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminCustomersRoute = AdminCustomersRouteImport.update({
-  id: '/customers',
-  path: '/customers',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
   id: '/categories',
   path: '/categories',
@@ -151,6 +173,21 @@ const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
   getParentRoute: () => AdminRoute,
+} as any)
+const AccountReviewsRoute = AccountReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountOrdersRoute = AccountOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountAddressesRoute = AccountAddressesRouteImport.update({
+  id: '/addresses',
+  path: '/addresses',
+  getParentRoute: () => AccountRoute,
 } as any)
 const LandingWithdrawalRoute = LandingWithdrawalRouteImport.update({
   id: '/_landing/withdrawal',
@@ -237,10 +274,18 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountOrdersOrderIdRoute = AccountOrdersOrderIdRouteImport.update({
+  id: '/$orderId',
+  path: '/$orderId',
+  getParentRoute: () => AccountOrdersRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AccountRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/sign-in': typeof AuthSignInRoute
@@ -256,10 +301,11 @@ export interface FileRoutesByFullPath {
   '/terms': typeof LandingTermsRoute
   '/track': typeof LandingTrackRoute
   '/withdrawal': typeof LandingWithdrawalRoute
+  '/account/addresses': typeof AccountAddressesRoute
+  '/account/orders': typeof AccountOrdersRouteWithChildren
+  '/account/reviews': typeof AccountReviewsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/categories': typeof AdminCategoriesRoute
-  '/admin/customers': typeof AdminCustomersRoute
-  '/admin/inventory': typeof AdminInventoryRoute
   '/admin/options': typeof AdminOptionsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payments': typeof AdminPaymentsRoute
@@ -271,14 +317,19 @@ export interface FileRoutesByFullPath {
   '/api/contact': typeof ApiContactRoute
   '/api/uploadthing': typeof ApiUploadthingRoute
   '/categories/$slug': typeof CategoriesSlugRoute
+  '/products/$slug': typeof ProductsSlugRoute
+  '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/categories/': typeof CategoriesIndexRoute
   '/products/': typeof ProductsIndexRoute
+  '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/sign-in': typeof AuthSignInRoute
@@ -294,10 +345,11 @@ export interface FileRoutesByTo {
   '/terms': typeof LandingTermsRoute
   '/track': typeof LandingTrackRoute
   '/withdrawal': typeof LandingWithdrawalRoute
+  '/account/addresses': typeof AccountAddressesRoute
+  '/account/orders': typeof AccountOrdersRouteWithChildren
+  '/account/reviews': typeof AccountReviewsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/categories': typeof AdminCategoriesRoute
-  '/admin/customers': typeof AdminCustomersRoute
-  '/admin/inventory': typeof AdminInventoryRoute
   '/admin/options': typeof AdminOptionsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payments': typeof AdminPaymentsRoute
@@ -309,9 +361,12 @@ export interface FileRoutesByTo {
   '/api/contact': typeof ApiContactRoute
   '/api/uploadthing': typeof ApiUploadthingRoute
   '/categories/$slug': typeof CategoriesSlugRoute
+  '/products/$slug': typeof ProductsSlugRoute
+  '/account': typeof AccountIndexRoute
   '/admin': typeof AdminIndexRoute
   '/categories': typeof CategoriesIndexRoute
   '/products': typeof ProductsIndexRoute
+  '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
 }
@@ -319,7 +374,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
+  '/account': typeof AccountRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
   '/_auth/forgot-password': typeof AuthForgotPasswordRoute
   '/_auth/reset-password': typeof AuthResetPasswordRoute
   '/_auth/sign-in': typeof AuthSignInRoute
@@ -335,10 +393,11 @@ export interface FileRoutesById {
   '/_landing/terms': typeof LandingTermsRoute
   '/_landing/track': typeof LandingTrackRoute
   '/_landing/withdrawal': typeof LandingWithdrawalRoute
+  '/account/addresses': typeof AccountAddressesRoute
+  '/account/orders': typeof AccountOrdersRouteWithChildren
+  '/account/reviews': typeof AccountReviewsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/categories': typeof AdminCategoriesRoute
-  '/admin/customers': typeof AdminCustomersRoute
-  '/admin/inventory': typeof AdminInventoryRoute
   '/admin/options': typeof AdminOptionsRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/payments': typeof AdminPaymentsRoute
@@ -350,9 +409,12 @@ export interface FileRoutesById {
   '/api/contact': typeof ApiContactRoute
   '/api/uploadthing': typeof ApiUploadthingRoute
   '/categories/$slug': typeof CategoriesSlugRoute
+  '/products/$slug': typeof ProductsSlugRoute
+  '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/categories/': typeof CategoriesIndexRoute
   '/products/': typeof ProductsIndexRoute
+  '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
 }
@@ -360,7 +422,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/account'
     | '/admin'
+    | '/cart'
+    | '/checkout'
     | '/forgot-password'
     | '/reset-password'
     | '/sign-in'
@@ -376,10 +441,11 @@ export interface FileRouteTypes {
     | '/terms'
     | '/track'
     | '/withdrawal'
+    | '/account/addresses'
+    | '/account/orders'
+    | '/account/reviews'
     | '/admin/analytics'
     | '/admin/categories'
-    | '/admin/customers'
-    | '/admin/inventory'
     | '/admin/options'
     | '/admin/orders'
     | '/admin/payments'
@@ -391,14 +457,19 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/api/uploadthing'
     | '/categories/$slug'
+    | '/products/$slug'
+    | '/account/'
     | '/admin/'
     | '/categories/'
     | '/products/'
+    | '/account/orders/$orderId'
     | '/api/auth/$'
     | '/api/webhooks/stripe'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/cart'
+    | '/checkout'
     | '/forgot-password'
     | '/reset-password'
     | '/sign-in'
@@ -414,10 +485,11 @@ export interface FileRouteTypes {
     | '/terms'
     | '/track'
     | '/withdrawal'
+    | '/account/addresses'
+    | '/account/orders'
+    | '/account/reviews'
     | '/admin/analytics'
     | '/admin/categories'
-    | '/admin/customers'
-    | '/admin/inventory'
     | '/admin/options'
     | '/admin/orders'
     | '/admin/payments'
@@ -429,16 +501,22 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/api/uploadthing'
     | '/categories/$slug'
+    | '/products/$slug'
+    | '/account'
     | '/admin'
     | '/categories'
     | '/products'
+    | '/account/orders/$orderId'
     | '/api/auth/$'
     | '/api/webhooks/stripe'
   id:
     | '__root__'
     | '/'
     | '/_auth'
+    | '/account'
     | '/admin'
+    | '/cart'
+    | '/checkout'
     | '/_auth/forgot-password'
     | '/_auth/reset-password'
     | '/_auth/sign-in'
@@ -454,10 +532,11 @@ export interface FileRouteTypes {
     | '/_landing/terms'
     | '/_landing/track'
     | '/_landing/withdrawal'
+    | '/account/addresses'
+    | '/account/orders'
+    | '/account/reviews'
     | '/admin/analytics'
     | '/admin/categories'
-    | '/admin/customers'
-    | '/admin/inventory'
     | '/admin/options'
     | '/admin/orders'
     | '/admin/payments'
@@ -469,9 +548,12 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/api/uploadthing'
     | '/categories/$slug'
+    | '/products/$slug'
+    | '/account/'
     | '/admin/'
     | '/categories/'
     | '/products/'
+    | '/account/orders/$orderId'
     | '/api/auth/$'
     | '/api/webhooks/stripe'
   fileRoutesById: FileRoutesById
@@ -479,7 +561,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
+  AccountRoute: typeof AccountRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
+  CartRoute: typeof CartRoute
+  CheckoutRoute: typeof CheckoutRoute
   LandingAboutRoute: typeof LandingAboutRoute
   LandingContactRoute: typeof LandingContactRoute
   LandingFaqRoute: typeof LandingFaqRoute
@@ -493,6 +578,7 @@ export interface RootRouteChildren {
   ApiContactRoute: typeof ApiContactRoute
   ApiUploadthingRoute: typeof ApiUploadthingRoute
   CategoriesSlugRoute: typeof CategoriesSlugRoute
+  ProductsSlugRoute: typeof ProductsSlugRoute
   CategoriesIndexRoute: typeof CategoriesIndexRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -501,11 +587,32 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin': {
       id: '/admin'
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -542,6 +649,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/account/': {
+      id: '/account/'
+      path: '/'
+      fullPath: '/account/'
+      preLoaderRoute: typeof AccountIndexRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/products/$slug': {
+      id: '/products/$slug'
+      path: '/products/$slug'
+      fullPath: '/products/$slug'
+      preLoaderRoute: typeof ProductsSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/categories/$slug': {
       id: '/categories/$slug'
@@ -620,20 +741,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOptionsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/inventory': {
-      id: '/admin/inventory'
-      path: '/inventory'
-      fullPath: '/admin/inventory'
-      preLoaderRoute: typeof AdminInventoryRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/customers': {
-      id: '/admin/customers'
-      path: '/customers'
-      fullPath: '/admin/customers'
-      preLoaderRoute: typeof AdminCustomersRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/categories': {
       id: '/admin/categories'
       path: '/categories'
@@ -647,6 +754,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/analytics'
       preLoaderRoute: typeof AdminAnalyticsRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/account/reviews': {
+      id: '/account/reviews'
+      path: '/reviews'
+      fullPath: '/account/reviews'
+      preLoaderRoute: typeof AccountReviewsRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/orders': {
+      id: '/account/orders'
+      path: '/orders'
+      fullPath: '/account/orders'
+      preLoaderRoute: typeof AccountOrdersRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/addresses': {
+      id: '/account/addresses'
+      path: '/addresses'
+      fullPath: '/account/addresses'
+      preLoaderRoute: typeof AccountAddressesRouteImport
+      parentRoute: typeof AccountRoute
     }
     '/_landing/withdrawal': {
       id: '/_landing/withdrawal'
@@ -767,6 +895,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account/orders/$orderId': {
+      id: '/account/orders/$orderId'
+      path: '/$orderId'
+      fullPath: '/account/orders/$orderId'
+      preLoaderRoute: typeof AccountOrdersOrderIdRouteImport
+      parentRoute: typeof AccountOrdersRoute
+    }
   }
 }
 
@@ -788,11 +923,38 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
+interface AccountOrdersRouteChildren {
+  AccountOrdersOrderIdRoute: typeof AccountOrdersOrderIdRoute
+}
+
+const AccountOrdersRouteChildren: AccountOrdersRouteChildren = {
+  AccountOrdersOrderIdRoute: AccountOrdersOrderIdRoute,
+}
+
+const AccountOrdersRouteWithChildren = AccountOrdersRoute._addFileChildren(
+  AccountOrdersRouteChildren,
+)
+
+interface AccountRouteChildren {
+  AccountAddressesRoute: typeof AccountAddressesRoute
+  AccountOrdersRoute: typeof AccountOrdersRouteWithChildren
+  AccountReviewsRoute: typeof AccountReviewsRoute
+  AccountIndexRoute: typeof AccountIndexRoute
+}
+
+const AccountRouteChildren: AccountRouteChildren = {
+  AccountAddressesRoute: AccountAddressesRoute,
+  AccountOrdersRoute: AccountOrdersRouteWithChildren,
+  AccountReviewsRoute: AccountReviewsRoute,
+  AccountIndexRoute: AccountIndexRoute,
+}
+
+const AccountRouteWithChildren =
+  AccountRoute._addFileChildren(AccountRouteChildren)
+
 interface AdminRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
-  AdminCustomersRoute: typeof AdminCustomersRoute
-  AdminInventoryRoute: typeof AdminInventoryRoute
   AdminOptionsRoute: typeof AdminOptionsRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminPaymentsRoute: typeof AdminPaymentsRoute
@@ -807,8 +969,6 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
-  AdminCustomersRoute: AdminCustomersRoute,
-  AdminInventoryRoute: AdminInventoryRoute,
   AdminOptionsRoute: AdminOptionsRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminPaymentsRoute: AdminPaymentsRoute,
@@ -825,7 +985,10 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
+  AccountRoute: AccountRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
+  CartRoute: CartRoute,
+  CheckoutRoute: CheckoutRoute,
   LandingAboutRoute: LandingAboutRoute,
   LandingContactRoute: LandingContactRoute,
   LandingFaqRoute: LandingFaqRoute,
@@ -839,6 +1002,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiContactRoute: ApiContactRoute,
   ApiUploadthingRoute: ApiUploadthingRoute,
   CategoriesSlugRoute: CategoriesSlugRoute,
+  ProductsSlugRoute: ProductsSlugRoute,
   CategoriesIndexRoute: CategoriesIndexRoute,
   ProductsIndexRoute: ProductsIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

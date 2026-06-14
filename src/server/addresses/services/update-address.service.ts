@@ -40,40 +40,36 @@ export const updateAddress = async (
 			throw badRequestError("At least one address field must be updated");
 		}
 
-		const updatedAddress = await db.transaction(async (tx) => {
-			const [existingAddress] = await tx
-				.select({ id: address.id })
-				.from(address)
-				.where(and(eq(address.id, addressId), eq(address.userId, userId)));
+		const [existingAddress] = await db
+			.select({ id: address.id })
+			.from(address)
+			.where(and(eq(address.id, addressId), eq(address.userId, userId)));
 
-			if (!existingAddress) {
-				throw notFoundError("Address not found");
-			}
+		if (!existingAddress) {
+			throw notFoundError("Address not found");
+		}
 
-			if (isDefault === true) {
-				await tx
-					.update(address)
-					.set({ isDefault: false })
-					.where(eq(address.userId, userId));
-			}
-
-			const [row] = await tx
+		if (isDefault === true) {
+			await db
 				.update(address)
-				.set({
-					...(fullName !== undefined ? { fullName } : {}),
-					...(phone !== undefined ? { phone } : {}),
-					...(street !== undefined ? { street } : {}),
-					...(postalCode !== undefined ? { postalCode } : {}),
-					...(city !== undefined ? { city } : {}),
-					...(state !== undefined ? { state: state ?? null } : {}),
-					...(country !== undefined ? { country } : {}),
-					...(isDefault !== undefined ? { isDefault } : {}),
-				})
-				.where(eq(address.id, addressId))
-				.returning();
+				.set({ isDefault: false })
+				.where(eq(address.userId, userId));
+		}
 
-			return row;
-		});
+		const [updatedAddress] = await db
+			.update(address)
+			.set({
+				...(fullName !== undefined ? { fullName } : {}),
+				...(phone !== undefined ? { phone } : {}),
+				...(street !== undefined ? { street } : {}),
+				...(postalCode !== undefined ? { postalCode } : {}),
+				...(city !== undefined ? { city } : {}),
+				...(state !== undefined ? { state: state ?? null } : {}),
+				...(country !== undefined ? { country } : {}),
+				...(isDefault !== undefined ? { isDefault } : {}),
+			})
+			.where(eq(address.id, addressId))
+			.returning();
 
 		return jsonOk<UpdateAddressOutputType>({
 			status: HttpStatusCode.OK,

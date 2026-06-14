@@ -1,6 +1,10 @@
 "use client";
-import { AlertDialog, Button, toast } from "@heroui/react";
+import { AlertDialog, Button } from "@heroui/react";
 import { Trash2 } from "lucide-react";
+import { useDeleteColor } from "#/mutations/options/use-delete-color";
+import { useDeleteRam } from "#/mutations/options/use-delete-ram";
+import { useDeleteScreen } from "#/mutations/options/use-delete-screen";
+import { useDeleteStorage } from "#/mutations/options/use-delete-storage";
 import type { OptionConfig, OptionRow } from "../option-configs";
 
 type Props = {
@@ -10,12 +14,35 @@ type Props = {
 };
 
 export function DeleteOptionDialog({ config, row, onClose }: Props) {
-	const handleDelete = () => {
-		// UI-only scaffold — no API call yet. Wire to the delete action during the
-		// API-connection pass.
-		toast.success(
-			`Deleted ${config.singular} "${row?.name}" (UI only — not saved)`,
-		);
+	const deleteColor = useDeleteColor({ onSuccess: onClose });
+	const deleteStorage = useDeleteStorage({ onSuccess: onClose });
+	const deleteRam = useDeleteRam({ onSuccess: onClose });
+	const deleteScreen = useDeleteScreen({ onSuccess: onClose });
+	const isDeleting =
+		deleteColor.isPending ||
+		deleteStorage.isPending ||
+		deleteRam.isPending ||
+		deleteScreen.isPending;
+
+	const handleDelete = async () => {
+		if (!row) return;
+
+		if (config.key === "colors") {
+			await deleteColor.mutateAsync({ colorId: row.id });
+			return;
+		}
+
+		if (config.key === "storages") {
+			await deleteStorage.mutateAsync({ storageId: row.id });
+			return;
+		}
+
+		if (config.key === "rams") {
+			await deleteRam.mutateAsync({ ramId: row.id });
+			return;
+		}
+
+		await deleteScreen.mutateAsync({ screenId: row.id });
 		onClose();
 	};
 
@@ -47,10 +74,21 @@ export function DeleteOptionDialog({ config, row, onClose }: Props) {
 						</AlertDialog.Body>
 
 						<AlertDialog.Footer className="gap-2">
-							<Button variant="outline" size="sm" onPress={onClose}>
+							<Button
+								variant="outline"
+								size="sm"
+								onPress={onClose}
+								isDisabled={isDeleting}
+							>
 								Cancel
 							</Button>
-							<Button variant="danger" size="sm" onPress={handleDelete}>
+							<Button
+								variant="danger"
+								size="sm"
+								onPress={handleDelete}
+								isPending={isDeleting}
+								isDisabled={isDeleting}
+							>
 								Delete {config.singular}
 							</Button>
 						</AlertDialog.Footer>

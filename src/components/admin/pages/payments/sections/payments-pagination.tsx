@@ -54,6 +54,7 @@ export function PaymentsPagination({
 						<Pagination.Previous
 							isDisabled={currentPage === 1}
 							onPress={() => onPageChange(currentPage - 1)}
+							onFocus={() => currentPage > 1 && onPrefetchPage(currentPage - 1)}
 							onMouseEnter={() =>
 								currentPage > 1 && onPrefetchPage(currentPage - 1)
 							}
@@ -73,6 +74,7 @@ export function PaymentsPagination({
 								<Pagination.Link
 									isActive={p === currentPage}
 									onPress={() => onPageChange(p)}
+									onFocus={() => p !== currentPage && onPrefetchPage(p)}
 									onMouseEnter={() => p !== currentPage && onPrefetchPage(p)}
 								>
 									{p}
@@ -85,6 +87,9 @@ export function PaymentsPagination({
 						<Pagination.Next
 							isDisabled={currentPage >= totalPages}
 							onPress={() => onPageChange(currentPage + 1)}
+							onFocus={() =>
+								currentPage < totalPages && onPrefetchPage(currentPage + 1)
+							}
 							onMouseEnter={() =>
 								currentPage < totalPages && onPrefetchPage(currentPage + 1)
 							}

@@ -1,10 +1,11 @@
-import { Alert, Button, Card, Form, Table } from "@heroui/react";
+import { Alert, Button, Card, Table } from "@heroui/react";
 import {
 	ClipboardCheck,
 	FileCheck,
 	HelpCircle,
 	Lock,
 	MapPin,
+	Package,
 	PackageCheck,
 	RefreshCcw,
 	Scale,
@@ -18,7 +19,8 @@ import {
 	PublicPageLayout,
 	ShopCta,
 } from "#/components/legal/sections/public-page-layout";
-import { InputField } from "#/components/ui/fields/input-field";
+import LinkAnchor from "#/components/ui/buttons/link-anchor";
+import { useSession } from "#/lib/auth-client";
 
 const shippingRows = [
 	["Germany standard", "DHL GoGreen", "2-4 business days", "4.90 EUR"],
@@ -181,50 +183,58 @@ export function ReturnsPage() {
 }
 
 export function TrackOrderPage() {
+	const { data: sessionData } = useSession();
+	const user = sessionData?.user ?? null;
+
 	return (
 		<PublicPageLayout
 			eyebrow="Order tracking"
 			title="Track your TechStore order."
-			description="A polished tracking surface prepared for your own internal order and shipping APIs, without using DHL APIs."
+			description="Sign in to view real-time tracking for your orders."
 			icon={Search}
 		>
 			<section className="py-16 sm:py-20">
-				<div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-					<Card className="p-6 shadow-sm sm:p-8">
-						<Form className="grid gap-4">
-							<InputField
-								name="orderNumber"
-								label="Order number"
-								placeholder="TS-DEMO-10482"
-							/>
-							<InputField
-								name="email"
-								label="Email address"
-								type="email"
-								placeholder="you@example.com"
-							/>
-							<Button variant="primary" type="button">
-								<Search size={16} /> Check order status
-							</Button>
-						</Form>
-						<div className="mt-8 rounded-2xl bg-surface-secondary p-6">
-							<p className="font-semibold text-foreground">
-								Internal tracking API placeholder
-							</p>
-							<div className="mt-4 grid gap-3 text-sm text-muted">
-								<p>
-									Later, this form can call your own backend with the order
-									number and customer email.
-								</p>
-								<p>
-									The backend can return your stored order status, shipping
-									status, carrier, tracking number, shipped date, and delivered
-									date.
-								</p>
-								<p>No DHL integration is needed for the portfolio version.</p>
+				<div className="max-w-lg mx-auto px-4 sm:px-6 lg:px-8">
+					{user ? (
+						<Card className="p-6 sm:p-8 text-center space-y-4">
+							<div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto">
+								<Package size={22} className="text-accent" />
 							</div>
-						</div>
-					</Card>
+							<p className="font-bold text-foreground text-lg">
+								Hi {user.name}!
+							</p>
+							<p className="text-sm text-muted">
+								View live tracking status for all your orders in My Orders.
+							</p>
+							<LinkAnchor to="/account/orders">
+								<Button variant="primary" className="w-full">
+									Go to My Orders
+								</Button>
+							</LinkAnchor>
+						</Card>
+					) : (
+						<Card className="p-6 sm:p-8 text-center space-y-4">
+							<div className="w-12 h-12 rounded-full bg-surface-secondary flex items-center justify-center mx-auto">
+								<Search size={22} className="text-muted" />
+							</div>
+							<p className="font-bold text-foreground text-lg">
+								Sign in to track your order
+							</p>
+							<p className="text-sm text-muted">
+								Order tracking is available to signed-in customers. Sign in to
+								view shipping status, tracking numbers, and delivery updates for
+								all your orders.
+							</p>
+							<LinkAnchor
+								to="/sign-in"
+								search={{ redirect: "/account/orders" }}
+							>
+								<Button variant="primary" className="w-full">
+									Sign in
+								</Button>
+							</LinkAnchor>
+						</Card>
+					)}
 				</div>
 			</section>
 		</PublicPageLayout>

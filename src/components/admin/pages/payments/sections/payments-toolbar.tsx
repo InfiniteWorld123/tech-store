@@ -6,8 +6,10 @@ type PaymentsToolbarProps = {
 	onSearchChange: (value: string) => void;
 	status: PaymentStatus | undefined;
 	onStatusChange: (value: string) => void;
+	onPrefetchStatus: (value: string) => void;
 	method: PaymentMethod | undefined;
 	onMethodChange: (value: string) => void;
+	onPrefetchMethod: (value: string) => void;
 };
 
 const statusOptions = [
@@ -34,9 +36,22 @@ export function PaymentsToolbar({
 	onSearchChange,
 	status,
 	onStatusChange,
+	onPrefetchStatus,
 	method,
 	onMethodChange,
+	onPrefetchMethod,
 }: PaymentsToolbarProps) {
+	const warmStatuses = () => {
+		for (const { value } of statusOptions) {
+			onPrefetchStatus(value);
+		}
+	};
+	const warmMethods = () => {
+		for (const { value } of methodOptions) {
+			onPrefetchMethod(value);
+		}
+	};
+
 	return (
 		<div className="flex flex-col sm:flex-row sm:items-center gap-3">
 			<div className="relative flex-1">
@@ -61,6 +76,8 @@ export function PaymentsToolbar({
 				<select
 					value={status ?? ""}
 					onChange={(e) => onStatusChange(e.target.value)}
+					onFocus={warmStatuses}
+					onMouseEnter={warmStatuses}
 					className={selectClass}
 				>
 					{statusOptions.map(({ value, label }) => (
@@ -79,6 +96,8 @@ export function PaymentsToolbar({
 				<select
 					value={method ?? ""}
 					onChange={(e) => onMethodChange(e.target.value)}
+					onFocus={warmMethods}
+					onMouseEnter={warmMethods}
 					className={selectClass}
 				>
 					{methodOptions.map(({ value, label }) => (

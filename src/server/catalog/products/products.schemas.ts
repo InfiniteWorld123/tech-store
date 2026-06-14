@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const productSearchTypeSchema = z.enum(["name", "slug", "brand"]);
+const productSearchTypeSchema = z.enum(["all", "id", "name", "slug", "brand"]);
 
 const productSortBySchema = z.enum([
 	"name",
@@ -14,6 +14,10 @@ const productSortOrderSchema = z.enum(["asc", "desc"]);
 
 export const getProductSchema = z.object({
 	productId: z.string().min(1, "Product id is required"),
+});
+
+export const getProductBySlugSchema = z.object({
+	slug: z.string().trim().min(1, "Slug is required"),
 });
 
 export const getProductsSchema = z.object({
@@ -107,15 +111,17 @@ export const getProductsSchema = z.object({
 		})
 		.optional(),
 
-	pagination: z.object({
-		page: z.number().int().min(1).default(1),
-		limit: z
-			.number()
-			.int()
-			.min(1, "Limit must be at least 1")
-			.max(100, "Limit cannot be greater than 100")
-			.default(10),
-	}),
+	pagination: z
+		.object({
+			page: z.number().int().min(1).default(1),
+			limit: z
+				.number()
+				.int()
+				.min(1, "Limit must be at least 1")
+				.max(100, "Limit cannot be greater than 100")
+				.default(10),
+		})
+		.default({ page: 1, limit: 10 }),
 });
 
 const productCategorySchema = z.object({

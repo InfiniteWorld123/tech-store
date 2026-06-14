@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useCallback } from "react";
+import { useDebouncedSearchParam } from "#/hooks/use-debounced-search-param";
 import { listCategoriesQueryOptions } from "#/queries/categories.queries.ts";
 import { Route } from "#/routes/admin/categories";
 
@@ -8,23 +9,24 @@ export function useCategoriesPage() {
 	const { searching } = Route.useSearch();
 	const navigate = useNavigate({ from: Route.fullPath });
 
-	const [inputValue, setInputValue] = useState(searching?.search ?? "");
-
-	// Debounce: push the search value into the URL after 400ms of no typing
-	useEffect(() => {
-		const timer = setTimeout(() => {
+	const commitSearch = useCallback(
+		(value: string | undefined) => {
 			navigate({
 				search: (prev) => ({
 					...prev,
 					searching: {
 						...prev.searching,
-						search: inputValue || undefined,
+						search: value,
 					},
 				}),
 			});
-		}, 400);
-		return () => clearTimeout(timer);
-	}, [inputValue, navigate]);
+		},
+		[navigate],
+	);
+	const { inputValue, setInputValue } = useDebouncedSearchParam({
+		committedValue: searching?.search,
+		onCommit: commitSearch,
+	});
 
 	const { data, isLoading, isError } = useQuery(
 		listCategoriesQueryOptions({ searching }),

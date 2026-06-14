@@ -15,12 +15,16 @@ type ShippingToolbarProps = {
 	onSearchChange: (value: string) => void;
 	status: ShippingStatus | undefined;
 	onStatusChange: (value: string) => void;
+	onPrefetchStatus: (value: string) => void;
 	carrier: ShippingCarrier | undefined;
 	onCarrierChange: (value: string) => void;
+	onPrefetchCarrier: (value: string) => void;
 	method: ShippingMethod | undefined;
 	onMethodChange: (value: string) => void;
+	onPrefetchMethod: (value: string) => void;
 	dateRange: DateRange;
 	onDateRangeChange: (value: DateRange) => void;
+	onPrefetchDateRange: (value: DateRange) => void;
 	onCreateClick: () => void;
 };
 
@@ -56,14 +60,34 @@ export function ShippingToolbar({
 	onSearchChange,
 	status,
 	onStatusChange,
+	onPrefetchStatus,
 	carrier,
 	onCarrierChange,
+	onPrefetchCarrier,
 	method,
 	onMethodChange,
+	onPrefetchMethod,
 	dateRange,
 	onDateRangeChange,
+	onPrefetchDateRange,
 	onCreateClick,
 }: ShippingToolbarProps) {
+	const warmStatuses = () => {
+		for (const { value } of statusOptions) {
+			onPrefetchStatus(value);
+		}
+	};
+	const warmCarriers = () => {
+		for (const { value } of carrierOptions) {
+			onPrefetchCarrier(value);
+		}
+	};
+	const warmMethods = () => {
+		for (const { value } of methodOptions) {
+			onPrefetchMethod(value);
+		}
+	};
+
 	return (
 		<div className="flex flex-wrap items-center gap-3">
 			{/* Search */}
@@ -90,6 +114,8 @@ export function ShippingToolbar({
 				<select
 					value={status ?? ""}
 					onChange={(e) => onStatusChange(e.target.value)}
+					onFocus={warmStatuses}
+					onMouseEnter={warmStatuses}
 					className={selectClass}
 				>
 					{statusOptions.map(({ value, label }) => (
@@ -109,6 +135,8 @@ export function ShippingToolbar({
 				<select
 					value={carrier ?? ""}
 					onChange={(e) => onCarrierChange(e.target.value)}
+					onFocus={warmCarriers}
+					onMouseEnter={warmCarriers}
 					className={selectClass}
 				>
 					{carrierOptions.map(({ value, label }) => (
@@ -128,6 +156,8 @@ export function ShippingToolbar({
 				<select
 					value={method ?? ""}
 					onChange={(e) => onMethodChange(e.target.value)}
+					onFocus={warmMethods}
+					onMouseEnter={warmMethods}
 					className={selectClass}
 				>
 					{methodOptions.map(({ value, label }) => (
@@ -148,12 +178,15 @@ export function ShippingToolbar({
 					<input
 						type="date"
 						value={dateRange.from ?? ""}
-						onChange={(e) =>
-							onDateRangeChange({
+						onChange={(e) => {
+							const nextDateRange = {
 								...dateRange,
 								from: e.target.value || undefined,
-							})
-						}
+							};
+							onPrefetchDateRange(nextDateRange);
+							onDateRangeChange(nextDateRange);
+						}}
+						onFocus={() => onPrefetchDateRange(dateRange)}
 						className="appearance-none pl-9 pr-3 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer"
 					/>
 				</div>
@@ -161,9 +194,15 @@ export function ShippingToolbar({
 				<input
 					type="date"
 					value={dateRange.to ?? ""}
-					onChange={(e) =>
-						onDateRangeChange({ ...dateRange, to: e.target.value || undefined })
-					}
+					onChange={(e) => {
+						const nextDateRange = {
+							...dateRange,
+							to: e.target.value || undefined,
+						};
+						onPrefetchDateRange(nextDateRange);
+						onDateRangeChange(nextDateRange);
+					}}
+					onFocus={() => onPrefetchDateRange(dateRange)}
 					className="appearance-none px-3 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer"
 				/>
 			</div>

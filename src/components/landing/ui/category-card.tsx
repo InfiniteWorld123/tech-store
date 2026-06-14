@@ -2,6 +2,10 @@ import { Card } from "@heroui/react";
 import { ArrowRight } from "lucide-react";
 import LinkAnchor from "#/components/ui/buttons/link-anchor";
 import { DynamicIcon } from "#/components/ui/icons/category-icon";
+import { useQueryIntentPrefetch } from "#/hooks/use-query-intent-prefetch";
+import { listCategoriesQueryOptions } from "#/queries/categories.queries";
+import { listProductsQueryOptions } from "#/queries/products.queries";
+import type { GetProductsInputType } from "#/server/catalog/products/products.types";
 
 type Category = {
 	category: {
@@ -11,15 +15,45 @@ type Category = {
 		icon: string | null;
 		iconColor: string | null;
 		iconBg: string | null;
+		totalProducts?: number;
 	};
+	showCount?: boolean;
 };
 
-export function CategoryCard({ category }: Category) {
+export function CategoryCard({ category, showCount = false }: Category) {
+	const { prefetch } = useQueryIntentPrefetch();
+
+	const prefetchCategory = () => {
+		prefetch(
+			listCategoriesQueryOptions({
+				searching: { search: category.slug, searchType: "slug" },
+			}),
+		);
+		prefetch(
+			listProductsQueryOptions({
+				data: {
+					pagination: { page: 1, limit: 12 },
+					filters: {
+						categoryIds: [category.id],
+						colorIds: [],
+						storageIds: [],
+						ramIds: [],
+						screenSizeIds: [],
+					},
+					sorting: { sortBy: "createdAt", sortOrder: "desc" },
+					flags: { isActive: true },
+				} satisfies GetProductsInputType,
+			}),
+		);
+	};
+
 	return (
 		<LinkAnchor
 			to="/categories/$slug"
 			params={{ slug: category.slug }}
 			className="group no-underline"
+			onFocus={prefetchCategory}
+			onMouseEnter={prefetchCategory}
 		>
 			<Card className="h-full items-center gap-4 p-6 text-center transition-all duration-300 group-hover:-translate-y-1 group-hover:border-accent/40 group-hover:shadow-md">
 				<div
@@ -39,6 +73,12 @@ export function CategoryCard({ category }: Category) {
 							className="text-muted opacity-0 -translate-x-1 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100"
 						/>
 					</div>
+					{showCount && category.totalProducts !== undefined ? (
+						<p className="mt-1 text-xs text-muted">
+							{category.totalProducts}{" "}
+							{category.totalProducts === 1 ? "product" : "products"}
+						</p>
+					) : null}
 				</Card.Content>
 			</Card>
 		</LinkAnchor>

@@ -1,6 +1,9 @@
-"use client";
-
-import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	Outlet,
+	redirect,
+	useLocation,
+} from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
 	AdminRouteError,
@@ -8,8 +11,16 @@ import {
 } from "#/components/admin/layout/admin-route-states";
 import { AdminSidebar } from "#/components/admin/layout/admin-sidebar";
 import { AdminTopbar } from "#/components/admin/layout/admin-topbar";
+import { getAdminAccessAction } from "#/server/auth/admin-access.action";
 
 export const Route = createFileRoute("/admin")({
+	beforeLoad: async () => {
+		const access = await getAdminAccessAction({ data: {} });
+
+		if (!access.isAdmin) {
+			throw redirect({ to: "/" });
+		}
+	},
 	component: AdminLayout,
 	pendingComponent: AdminRouteLoading,
 	errorComponent: ({ error }) => <AdminRouteError error={error as Error} />,

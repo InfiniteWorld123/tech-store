@@ -59,6 +59,9 @@ export function ReviewsFilters({
 						// prefetch all 5 ratings + "all ratings" on hover
 						[undefined, 1, 2, 3, 4, 5].forEach(onPrefetchRating);
 					}}
+					onFocus={() => {
+						[undefined, 1, 2, 3, 4, 5].forEach(onPrefetchRating);
+					}}
 				>
 					{ratingOptions.map(({ value, label }) => (
 						<option key={label} value={value ?? ""}>

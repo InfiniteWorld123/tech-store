@@ -25,24 +25,22 @@ const markCheckoutSessionCompleted = async (
 		return new Response("Missing payment id", { status: 400 });
 	}
 
-	await db.transaction(async (tx) => {
-		await tx
-			.update(payment)
-			.set({
-				status: "paid",
-				paidAt: new Date(),
-			})
-			.where(eq(payment.id, paymentId));
+	await db
+		.update(payment)
+		.set({
+			status: "paid",
+			paidAt: new Date(),
+		})
+		.where(eq(payment.id, paymentId));
 
-		await tx
-			.update(stripePayment)
-			.set({
-				status: session.status ?? "complete",
-				paymentIntentId: stripeObjectId(session.payment_intent),
-				customerId: stripeObjectId(session.customer),
-			})
-			.where(eq(stripePayment.checkoutSessionId, session.id));
-	});
+	await db
+		.update(stripePayment)
+		.set({
+			status: session.status ?? "complete",
+			paymentIntentId: stripeObjectId(session.payment_intent),
+			customerId: stripeObjectId(session.customer),
+		})
+		.where(eq(stripePayment.checkoutSessionId, session.id));
 };
 
 const markCheckoutSessionExpired = async (session: Stripe.Checkout.Session) => {
@@ -65,23 +63,21 @@ const markPaymentIntentFailed = async (intent: Stripe.PaymentIntent) => {
 		return new Response("Missing payment id", { status: 400 });
 	}
 
-	await db.transaction(async (tx) => {
-		await tx
-			.update(payment)
-			.set({
-				status: "failed",
-			})
-			.where(eq(payment.id, paymentId));
+	await db
+		.update(payment)
+		.set({
+			status: "failed",
+		})
+		.where(eq(payment.id, paymentId));
 
-		await tx
-			.update(stripePayment)
-			.set({
-				status: intent.status,
-				paymentIntentId: intent.id,
-				customerId: stripeObjectId(intent.customer),
-			})
-			.where(eq(stripePayment.paymentId, paymentId));
-	});
+	await db
+		.update(stripePayment)
+		.set({
+			status: intent.status,
+			paymentIntentId: intent.id,
+			customerId: stripeObjectId(intent.customer),
+		})
+		.where(eq(stripePayment.paymentId, paymentId));
 };
 
 const markRefundUpdated = async (refund: Stripe.Refund) => {
@@ -104,21 +100,19 @@ const markRefundUpdated = async (refund: Stripe.Refund) => {
 
 	const nextPaymentStatus = refund.status === "succeeded" ? "refunded" : "paid";
 
-	await db.transaction(async (tx) => {
-		await tx
-			.update(payment)
-			.set({
-				status: nextPaymentStatus,
-			})
-			.where(eq(payment.id, stripeRow.paymentId));
+	await db
+		.update(payment)
+		.set({
+			status: nextPaymentStatus,
+		})
+		.where(eq(payment.id, stripeRow.paymentId));
 
-		await tx
-			.update(stripePayment)
-			.set({
-				status: refund.status ?? "refund_updated",
-			})
-			.where(eq(stripePayment.paymentId, stripeRow.paymentId));
-	});
+	await db
+		.update(stripePayment)
+		.set({
+			status: refund.status ?? "refund_updated",
+		})
+		.where(eq(stripePayment.paymentId, stripeRow.paymentId));
 };
 
 const markChargeRefunded = async (charge: Stripe.Charge) => {
@@ -139,21 +133,19 @@ const markChargeRefunded = async (charge: Stripe.Charge) => {
 		return;
 	}
 
-	await db.transaction(async (tx) => {
-		await tx
-			.update(payment)
-			.set({
-				status: "refunded",
-			})
-			.where(eq(payment.id, stripeRow.paymentId));
+	await db
+		.update(payment)
+		.set({
+			status: "refunded",
+		})
+		.where(eq(payment.id, stripeRow.paymentId));
 
-		await tx
-			.update(stripePayment)
-			.set({
-				status: "refunded",
-			})
-			.where(eq(stripePayment.paymentId, stripeRow.paymentId));
-	});
+	await db
+		.update(stripePayment)
+		.set({
+			status: "refunded",
+		})
+		.where(eq(stripePayment.paymentId, stripeRow.paymentId));
 };
 
 export const Route = createFileRoute("/api/webhooks/stripe")({

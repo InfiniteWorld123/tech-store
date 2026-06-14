@@ -16,29 +16,25 @@ export const setDefaultAddress = async (
 	try {
 		const { addressId, userId } = data;
 
-		const updatedAddress = await db.transaction(async (tx) => {
-			const [existingAddress] = await tx
-				.select({ id: address.id })
-				.from(address)
-				.where(and(eq(address.id, addressId), eq(address.userId, userId)));
+		const [existingAddress] = await db
+			.select({ id: address.id })
+			.from(address)
+			.where(and(eq(address.id, addressId), eq(address.userId, userId)));
 
-			if (!existingAddress) {
-				throw notFoundError("Address not found");
-			}
+		if (!existingAddress) {
+			throw notFoundError("Address not found");
+		}
 
-			await tx
-				.update(address)
-				.set({ isDefault: false })
-				.where(eq(address.userId, userId));
+		await db
+			.update(address)
+			.set({ isDefault: false })
+			.where(eq(address.userId, userId));
 
-			const [row] = await tx
-				.update(address)
-				.set({ isDefault: true })
-				.where(eq(address.id, addressId))
-				.returning();
-
-			return row;
-		});
+		const [updatedAddress] = await db
+			.update(address)
+			.set({ isDefault: true })
+			.where(eq(address.id, addressId))
+			.returning();
 
 		return jsonOk<SetDefaultAddressOutputType>({
 			status: HttpStatusCode.OK,

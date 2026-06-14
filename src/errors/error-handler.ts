@@ -24,27 +24,35 @@ const isJsonError = (error: unknown): error is JsonError => {
 	);
 };
 
-export const handleError = (error: unknown): JsonError => {
+const toErrorWithJson = (je: JsonError): Error & JsonError =>
+	Object.assign(new Error(je.message), je);
+
+export const handleError = (error: unknown): Error & JsonError => {
 	if (isJsonError(error)) {
-		return error;
+		if (error instanceof Error) return error as Error & JsonError;
+		return toErrorWithJson(error);
 	}
 
 	if (isAppError(error)) {
-		return jsonError({
-			message: error.message,
-			status: error.status,
-			code: error.code,
-			details: error.details,
-		});
+		return toErrorWithJson(
+			jsonError({
+				message: error.message,
+				status: error.status,
+				code: error.code,
+				details: error.details,
+			}),
+		);
 	}
 
 	// 1. Better Auth Server API Errors
 	if (error instanceof APIError) {
-		return jsonError({
-			message: error.body?.message || error.message || "Authentication error",
-			status: error.status as HttpStatusCode,
-			code: error.body?.code || "AUTH_ERROR",
-		});
+		return toErrorWithJson(
+			jsonError({
+				message: error.body?.message || error.message || "Authentication error",
+				status: error.status as HttpStatusCode,
+				code: error.body?.code || "AUTH_ERROR",
+			}),
+		);
 	}
 
 	// 2. Generic Error instances
@@ -52,31 +60,37 @@ export const handleError = (error: unknown): JsonError => {
 		// Better Fetch client error check (if thrown from authClient)
 		if ("status" in error && "error" in error) {
 			const fetchError = error as BetterFetchErrorShape;
-			return jsonError({
-				message:
-					fetchError.error?.message ||
-					fetchError.message ||
-					"Client authentication error",
-				status:
-					(fetchError.status as HttpStatusCode | undefined) ||
-					HttpStatusCode.BAD_REQUEST,
-				code: fetchError.error?.code || "AUTH_FETCH_ERROR",
-			});
+			return toErrorWithJson(
+				jsonError({
+					message:
+						fetchError.error?.message ||
+						fetchError.message ||
+						"Client authentication error",
+					status:
+						(fetchError.status as HttpStatusCode | undefined) ||
+						HttpStatusCode.BAD_REQUEST,
+					code: fetchError.error?.code || "AUTH_FETCH_ERROR",
+				}),
+			);
 		}
 
-		return jsonError({
-			message: error.message || "An unexpected error occurred",
-			status: HttpStatusCode.INTERNAL_SERVER_ERROR,
-			code: "INTERNAL_ERROR",
-		});
+		return toErrorWithJson(
+			jsonError({
+				message: error.message || "An unexpected error occurred",
+				status: HttpStatusCode.INTERNAL_SERVER_ERROR,
+				code: "INTERNAL_ERROR",
+			}),
+		);
 	}
 
 	// 3. Fallback
-	return jsonError({
-		message: "An unexpected error occurred",
-		status: HttpStatusCode.INTERNAL_SERVER_ERROR,
-		code: "UNKNOWN_ERROR",
-	});
+	return toErrorWithJson(
+		jsonError({
+			message: "An unexpected error occurred",
+			status: HttpStatusCode.INTERNAL_SERVER_ERROR,
+			code: "UNKNOWN_ERROR",
+		}),
+	);
 };
 
 export const catchAsyncFn = <TArgs extends unknown[], TResult>(

@@ -2,15 +2,7 @@ import { and, eq, gte, sql } from "drizzle-orm";
 import { HttpStatusCode } from "#/constants/http";
 import { type JsonOk, jsonOk } from "#/constants/json";
 import { db } from "#/db/drizzle";
-import {
-	address,
-	cartItem,
-	order,
-	orderItem,
-	payment,
-	shipping,
-	variant,
-} from "#/db/schema";
+import { cartItem, orderItem, variant } from "#/db/schema";
 import { conflictError, notFoundError } from "#/errors/app-error";
 import { handleError } from "#/errors/error-handler";
 import { validateCart } from "#/server/cart/services/validate-cart.service";
@@ -31,6 +23,33 @@ const createOrderNumber = (): string => {
 	return `ORD-${datePart}-${randomPart}`;
 };
 
+type CreatedCheckoutRows = {
+	orderId: string;
+	orderNumber: string;
+	orderStatus: "pending" | "processing" | "completed" | "cancelled";
+	orderSubtotal: string;
+	orderShippingFee: string;
+	orderTaxAmount: string;
+	orderTotalAmount: string;
+	orderNotes: string | null;
+	orderPlacedAt: string;
+	paymentMethod: "card" | "paypal" | "bank_transfer" | "cash_on_delivery";
+	paymentStatus: "pending" | "paid" | "failed" | "refunded";
+	paymentAmount: string;
+	paymentPaidAt: string | null;
+	shippingMethod: "standard" | "express" | "same_day";
+	shippingCarrier: "dhl" | "hermes" | "ups" | "fedex";
+	shippingStatus: "pending" | "packed" | "shipped" | "in_transit" | "delivered";
+	shippingTrackingNumber: string | null;
+};
+
+const serializeTimestamp = (value: string | Date | null): string | null => {
+	if (!value) return null;
+	if (value instanceof Date) return value.toISOString();
+
+	return new Date(value.replace(" ", "T")).toISOString();
+};
+
 export const placeOrderFromCart = async (
 	data: PlaceOrderFromCartInputType,
 ): Promise<JsonOk<PlaceOrderFromCartOutputType>> => {
@@ -43,15 +62,6 @@ export const placeOrderFromCart = async (
 			paymentMethod,
 			shippingCarrier,
 		} = data;
-
-		const [existingAddress] = await db
-			.select({ addressId: address.id })
-			.from(address)
-			.where(and(eq(address.id, addressId), eq(address.userId, userId)));
-
-		if (!existingAddress) {
-			throw notFoundError("Address not found");
-		}
 
 		const cartResponse = await validateCart({ userId, sessionId: null });
 		const validatedCart = cartResponse.data;
@@ -78,112 +88,166 @@ export const placeOrderFromCart = async (
 		const taxAmount = roundOrderMoney(subtotal * ORDER_TAX_RATE);
 		const totalAmount = roundOrderMoney(subtotal + shippingFee + taxAmount);
 
-		const payload = await db.transaction(async (tx) => {
-			const [createdOrder] = await tx
-				.insert(order)
-				.values({
-					userId,
-					addressId,
-					orderNumber: createOrderNumber(),
-					status: "pending",
-					subtotal: subtotal.toString(),
-					shippingFee: shippingFee.toString(),
-					taxAmount: taxAmount.toString(),
-					totalAmount: totalAmount.toString(),
-					notes: notes ?? null,
+		const createCheckoutRows = await db.execute<CreatedCheckoutRows>(sql`
+			with created_order as (
+				insert into "order" (
+					"user_id",
+					"address_id",
+					"order_number",
+					"status",
+					"subtotal",
+					"shipping_fee",
+					"tax_amount",
+					"total_amount",
+					"notes"
+				)
+				select
+					${userId},
+					a.id,
+					${createOrderNumber()},
+					${"pending"}::order_status,
+					${subtotal.toString()}::numeric,
+					${shippingFee.toString()}::numeric,
+					${taxAmount.toString()}::numeric,
+					${totalAmount.toString()}::numeric,
+					${notes ?? null}
+				from address a
+				where a.id = ${addressId}
+					and a.user_id = ${userId}
+				returning
+					id,
+					order_number,
+					status,
+					subtotal,
+					shipping_fee,
+					tax_amount,
+					total_amount,
+					notes,
+					placed_at
+			),
+			created_payment as (
+				insert into payment (
+					"order_id",
+					"method",
+					"amount",
+					"status"
+				)
+				select
+					id,
+					${paymentMethod}::payment_method,
+					${totalAmount.toString()}::numeric,
+					${"pending"}::payment_status
+				from created_order
+				returning method, status, amount, paid_at
+			),
+			created_shipping as (
+				insert into shipping (
+					"order_id",
+					"carrier",
+					"method",
+					"status",
+					"tracking_number"
+				)
+				select
+					id,
+					${shippingCarrier}::shipping_carrier,
+					${shippingMethod}::shipping_method,
+					${"pending"}::shipping_status,
+					null
+				from created_order
+				returning method, carrier, status, tracking_number
+			)
+			select
+				created_order.id as "orderId",
+				created_order.order_number as "orderNumber",
+				created_order.status as "orderStatus",
+				created_order.subtotal as "orderSubtotal",
+				created_order.shipping_fee as "orderShippingFee",
+				created_order.tax_amount as "orderTaxAmount",
+				created_order.total_amount as "orderTotalAmount",
+				created_order.notes as "orderNotes",
+				created_order.placed_at as "orderPlacedAt",
+				created_payment.method as "paymentMethod",
+				created_payment.status as "paymentStatus",
+				created_payment.amount as "paymentAmount",
+				created_payment.paid_at as "paymentPaidAt",
+				created_shipping.method as "shippingMethod",
+				created_shipping.carrier as "shippingCarrier",
+				created_shipping.status as "shippingStatus",
+				created_shipping.tracking_number as "shippingTrackingNumber"
+			from created_order
+			cross join created_payment
+			cross join created_shipping
+		`);
+
+		const createdCheckout = createCheckoutRows.rows[0];
+
+		if (!createdCheckout) {
+			throw notFoundError("Address not found");
+		}
+
+		await db.insert(orderItem).values(
+			items.map((item) => ({
+				orderId: createdCheckout.orderId,
+				variantId: item.variantId,
+				productName: item.productName,
+				variantName: item.variantName,
+				sku: item.sku,
+				quantity: item.quantity,
+				unitPrice: item.unitPrice.toString(),
+				totalPrice: item.totalPrice.toString(),
+			})),
+		);
+
+		for (const item of items) {
+			const [updatedVariant] = await db
+				.update(variant)
+				.set({
+					stockQuantity: sql`${variant.stockQuantity} - ${item.quantity}`,
 				})
-				.returning();
+				.where(
+					and(
+						eq(variant.id, item.variantId),
+						gte(variant.stockQuantity, item.quantity),
+					),
+				)
+				.returning({ id: variant.id });
 
-			await tx.insert(orderItem).values(
-				items.map((item) => ({
-					orderId: createdOrder.id,
-					variantId: item.variantId,
-					productName: item.productName,
-					variantName: item.variantName,
-					sku: item.sku,
-					quantity: item.quantity,
-					unitPrice: item.unitPrice.toString(),
-					totalPrice: item.totalPrice.toString(),
-				})),
-			);
-
-			const [createdPayment] = await tx
-				.insert(payment)
-				.values({
-					orderId: createdOrder.id,
-					method: paymentMethod,
-					amount: totalAmount.toString(),
-					status: "pending",
-				})
-				.returning();
-
-			const [createdShipping] = await tx
-				.insert(shipping)
-				.values({
-					orderId: createdOrder.id,
-					carrier: shippingCarrier,
-					method: shippingMethod,
-					status: "pending",
-					trackingNumber: null,
-				})
-				.returning();
-
-			for (const item of items) {
-				const [updatedVariant] = await tx
-					.update(variant)
-					.set({
-						stockQuantity: sql`${variant.stockQuantity} - ${item.quantity}`,
-					})
-					.where(
-						and(
-							eq(variant.id, item.variantId),
-							gte(variant.stockQuantity, item.quantity),
-						),
-					)
-					.returning({ id: variant.id });
-
-				if (!updatedVariant) {
-					throw conflictError(`${item.productName} does not have enough stock`);
-				}
+			if (!updatedVariant) {
+				throw conflictError(`${item.productName} does not have enough stock`);
 			}
+		}
 
-			await tx
-				.delete(cartItem)
-				.where(eq(cartItem.cartId, validatedCart.cart.id));
-
-			return {
-				createdOrder,
-				createdPayment,
-				createdShipping,
-			};
-		});
+		await db.delete(cartItem).where(eq(cartItem.cartId, validatedCart.cart.id));
 
 		return jsonOk<PlaceOrderFromCartOutputType>({
 			status: HttpStatusCode.CREATED,
 			message: "Order placed successfully",
 			data: {
 				order: {
-					id: payload.createdOrder.id,
-					orderNumber: payload.createdOrder.orderNumber,
-					status: payload.createdOrder.status,
-					subtotal: Number(payload.createdOrder.subtotal),
-					shippingFee: Number(payload.createdOrder.shippingFee),
-					taxAmount: Number(payload.createdOrder.taxAmount),
-					totalAmount: Number(payload.createdOrder.totalAmount),
-					notes: payload.createdOrder.notes,
-					placedAt: payload.createdOrder.placedAt.toISOString(),
+					id: createdCheckout.orderId,
+					orderNumber: createdCheckout.orderNumber,
+					status: createdCheckout.orderStatus,
+					subtotal: Number(createdCheckout.orderSubtotal),
+					shippingFee: Number(createdCheckout.orderShippingFee),
+					taxAmount: Number(createdCheckout.orderTaxAmount),
+					totalAmount: Number(createdCheckout.orderTotalAmount),
+					notes: createdCheckout.orderNotes,
+					placedAt:
+						serializeTimestamp(createdCheckout.orderPlacedAt) ??
+						new Date().toISOString(),
 				},
 				payment: {
-					method: payload.createdPayment.method,
-					status: payload.createdPayment.status,
-					amount: Number(payload.createdPayment.amount),
-					paidAt: payload.createdPayment.paidAt?.toISOString() ?? null,
+					method: createdCheckout.paymentMethod,
+					status: createdCheckout.paymentStatus,
+					amount: Number(createdCheckout.paymentAmount),
+					paidAt: serializeTimestamp(createdCheckout.paymentPaidAt),
 				},
 				shipping: {
-					method: payload.createdShipping.method,
-					carrier: payload.createdShipping.carrier,
-					status: payload.createdShipping.status,
-					trackingNumber: payload.createdShipping.trackingNumber,
+					method: createdCheckout.shippingMethod,
+					carrier: createdCheckout.shippingCarrier,
+					status: createdCheckout.shippingStatus,
+					trackingNumber: createdCheckout.shippingTrackingNumber,
 				},
 				items,
 				itemCount: items.length,

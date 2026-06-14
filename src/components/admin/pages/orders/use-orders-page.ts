@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useCallback } from "react";
+import { useDebouncedSearchParam } from "#/hooks/use-debounced-search-param";
+import { useQueryIntentPrefetch } from "#/hooks/use-query-intent-prefetch";
 import { listOrdersQueryOptions } from "#/queries/orders.queries";
 import { Route } from "#/routes/admin/orders";
 import type { ListOrdersInputType } from "#/server/orders/admin/admin.types";
@@ -38,16 +40,16 @@ const toDate = (value: string, endOfDay = false) => {
 export function useOrdersPage() {
 	const search = Route.useSearch();
 	const navigate = useNavigate({ from: Route.fullPath });
-	const [inputValue, setInputValue] = useState(search.searching?.search ?? "");
+	const { prefetch } = useQueryIntentPrefetch();
 
-	useEffect(() => {
-		const timer = window.setTimeout(() => {
+	const commitSearch = useCallback(
+		(value: string | undefined) => {
 			navigate({
 				search: (prev) => ({
 					...prev,
-					searching: inputValue.trim()
+					searching: value
 						? {
-								search: inputValue.trim(),
+								search: value,
 								searchType: prev.searching?.searchType,
 							}
 						: undefined,
@@ -57,9 +59,13 @@ export function useOrdersPage() {
 					},
 				}),
 			});
-		}, 400);
-		return () => window.clearTimeout(timer);
-	}, [inputValue, navigate]);
+		},
+		[navigate],
+	);
+	const { inputValue, setInputValue } = useDebouncedSearchParam({
+		committedValue: search.searching?.search,
+		onCommit: commitSearch,
+	});
 
 	const { data, isLoading, isError } = useQuery(listOrdersQueryOptions(search));
 	const items = data?.data.items ?? [];
@@ -72,7 +78,42 @@ export function useOrdersPage() {
 		hasPreviousPage: false,
 	};
 
-	const setFilters = (filters: OrderFilters) =>
+	const filters = emptyFilters(search.filters);
+	const placedAtRange = search.ranges?.placedAtRange;
+	const dateFrom = toInputDate(placedAtRange?.from);
+	const dateTo = toInputDate(placedAtRange?.to);
+
+	const prefetchOrders = useCallback(
+		(data: ListOrdersInputType) => prefetch(listOrdersQueryOptions(data)),
+		[prefetch],
+	);
+
+	const withFilters = useCallback(
+		(filters: OrderFilters): ListOrdersInputType => ({
+			...search,
+			filters,
+			pagination: {
+				page: 1,
+				limit: search.pagination?.limit ?? LIMIT,
+			},
+		}),
+		[search],
+	);
+
+	const withRanges = useCallback(
+		(ranges: OrderRanges | undefined): ListOrdersInputType => ({
+			...search,
+			ranges,
+			pagination: {
+				page: 1,
+				limit: search.pagination?.limit ?? LIMIT,
+			},
+		}),
+		[search],
+	);
+
+	const setFilters = (filters: OrderFilters) => {
+		prefetchOrders(withFilters(filters));
 		navigate({
 			search: (prev) => ({
 				...prev,
@@ -83,8 +124,10 @@ export function useOrdersPage() {
 				},
 			}),
 		});
+	};
 
-	const setRanges = (ranges: OrderRanges | undefined) =>
+	const setRanges = (ranges: OrderRanges | undefined) => {
+		prefetchOrders(withRanges(ranges));
 		navigate({
 			search: (prev) => ({
 				...prev,
@@ -95,8 +138,17 @@ export function useOrdersPage() {
 				},
 			}),
 		});
+	};
 
-	const setPage = (page: number) =>
+	const setPage = (page: number) => {
+		prefetchOrders({
+			...search,
+			pagination: {
+				...search.pagination,
+				page,
+				limit: search.pagination?.limit ?? LIMIT,
+			},
+		});
 		navigate({
 			search: (prev) => ({
 				...prev,
@@ -107,11 +159,74 @@ export function useOrdersPage() {
 				},
 			}),
 		});
+	};
 
-	const filters = emptyFilters(search.filters);
-	const placedAtRange = search.ranges?.placedAtRange;
-	const dateFrom = toInputDate(placedAtRange?.from);
-	const dateTo = toInputDate(placedAtRange?.to);
+	const prefetchPage = (page: number) => {
+		if (page === pagination.page) return;
+		prefetchOrders({
+			...search,
+			pagination: {
+				...search.pagination,
+				page,
+				limit: search.pagination?.limit ?? LIMIT,
+			},
+		});
+	};
+
+	const prefetchOrderStatus = (v: string) =>
+		prefetchOrders(
+			withFilters({
+				...filters,
+				orderStatuses: v ? [v as OrderStatus] : [],
+			}),
+		);
+	const prefetchPaymentStatus = (v: string) =>
+		prefetchOrders(
+			withFilters({
+				...filters,
+				paymentStatuses: v ? [v as PaymentStatus] : [],
+			}),
+		);
+	const prefetchShippingStatus = (v: string) =>
+		prefetchOrders(
+			withFilters({
+				...filters,
+				shippingStatuses: v ? [v as ShippingStatus] : [],
+			}),
+		);
+	const prefetchCarrier = (v: string) =>
+		prefetchOrders(
+			withFilters({
+				...filters,
+				carriers: v ? [v as ShippingCarrier] : [],
+			}),
+		);
+	const prefetchDateFrom = (v: string) => {
+		if (!v) return;
+		const nextPlacedAtRange = {
+			from: toDate(v),
+			to: toDate(dateTo, true),
+		};
+		prefetchOrders(
+			withRanges({
+				...search.ranges,
+				placedAtRange: nextPlacedAtRange,
+			}),
+		);
+	};
+	const prefetchDateTo = (v: string) => {
+		if (!v) return;
+		const nextPlacedAtRange = {
+			from: toDate(dateFrom),
+			to: toDate(v, true),
+		};
+		prefetchOrders(
+			withRanges({
+				...search.ranges,
+				placedAtRange: nextPlacedAtRange,
+			}),
+		);
+	};
 
 	return {
 		inputValue,
@@ -173,6 +288,13 @@ export function useOrdersPage() {
 			});
 		},
 		setPage,
+		prefetchPage,
+		prefetchOrderStatus,
+		prefetchPaymentStatus,
+		prefetchShippingStatus,
+		prefetchCarrier,
+		prefetchDateFrom,
+		prefetchDateTo,
 		items,
 		pagination,
 		isLoading,

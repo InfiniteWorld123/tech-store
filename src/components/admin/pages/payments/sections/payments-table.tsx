@@ -42,9 +42,10 @@ const tdClass = "py-3 px-2";
 
 type PaymentsTableProps = {
 	items: PaymentListItem[];
+	onView: (item: PaymentListItem) => void;
 };
 
-export function PaymentsTable({ items }: PaymentsTableProps) {
+export function PaymentsTable({ items, onView }: PaymentsTableProps) {
 	const { mutate: refund, isPending, variables } = useRefundPayment();
 
 	if (items.length === 0) {
@@ -73,7 +74,8 @@ export function PaymentsTable({ items }: PaymentsTableProps) {
 					{items.map((item) => (
 						<tr
 							key={item.id}
-							className="border-b border-border last:border-0 hover:bg-default/50 transition-colors"
+							onClick={() => onView(item)}
+							className="cursor-pointer border-b border-border last:border-0 hover:bg-default/50 transition-colors"
 						>
 							<td className={`${tdClass} font-medium text-foreground`}>
 								{item.orderNumber}
@@ -101,6 +103,7 @@ export function PaymentsTable({ items }: PaymentsTableProps) {
 										variant="danger-soft"
 										size="sm"
 										isPending={isPending && variables?.orderId === item.orderId}
+										onClick={(event) => event.stopPropagation()}
 										onPress={() => refund({ orderId: item.orderId })}
 									>
 										Refund
@@ -115,7 +118,7 @@ export function PaymentsTable({ items }: PaymentsTableProps) {
 	);
 }
 
-export function PaymentsList({ items }: PaymentsTableProps) {
+export function PaymentsList({ items, onView }: PaymentsTableProps) {
 	const { mutate: refund, isPending, variables } = useRefundPayment();
 
 	if (items.length === 0) {
@@ -133,7 +136,11 @@ export function PaymentsList({ items }: PaymentsTableProps) {
 					key={item.id}
 					className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between"
 				>
-					<div className="min-w-0">
+					<button
+						type="button"
+						onClick={() => onView(item)}
+						className="min-w-0 flex-1 text-left"
+					>
 						<div className="flex flex-wrap items-center gap-2">
 							<p className="font-mono text-xs font-medium text-foreground">
 								{item.orderNumber}
@@ -145,7 +152,7 @@ export function PaymentsList({ items }: PaymentsTableProps) {
 						<p className="mt-1 text-sm text-muted">
 							{methodLabels[item.method]} • Created {formatDate(item.createdAt)}
 						</p>
-					</div>
+					</button>
 					<div className="flex items-center justify-between gap-3 sm:justify-end">
 						<span className="text-sm font-semibold text-foreground">
 							{formatAmount(item.amount, item.currency)}
@@ -155,6 +162,7 @@ export function PaymentsList({ items }: PaymentsTableProps) {
 								variant="danger-soft"
 								size="sm"
 								isPending={isPending && variables?.orderId === item.orderId}
+								onClick={(event) => event.stopPropagation()}
 								onPress={() => refund({ orderId: item.orderId })}
 							>
 								Refund
@@ -167,7 +175,7 @@ export function PaymentsList({ items }: PaymentsTableProps) {
 	);
 }
 
-export function PaymentsCards({ items }: PaymentsTableProps) {
+export function PaymentsCards({ items, onView }: PaymentsTableProps) {
 	const { mutate: refund, isPending, variables } = useRefundPayment();
 
 	if (items.length === 0) {
@@ -185,22 +193,28 @@ export function PaymentsCards({ items }: PaymentsTableProps) {
 					key={item.id}
 					className="rounded-2xl border border-border bg-default/30 p-4"
 				>
-					<div className="flex items-start justify-between gap-3">
-						<div className="min-w-0">
-							<p className="font-mono text-xs font-medium text-muted">
-								{item.orderNumber}
-							</p>
-							<p className="mt-1 text-sm font-semibold text-foreground">
-								{methodLabels[item.method]}
-							</p>
+					<button
+						type="button"
+						onClick={() => onView(item)}
+						className="block w-full text-left"
+					>
+						<div className="flex items-start justify-between gap-3">
+							<div className="min-w-0">
+								<p className="font-mono text-xs font-medium text-muted">
+									{item.orderNumber}
+								</p>
+								<p className="mt-1 text-sm font-semibold text-foreground">
+									{methodLabels[item.method]}
+								</p>
+							</div>
+							<Chip variant="soft" color={statusColors[item.status]}>
+								{item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+							</Chip>
 						</div>
-						<Chip variant="soft" color={statusColors[item.status]}>
-							{item.status.charAt(0).toUpperCase() + item.status.slice(1)}
-						</Chip>
-					</div>
-					<p className="mt-4 text-xl font-bold text-foreground">
-						{formatAmount(item.amount, item.currency)}
-					</p>
+						<p className="mt-4 text-xl font-bold text-foreground">
+							{formatAmount(item.amount, item.currency)}
+						</p>
+					</button>
 					<div className="mt-4 flex items-center justify-between gap-3 text-xs text-muted">
 						<span>Paid {formatDate(item.paidAt)}</span>
 						{item.status === "paid" ? (
@@ -208,6 +222,7 @@ export function PaymentsCards({ items }: PaymentsTableProps) {
 								variant="danger-soft"
 								size="sm"
 								isPending={isPending && variables?.orderId === item.orderId}
+								onClick={(event) => event.stopPropagation()}
 								onPress={() => refund({ orderId: item.orderId })}
 							>
 								Refund
