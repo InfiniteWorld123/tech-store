@@ -99,24 +99,13 @@ GOOGLE_CLIENT_SECRET=    # (optional) Google OAuth client secret
 
 ## Screenshots
 
-<!--
-  To add screenshots (takes ~2 min):
-  1. Open https://tech-store.yamanwarda.dev and take screenshots of:
-       - the home page          -> save as  docs/home.png
-       - the products page       -> save as  docs/products.png
-       - a product detail page   -> save as  docs/product.png
-       - the admin dashboard     -> save as  docs/admin.png
-  2. Create a folder named "docs" in this project and drop the images in.
-  3. Delete this comment block and uncomment the lines below.
-
 | Home | Products |
 | --- | --- |
 | ![Home](docs/home.png) | ![Products](docs/products.png) |
 
 | Product detail | Admin dashboard |
 | --- | --- |
-| ![Product](docs/product.png) | ![Admin](docs/admin.png) |
--->
+| ![Product detail](docs/product.png) | ![Admin dashboard](docs/admin.png) |
 
 👉 The best way to see it is the **[live demo](https://tech-store.yamanwarda.dev)** — sign in with the demo account above.
 
