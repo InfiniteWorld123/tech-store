@@ -83,12 +83,10 @@ type InfoRowProps = {
 
 function InfoRow({ label, value, mono }: InfoRowProps) {
 	return (
-		<div className="flex justify-between items-start gap-3">
-			<span className="text-xs text-muted w-28 flex-shrink-0 pt-0.5">
-				{label}
-			</span>
+		<div className="grid min-w-0 gap-1 min-[360px]:grid-cols-[7rem_minmax(0,1fr)] min-[360px]:gap-3">
+			<span className="text-xs text-muted min-[360px]:pt-0.5">{label}</span>
 			<span
-				className={`text-sm text-foreground text-right break-all ${mono ? "font-mono text-xs" : ""}`}
+				className={`min-w-0 break-all text-left text-sm text-foreground min-[360px]:text-right ${mono ? "font-mono text-xs" : ""}`}
 			>
 				{value ?? "—"}
 			</span>
@@ -116,14 +114,16 @@ function ActionButton({
 			type="button"
 			disabled={disabled}
 			onClick={onPress}
-			className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border border-border text-left hover:bg-default/50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+			className="flex w-full min-w-0 items-start gap-3 rounded-xl border border-border px-3 py-2.5 text-left transition-colors hover:bg-default/50 disabled:cursor-not-allowed disabled:opacity-40"
 		>
 			<span className="size-8 rounded-lg bg-default/50 flex items-center justify-center text-foreground flex-shrink-0">
 				{icon}
 			</span>
 			<div className="min-w-0">
-				<p className="text-sm font-medium text-foreground">{label}</p>
-				<p className="text-xs text-muted truncate">{description}</p>
+				<p className="break-words text-sm font-medium text-foreground">
+					{label}
+				</p>
+				<p className="break-words text-xs text-muted">{description}</p>
 			</div>
 		</button>
 	);
@@ -160,26 +160,26 @@ export function OrdersDetailSheet({
 
 			{/* Panel */}
 			<div
-				className={`fixed inset-y-0 right-0 z-40 w-full max-w-md bg-surface shadow-xl flex flex-col transition-transform duration-300 ${
+				className={`fixed inset-y-0 right-0 z-40 flex w-full max-w-md flex-col bg-surface shadow-xl transition-transform duration-300 ${
 					isOpen ? "translate-x-0" : "translate-x-full"
 				}`}
 			>
 				{displayItem && (
 					<>
 						{/* Header */}
-						<div className="flex items-center justify-between px-5 py-4 border-b border-border flex-shrink-0">
-							<div className="flex items-center gap-3">
+						<div className="flex flex-shrink-0 items-start justify-between gap-2 border-b border-border px-3 py-4 sm:px-5">
+							<div className="flex min-w-0 items-center gap-3">
 								<div className="size-9 rounded-xl bg-primary/10 flex items-center justify-center">
 									<Package size={16} className="text-primary" />
 								</div>
-								<div>
-									<p className="text-sm font-semibold text-foreground">
+								<div className="min-w-0">
+									<p className="break-all text-sm font-semibold text-foreground">
 										{displayItem.orderNumber}
 									</p>
 									<p className="text-xs text-muted">Order Details</p>
 								</div>
 							</div>
-							<div className="flex items-center gap-2">
+							<div className="flex shrink-0 items-center gap-1 sm:gap-2">
 								<Chip
 									variant="soft"
 									color={orderStatusColors[displayItem.status]}
@@ -198,7 +198,7 @@ export function OrdersDetailSheet({
 						</div>
 
 						{/* Body */}
-						<div className="flex-1 overflow-y-auto p-5 space-y-6">
+						<div className="flex-1 space-y-6 overflow-y-auto p-3 sm:p-5">
 							{/* Order Info */}
 							<div>
 								<p className="text-xs font-semibold uppercase tracking-wide text-muted mb-3">

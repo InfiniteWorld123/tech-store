@@ -257,9 +257,9 @@ export function CategoryDetailPage({ slug }: Props) {
 		<div className="min-h-screen flex flex-col">
 			<Header />
 
-			<main className="flex-1 pt-24 pb-20">
-				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-					<nav className="flex items-center gap-2 text-sm text-muted mb-8">
+			<main className="flex-1 pt-20 pb-14 sm:pt-24 sm:pb-20">
+				<div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+					<nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-muted sm:mb-8">
 						<LinkAnchor
 							to="/categories"
 							className="hover:text-foreground transition-colors"
@@ -268,12 +268,14 @@ export function CategoryDetailPage({ slug }: Props) {
 						>
 							All categories
 						</LinkAnchor>
-						<ArrowRight size={14} />
-						<span className="text-foreground font-medium">{categoryName}</span>
+						<ArrowRight size={14} className="flex-shrink-0" />
+						<span className="min-w-0 break-words font-medium text-foreground">
+							{categoryName}
+						</span>
 					</nav>
 
 					{isCategoryNotFound ? (
-						<Card className="items-center border-dashed px-6 py-16 text-center">
+						<Card className="items-center border-dashed px-4 py-12 text-center sm:px-6 sm:py-16">
 							<Tags size={28} className="text-muted" />
 							<Card.Header className="items-center">
 								<Card.Title className="text-base">
@@ -286,7 +288,7 @@ export function CategoryDetailPage({ slug }: Props) {
 						</Card>
 					) : (
 						<>
-							<div className="flex items-center gap-4 mb-10">
+							<div className="mb-8 flex items-start gap-3 sm:mb-10 sm:items-center sm:gap-4">
 								{category ? (
 									<CategoryIconDisplay
 										icon={category.icon}
@@ -294,11 +296,11 @@ export function CategoryDetailPage({ slug }: Props) {
 										iconBg={category.iconBg}
 										name={category.name}
 										iconSize={24}
-										className="w-14 h-14 rounded-2xl flex-shrink-0"
+										className="h-12 w-12 flex-shrink-0 rounded-2xl sm:h-14 sm:w-14"
 									/>
 								) : null}
-								<div>
-									<h1 className="text-3xl sm:text-4xl font-bold text-foreground">
+								<div className="min-w-0">
+									<h1 className="break-words text-2xl font-bold text-foreground sm:text-4xl">
 										{categoryName}
 									</h1>
 									<div className="flex items-center gap-2 mt-1">
@@ -309,8 +311,8 @@ export function CategoryDetailPage({ slug }: Props) {
 								</div>
 							</div>
 
-							<div className="flex gap-8">
-								<div className="hidden lg:block w-52 flex-shrink-0">
+							<div className="grid gap-6 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-8">
+								<div className="hidden lg:block w-52 flex-shrink-0 sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pr-2">
 									<ProductFilterSidebar
 										values={filterValues}
 										options={filterOptions}
@@ -319,9 +321,9 @@ export function CategoryDetailPage({ slug }: Props) {
 									/>
 								</div>
 
-								<div className="flex-1 min-w-0">
-									<div className="flex flex-col gap-3 mb-6 sm:flex-row sm:items-center sm:justify-between">
-										<div className="relative min-w-0 flex-1 sm:max-w-sm">
+								<div className="min-w-0">
+									<div className="mb-6 grid gap-3 md:grid-cols-[minmax(0,24rem)_auto] md:items-center md:justify-between">
+										<div className="relative min-w-0">
 											<Search
 												size={14}
 												className="absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none"
@@ -334,42 +336,40 @@ export function CategoryDetailPage({ slug }: Props) {
 												className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-border bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all"
 											/>
 										</div>
-										<div className="flex items-center justify-between gap-3 sm:justify-end">
+										<div className="grid gap-2 md:flex md:items-center md:justify-end md:gap-3">
 											<Button
 												size="sm"
 												variant="outline"
-												className="lg:hidden"
+												className="w-full justify-start lg:hidden"
 												onPress={() => setIsFilterOpen(true)}
 											>
 												<SlidersHorizontal size={14} />
 												Filters
 												{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
 											</Button>
-											<p className="text-sm text-muted hidden sm:block">
+											<p className="rounded-xl border border-border bg-surface px-3 py-2 text-sm text-muted md:border-0 md:bg-transparent md:px-0 md:py-0">
 												{pagination
-													? `Page ${page} of ${pagination.totalPages}`
+													? `${pagination.total} product${pagination.total !== 1 ? "s" : ""}`
 													: ""}
 											</p>
-											<div className="relative">
-												<select
-													value={sort}
-													onChange={(e) => setSort(e.target.value as SortValue)}
-													onFocus={warmSortOptions}
-													onMouseEnter={warmSortOptions}
-													className="appearance-none pl-3 pr-8 py-2 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer"
-												>
-													{SORT_OPTIONS.map((opt) => (
-														<option key={opt.value} value={opt.value}>
-															{opt.label}
-														</option>
-													))}
-												</select>
-											</div>
+											<select
+												value={sort}
+												onChange={(e) => setSort(e.target.value as SortValue)}
+												onFocus={warmSortOptions}
+												onMouseEnter={warmSortOptions}
+												className="w-full appearance-none rounded-xl border border-border bg-surface px-3 py-2 text-sm text-foreground transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent/40 md:w-auto md:pr-8"
+											>
+												{SORT_OPTIONS.map((opt) => (
+													<option key={opt.value} value={opt.value}>
+														{opt.label}
+													</option>
+												))}
+											</select>
 										</div>
 									</div>
 
 									{isLoading ? (
-										<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+										<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
 											{SKELETON_IDS.map((id) => (
 												<Card key={id} className="overflow-hidden">
 													<Skeleton className="aspect-square w-full" />
@@ -383,13 +383,13 @@ export function CategoryDetailPage({ slug }: Props) {
 											))}
 										</div>
 									) : items.length > 0 ? (
-										<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+										<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
 											{items.map((product) => (
 												<ProductCard key={product.id} product={product} />
 											))}
 										</div>
 									) : (
-										<Card className="items-center border-dashed px-6 py-16 text-center">
+										<Card className="items-center border-dashed px-4 py-12 text-center sm:px-6 sm:py-16">
 											<ImageOff size={28} className="text-muted" />
 											<Card.Header className="items-center">
 												<Card.Title className="text-base">

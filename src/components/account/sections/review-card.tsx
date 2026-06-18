@@ -39,7 +39,7 @@ export function ReviewCard({ review, onEdit, onDelete, deleting }: Props) {
 	);
 
 	return (
-		<div className="border border-border rounded-2xl p-5 space-y-3">
+		<div className="space-y-3 rounded-2xl border border-border p-5">
 			{/* Product */}
 			<div className="flex items-start gap-3">
 				{review.product.image && (
@@ -49,11 +49,11 @@ export function ReviewCard({ review, onEdit, onDelete, deleting }: Props) {
 						className="w-12 h-12 rounded-xl object-cover flex-shrink-0"
 					/>
 				)}
-				<div>
+				<div className="min-w-0">
 					<LinkAnchor
 						to="/products/$slug"
 						params={{ slug: review.product.slug }}
-						className="text-sm font-semibold text-foreground hover:text-accent transition-colors"
+						className="block break-words text-sm font-semibold text-foreground transition-colors hover:text-accent"
 						onFocus={productPrefetchHandlers.onFocus}
 						onMouseEnter={productPrefetchHandlers.onMouseEnter}
 					>
@@ -66,11 +66,13 @@ export function ReviewCard({ review, onEdit, onDelete, deleting }: Props) {
 			{/* Content */}
 			<div>
 				{review.title && (
-					<p className="text-sm font-semibold text-foreground">
+					<p className="break-words text-sm font-semibold text-foreground">
 						{review.title}
 					</p>
 				)}
-				<p className="text-sm text-muted mt-0.5">{review.comment}</p>
+				<p className="mt-0.5 break-words text-sm text-muted">
+					{review.comment}
+				</p>
 			</div>
 
 			<p className="text-xs text-muted">
@@ -82,8 +84,13 @@ export function ReviewCard({ review, onEdit, onDelete, deleting }: Props) {
 			</p>
 
 			{/* Actions */}
-			<div className="flex items-center gap-2 pt-1 border-t border-border">
-				<Button variant="ghost" size="sm" onPress={() => onEdit(review)}>
+			<div className="flex flex-wrap items-center gap-2 border-t border-border pt-1">
+				<Button
+					variant="ghost"
+					size="sm"
+					onPress={() => onEdit(review)}
+					className="min-w-fit"
+				>
 					<Edit2 size={12} />
 					Edit
 				</Button>
@@ -92,7 +99,7 @@ export function ReviewCard({ review, onEdit, onDelete, deleting }: Props) {
 					size="sm"
 					isPending={deleting}
 					onPress={() => onDelete(review.id)}
-					className="text-danger hover:text-danger ml-auto"
+					className="ml-0 min-w-fit text-danger hover:text-danger sm:ml-auto"
 				>
 					<Trash2 size={12} />
 					Delete

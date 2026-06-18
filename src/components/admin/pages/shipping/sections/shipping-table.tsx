@@ -406,7 +406,7 @@ export function ShippingCards({
 	}
 
 	return (
-		<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+		<div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
 			{items.map((item) => (
 				<button
 					key={item.id}
@@ -414,9 +414,9 @@ export function ShippingCards({
 					onClick={() => onRowClick(item)}
 					className="rounded-2xl border border-border bg-default/30 p-4 text-left transition-colors hover:border-accent/40 hover:bg-default/50"
 				>
-					<div className="flex items-start justify-between gap-3">
+					<div className="flex min-w-0 flex-col gap-2 min-[360px]:flex-row min-[360px]:items-start min-[360px]:justify-between">
 						<div className="min-w-0">
-							<p className="font-mono text-xs font-medium text-muted">
+							<p className="break-all font-mono text-xs font-medium text-muted">
 								{item.orderNumber}
 							</p>
 							<p className="mt-1 text-sm font-semibold text-foreground">
@@ -429,11 +429,11 @@ export function ShippingCards({
 					</div>
 					<div className="mt-4 text-xs text-muted">
 						<p>{methodLabels[item.method]}</p>
-						<p className="mt-1 truncate">
+						<p className="mt-1 break-all">
 							Tracking: {item.trackingNumber ?? "Not assigned"}
 						</p>
 					</div>
-					<div className="mt-4 flex items-center justify-end gap-1">
+					<div className="mt-4 flex flex-wrap items-center justify-end gap-1">
 						<button
 							type="button"
 							title="Mark as shipped"

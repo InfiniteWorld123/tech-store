@@ -97,16 +97,16 @@ function OptionSection({
 				{options.map((option) => (
 					<label
 						key={option.id}
-						className="flex items-center gap-2.5 cursor-pointer group"
+						className="group flex min-w-0 cursor-pointer items-start gap-2.5"
 					>
 						<input
 							type="checkbox"
 							checked={selected.includes(option.id)}
 							onChange={() => onToggle(option.id)}
-							className="w-4 h-4 rounded border-border accent-accent cursor-pointer"
+							className="mt-0.5 h-4 w-4 flex-shrink-0 cursor-pointer rounded border-border accent-accent"
 						/>
 						{renderPrefix?.(option)}
-						<span className="text-sm text-foreground group-hover:text-accent transition-colors">
+						<span className="min-w-0 break-words text-sm text-foreground transition-colors group-hover:text-accent">
 							{option.name}
 						</span>
 					</label>
@@ -308,8 +308,8 @@ export function ProductFilterSidebar({
 					<p className="text-xs font-semibold text-muted uppercase tracking-widest mb-3">
 						Price range
 					</p>
-					<div className="flex items-center gap-2">
-						<div className="flex-1">
+					<div className="grid grid-cols-1 gap-2 min-[360px]:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] min-[360px]:items-center">
+						<div className="min-w-0">
 							<input
 								type="number"
 								placeholder="Min"
@@ -320,8 +320,10 @@ export function ProductFilterSidebar({
 								className="w-full px-3 py-2 text-sm rounded-xl border border-border bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent/30"
 							/>
 						</div>
-						<span className="text-muted text-sm">–</span>
-						<div className="flex-1">
+						<span className="hidden text-sm text-muted min-[360px]:block">
+							–
+						</span>
+						<div className="min-w-0">
 							<input
 								type="number"
 								placeholder="Max"
@@ -342,7 +344,7 @@ export function ProductFilterSidebar({
 					<p className="text-xs font-semibold text-muted uppercase tracking-widest mb-3">
 						Availability
 					</p>
-					<label className="flex items-center gap-2.5 cursor-pointer group">
+					<label className="group flex min-w-0 cursor-pointer items-start gap-2.5">
 						<input
 							type="checkbox"
 							checked={values.inStock ?? false}
@@ -359,9 +361,9 @@ export function ProductFilterSidebar({
 									inStock: values.inStock ? undefined : true,
 								})
 							}
-							className="w-4 h-4 rounded border-border accent-accent cursor-pointer"
+							className="mt-0.5 h-4 w-4 flex-shrink-0 cursor-pointer rounded border-border accent-accent"
 						/>
-						<span className="text-sm text-foreground group-hover:text-accent transition-colors">
+						<span className="min-w-0 break-words text-sm text-foreground transition-colors group-hover:text-accent">
 							In stock only
 						</span>
 					</label>
@@ -371,7 +373,7 @@ export function ProductFilterSidebar({
 					<p className="text-xs font-semibold text-muted uppercase tracking-widest mb-3">
 						Deals
 					</p>
-					<label className="flex items-center gap-2.5 cursor-pointer group">
+					<label className="group flex min-w-0 cursor-pointer items-start gap-2.5">
 						<input
 							type="checkbox"
 							checked={values.onSale ?? false}
@@ -381,9 +383,9 @@ export function ProductFilterSidebar({
 									onSale: e.target.checked || undefined,
 								})
 							}
-							className="w-4 h-4 rounded border-border accent-accent cursor-pointer"
+							className="mt-0.5 h-4 w-4 flex-shrink-0 cursor-pointer rounded border-border accent-accent"
 						/>
-						<span className="text-sm text-foreground group-hover:text-accent transition-colors">
+						<span className="min-w-0 break-words text-sm text-foreground transition-colors group-hover:text-accent">
 							On sale
 						</span>
 					</label>
@@ -433,7 +435,7 @@ export function ProductFilterDrawer({
 				className="absolute inset-0 bg-black/40"
 				onClick={onClose}
 			/>
-			<div className="absolute right-0 top-0 h-full w-full max-w-sm overflow-y-auto bg-background p-4 shadow-2xl">
+			<div className="absolute right-0 top-0 h-full w-full max-w-full overflow-y-auto bg-background p-3 shadow-2xl sm:max-w-sm sm:p-4">
 				<div className="flex items-center justify-between mb-4">
 					<p className="text-sm font-bold text-foreground">Filters</p>
 					<Button

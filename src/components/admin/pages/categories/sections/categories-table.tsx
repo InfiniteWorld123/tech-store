@@ -176,12 +176,12 @@ export function CategoriesList({
 							<p className="truncate text-sm font-semibold text-foreground">
 								{cat.name}
 							</p>
-							<code className="mt-1 inline-flex rounded-md border border-border bg-default px-2 py-0.5 text-xs text-muted">
+							<code className="mt-1 inline-flex max-w-full break-all rounded-md border border-border bg-default px-2 py-0.5 text-xs text-muted">
 								{cat.slug}
 							</code>
 						</div>
 					</button>
-					<div className="flex items-center justify-between gap-3 sm:justify-end">
+					<div className="flex flex-wrap items-center justify-between gap-3 sm:justify-end">
 						<Chip size="sm" variant="soft" color="default">
 							{cat.totalProducts} products
 						</Chip>
@@ -227,7 +227,7 @@ export function CategoriesCards({
 	}
 
 	return (
-		<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+		<div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
 			{categories.map((cat) => (
 				<div
 					key={cat.id}
@@ -249,15 +249,17 @@ export function CategoriesCards({
 								<p className="truncate text-sm font-semibold text-foreground">
 									{cat.name}
 								</p>
-								<p className="text-xs text-muted">{cat.slug}</p>
+								<p className="break-all text-xs text-muted">{cat.slug}</p>
 							</div>
 						</button>
 						<Chip size="sm" variant="soft" color="default">
 							{cat.totalProducts}
 						</Chip>
 					</div>
-					<div className="mt-4 flex items-center justify-between text-xs text-muted">
-						<span>Updated {new Date(cat.updatedAt).toLocaleDateString()}</span>
+					<div className="mt-4 flex flex-col gap-2 text-xs text-muted min-[360px]:flex-row min-[360px]:items-center min-[360px]:justify-between">
+						<span className="break-words">
+							Updated {new Date(cat.updatedAt).toLocaleDateString()}
+						</span>
 						<div className="flex items-center gap-1">
 							<Button
 								isIconOnly

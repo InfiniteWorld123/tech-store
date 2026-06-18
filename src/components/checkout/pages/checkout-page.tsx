@@ -114,8 +114,11 @@ export function CheckoutPage() {
 											</h2>
 											{addresses.length === 0 ? (
 												<InlineAddressForm
-													onSuccess={() => {
-														// query invalidation handled by mutation; parent will re-render
+													isDefault
+													onSuccess={(address) => {
+														setFieldValue("addressId", address.id);
+														hasInitializedAddress.current = true;
+														prefetchEstimate(address.id, values.shippingMethod);
 													}}
 												/>
 											) : (

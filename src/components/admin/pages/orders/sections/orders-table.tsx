@@ -267,7 +267,7 @@ export function OrdersCards({ items, onRowClick }: OrdersTableProps) {
 	}
 
 	return (
-		<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+		<div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
 			{items.map((item) => (
 				<button
 					key={item.id}
@@ -275,16 +275,16 @@ export function OrdersCards({ items, onRowClick }: OrdersTableProps) {
 					onClick={() => onRowClick(item)}
 					className="rounded-2xl border border-border bg-default/30 p-4 text-left transition-colors hover:border-accent/40 hover:bg-default/50"
 				>
-					<div className="flex items-start justify-between gap-3">
+					<div className="flex min-w-0 flex-col gap-2 min-[360px]:flex-row min-[360px]:items-start min-[360px]:justify-between">
 						<div className="min-w-0">
-							<p className="font-mono text-xs font-medium text-muted">
+							<p className="break-all font-mono text-xs font-medium text-muted">
 								{item.orderNumber}
 							</p>
 							<p className="mt-1 truncate text-sm font-semibold text-foreground">
 								{item.customer.name}
 							</p>
 						</div>
-						<span className="text-sm font-bold text-foreground">
+						<span className="break-words text-sm font-bold text-foreground">
 							{formatCurrency(item.totalAmount)}
 						</span>
 					</div>
@@ -311,8 +311,8 @@ export function OrdersCards({ items, onRowClick }: OrdersTableProps) {
 							{shippingStatusLabels[item.shipping.status]}
 						</Chip>
 					</div>
-					<div className="mt-4 flex items-center justify-between text-xs text-muted">
-						<span>{formatDate(item.placedAt)}</span>
+					<div className="mt-4 flex flex-col gap-2 text-xs text-muted min-[360px]:flex-row min-[360px]:items-center min-[360px]:justify-between">
+						<span className="break-words">{formatDate(item.placedAt)}</span>
 						<span>{item.itemCount} items</span>
 					</div>
 				</button>

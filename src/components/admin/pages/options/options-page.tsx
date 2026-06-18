@@ -182,7 +182,7 @@ export function OptionsPage() {
 	}
 
 	return (
-		<div className="space-y-4 py-6">
+		<div className="space-y-4 py-4 sm:py-6">
 			<div>
 				<h1 className="text-xl font-bold text-foreground">Options</h1>
 				<p className="text-sm text-muted mt-0.5">{config.description}</p>
@@ -192,7 +192,7 @@ export function OptionsPage() {
 				selectedKey={tab}
 				onSelectionChange={(key) => handleTabChange(key as OptionType)}
 			>
-				<Tabs.List>
+				<Tabs.List className="max-w-full overflow-x-auto">
 					{OPTION_TABS.map((t) => (
 						<Tabs.Tab
 							key={t}
@@ -228,7 +228,7 @@ export function OptionsPage() {
 							) : null}
 						</div>
 
-						<div className="bg-surface border border-border rounded-2xl p-5 shadow-sm">
+						<div className="rounded-2xl border border-border bg-surface p-4 shadow-sm sm:p-5">
 							{t === tab &&
 								(isLoading ? (
 									<DataLoading label={`Loading ${config.plural}...`} />

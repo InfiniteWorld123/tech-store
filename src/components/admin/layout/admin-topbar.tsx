@@ -47,26 +47,29 @@ export function AdminTopbar({ onMenuClick }: Props) {
 	};
 
 	return (
-		<header className="flex h-16 flex-shrink-0 items-center justify-between rounded-2xl border border-border bg-surface px-4 shadow-sm">
+		<header className="flex h-14 min-w-0 flex-shrink-0 items-center justify-between gap-2 rounded-xl border border-border bg-surface px-2 shadow-sm sm:h-16 sm:rounded-2xl sm:px-4">
 			{/* Left: hamburger (mobile) + page title */}
-			<div className="flex items-center gap-3">
+			<div className="flex min-w-0 items-center gap-2 sm:gap-3">
 				<Button
 					type="button"
 					onPress={onMenuClick}
 					isIconOnly
 					variant="ghost"
-					className="md:hidden text-muted hover:text-foreground"
+					size="sm"
+					className="shrink-0 text-muted hover:text-foreground md:hidden"
 					aria-label="Open menu"
 				>
 					<Menu size={20} />
 				</Button>
-				<h1 className="font-semibold text-foreground text-base">{pageTitle}</h1>
+				<h1 className="min-w-0 truncate text-sm font-semibold text-foreground sm:text-base">
+					{pageTitle}
+				</h1>
 			</div>
 
 			{/* Right: user dropdown */}
 			<Dropdown>
 				<Dropdown.Trigger>
-					<div className="flex items-center gap-2.5 px-2 py-1.5">
+					<div className="flex min-w-0 items-center gap-2 px-1 py-1.5 sm:gap-2.5 sm:px-2">
 						<Avatar className="w-7 h-7">
 							<Avatar.Fallback className="text-xs bg-accent text-accent-foreground">
 								{avatarImage ? (
@@ -76,7 +79,7 @@ export function AdminTopbar({ onMenuClick }: Props) {
 								)}
 							</Avatar.Fallback>
 						</Avatar>
-						<span className="hidden sm:block text-sm font-medium text-foreground">
+						<span className="hidden max-w-32 truncate text-sm font-medium text-foreground sm:block">
 							{userName}
 						</span>
 					</div>

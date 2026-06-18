@@ -36,18 +36,18 @@ export function AccountSidebar() {
 	};
 
 	return (
-		<nav className="flex flex-col gap-1">
+		<nav className="flex gap-2 overflow-x-auto overscroll-x-contain pb-1 [-ms-overflow-style:none] [scrollbar-width:none] lg:flex-col lg:gap-1 lg:overflow-visible lg:pb-0 [&::-webkit-scrollbar]:hidden">
 			{NAV_ITEMS.map(({ to, label, icon: Icon, query }) => (
 				<LinkAnchor
 					key={to}
 					to={to}
 					activeProps={{ className: "bg-accent/10 text-accent font-semibold" }}
-					className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted hover:text-foreground hover:bg-default transition-colors"
+					className="flex min-h-10 flex-shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-default hover:text-foreground lg:w-full lg:gap-3 lg:py-2.5"
 					onFocus={() => prefetchRoute(query)}
 					onMouseEnter={() => prefetchRoute(query)}
 				>
 					<Icon size={16} className="flex-shrink-0" />
-					{label}
+					<span className="whitespace-nowrap">{label}</span>
 				</LinkAnchor>
 			))}
 		</nav>

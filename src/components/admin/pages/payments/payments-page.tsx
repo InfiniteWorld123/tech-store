@@ -128,7 +128,7 @@ export function PaymentsPage() {
 	}
 
 	return (
-		<div className="space-y-4 py-6">
+		<div className="space-y-4 py-4 sm:py-6">
 			<div>
 				<h1 className="text-xl font-bold text-foreground">Payments</h1>
 				<p className="text-sm text-muted mt-0.5">
@@ -152,7 +152,7 @@ export function PaymentsPage() {
 				<ViewModeToggle value={viewMode} onChange={setViewMode} />
 			</div>
 
-			<div className="bg-surface border border-border rounded-2xl p-5 shadow-sm">
+			<div className="rounded-2xl border border-border bg-surface p-4 shadow-sm sm:p-5">
 				{isLoading ? (
 					<DataLoading label="Loading payments..." />
 				) : isError ? (

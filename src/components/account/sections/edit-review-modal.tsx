@@ -86,20 +86,20 @@ export function EditReviewModal({ isOpen, onClose, review }: Props) {
 		<Modal.Root isOpen={isOpen} onOpenChange={(open) => !open && onClose()}>
 			<Modal.Backdrop>
 				<Modal.Container>
-					<Modal.Dialog className="max-w-md w-full">
+					<Modal.Dialog className="mx-3 max-h-[calc(100dvh-2rem)] w-[calc(100vw-1.5rem)] max-w-md overflow-hidden">
 						<Modal.Header>
-							<div>
+							<div className="min-w-0">
 								<Modal.Heading className="text-base font-semibold text-foreground">
 									Edit review
 								</Modal.Heading>
-								<p className="text-sm text-muted mt-0.5">
+								<p className="mt-0.5 break-words text-sm text-muted">
 									{review.product.name}
 								</p>
 							</div>
 							<Modal.CloseTrigger className="text-muted hover:text-foreground" />
 						</Modal.Header>
 
-						<Modal.Body>
+						<Modal.Body className="overflow-y-auto">
 							<form
 								id="edit-review-form"
 								onSubmit={(e) => {
@@ -189,8 +189,12 @@ export function EditReviewModal({ isOpen, onClose, review }: Props) {
 							</form>
 						</Modal.Body>
 
-						<Modal.Footer className="gap-2">
-							<Button variant="outline" onPress={onClose}>
+						<Modal.Footer className="flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+							<Button
+								variant="outline"
+								onPress={onClose}
+								className="w-full sm:w-auto"
+							>
 								Cancel
 							</Button>
 							<Subscribe>
@@ -201,6 +205,7 @@ export function EditReviewModal({ isOpen, onClose, review }: Props) {
 										variant="primary"
 										isPending={isSubmitting}
 										isDisabled={values.rating === 0}
+										className="w-full sm:w-auto"
 									>
 										Save changes
 									</Button>

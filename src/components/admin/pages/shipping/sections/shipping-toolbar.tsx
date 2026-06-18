@@ -53,7 +53,7 @@ const methodOptions = [
 ];
 
 const selectClass =
-	"appearance-none pl-9 pr-8 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer";
+	"w-full min-w-0 appearance-none pl-9 pr-8 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer";
 
 export function ShippingToolbar({
 	search,
@@ -89,9 +89,9 @@ export function ShippingToolbar({
 	};
 
 	return (
-		<div className="flex flex-wrap items-center gap-3">
+		<div className="grid w-full min-w-0 grid-cols-1 gap-3 min-[520px]:grid-cols-2 xl:flex xl:flex-wrap xl:items-center">
 			{/* Search */}
-			<div className="relative flex-1 min-w-48">
+			<div className="relative min-w-0 min-[520px]:col-span-2 xl:col-span-1 xl:flex-1">
 				<Search
 					size={15}
 					className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
@@ -106,7 +106,7 @@ export function ShippingToolbar({
 			</div>
 
 			{/* Status */}
-			<div className="relative">
+			<div className="relative min-w-0">
 				<Package
 					size={15}
 					className="absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none"
@@ -127,7 +127,7 @@ export function ShippingToolbar({
 			</div>
 
 			{/* Carrier */}
-			<div className="relative">
+			<div className="relative min-w-0">
 				<Truck
 					size={15}
 					className="absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none"
@@ -148,7 +148,7 @@ export function ShippingToolbar({
 			</div>
 
 			{/* Method */}
-			<div className="relative">
+			<div className="relative min-w-0">
 				<Zap
 					size={15}
 					className="absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none"
@@ -169,8 +169,8 @@ export function ShippingToolbar({
 			</div>
 
 			{/* Date range */}
-			<div className="flex items-center gap-2">
-				<div className="relative">
+			<div className="grid min-w-0 grid-cols-1 gap-2 min-[420px]:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] min-[420px]:items-center min-[520px]:col-span-2 xl:col-span-1">
+				<div className="relative min-w-0">
 					<CalendarDays
 						size={15}
 						className="absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none"
@@ -187,10 +187,12 @@ export function ShippingToolbar({
 							onDateRangeChange(nextDateRange);
 						}}
 						onFocus={() => onPrefetchDateRange(dateRange)}
-						className="appearance-none pl-9 pr-3 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer"
+						className="w-full min-w-0 appearance-none rounded-xl border border-border bg-surface py-2.5 pl-9 pr-3 text-sm text-foreground transition-all focus:outline-none focus:ring-2 focus:ring-accent/40"
 					/>
 				</div>
-				<span className="text-xs text-muted">to</span>
+				<span className="hidden justify-self-center text-xs text-muted min-[420px]:block">
+					to
+				</span>
 				<input
 					type="date"
 					value={dateRange.to ?? ""}
@@ -203,7 +205,7 @@ export function ShippingToolbar({
 						onDateRangeChange(nextDateRange);
 					}}
 					onFocus={() => onPrefetchDateRange(dateRange)}
-					className="appearance-none px-3 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer"
+					className="w-full min-w-0 appearance-none rounded-xl border border-border bg-surface px-3 py-2.5 text-sm text-foreground transition-all focus:outline-none focus:ring-2 focus:ring-accent/40"
 				/>
 			</div>
 
@@ -212,7 +214,7 @@ export function ShippingToolbar({
 				variant="primary"
 				size="sm"
 				onPress={onCreateClick}
-				className="whitespace-nowrap ml-auto"
+				className="w-full justify-center whitespace-nowrap min-[520px]:w-auto xl:ml-auto"
 			>
 				<Plus size={15} />
 				New Shipment

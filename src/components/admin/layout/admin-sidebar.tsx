@@ -106,17 +106,17 @@ export function AdminSidebar({
 						aria-label="Close menu"
 						onPress={onMobileClose}
 					/>
-					<aside className="fixed inset-y-4 left-4 z-50 flex w-64 flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-xl md:hidden">
-						<div className="flex items-center justify-between px-4 py-4 border-b border-border">
+					<aside className="fixed inset-y-2 left-2 right-2 z-50 flex max-w-xs flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-xl sm:inset-y-4 sm:left-4 sm:right-auto sm:w-64 md:hidden">
+						<div className="flex min-w-0 items-center justify-between gap-2 border-b border-border px-3 py-4 sm:px-4">
 							<LinkAnchor
 								to="/admin"
-								className="flex items-center gap-2"
+								className="flex min-w-0 items-center gap-2"
 								onClick={onMobileClose}
 							>
 								<div className="w-7 h-7 rounded-md bg-accent flex items-center justify-center flex-shrink-0">
 									<Zap size={14} className="text-accent-foreground" />
 								</div>
-								<span className="font-bold text-base">
+								<span className="min-w-0 truncate text-base font-bold">
 									tech<span className="text-accent">store</span>
 								</span>
 							</LinkAnchor>

@@ -33,26 +33,28 @@ export function StatCard({
 	const c = colorMap[color];
 
 	return (
-		<div className="bg-surface border border-border rounded-2xl p-5 shadow-sm flex flex-col gap-4">
+		<div className="flex min-w-0 flex-col gap-4 rounded-2xl border border-border bg-surface p-4 shadow-sm sm:p-5">
 			{/* Label */}
-			<p className="text-sm font-medium text-muted">{label}</p>
+			<p className="break-words text-sm font-medium text-muted">{label}</p>
 
 			{/* Icon + Value row */}
-			<div className="flex items-end justify-between">
+			<div className="flex min-w-0 flex-col gap-3 min-[360px]:flex-row min-[360px]:items-end min-[360px]:justify-between">
 				<div
-					className={`flex size-12 items-center justify-center rounded-2xl ${c.bg}`}
+					className={`flex size-11 shrink-0 items-center justify-center rounded-2xl sm:size-12 ${c.bg}`}
 				>
 					<Icon size={22} className={c.icon} />
 				</div>
 
 				{isError ? (
 					(errorComponent ?? (
-						<p className="text-sm text-danger">Failed to load</p>
+						<p className="break-words text-sm text-danger">Failed to load</p>
 					))
 				) : isLoading ? (
 					<Skeleton className="h-9 w-24 rounded-lg" />
 				) : (
-					<div className="text-right">{children}</div>
+					<div className="min-w-0 break-words text-left min-[360px]:text-right">
+						{children}
+					</div>
 				)}
 			</div>
 		</div>

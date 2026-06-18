@@ -45,7 +45,7 @@ export function SettingsPage() {
 	const emailVerified = Boolean(user?.emailVerified);
 
 	return (
-		<div className="space-y-4 py-6">
+		<div className="space-y-4 py-4 sm:py-6">
 			<div>
 				<h1 className="text-xl font-bold text-foreground">Settings</h1>
 				<p className="text-sm text-muted mt-0.5">
@@ -54,12 +54,12 @@ export function SettingsPage() {
 			</div>
 
 			<div className="grid gap-4 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-				<section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
-					<div className="flex items-center gap-3">
+				<section className="rounded-2xl border border-border bg-surface p-4 shadow-sm sm:p-5">
+					<div className="flex min-w-0 items-center gap-3">
 						<div className="flex size-10 items-center justify-center rounded-xl bg-accent text-accent-foreground">
 							<User size={18} />
 						</div>
-						<div>
+						<div className="min-w-0">
 							<h2 className="font-semibold text-foreground">Account</h2>
 							<p className="text-sm text-muted">Signed-in admin details</p>
 						</div>
@@ -94,12 +94,12 @@ export function SettingsPage() {
 					</div>
 				</section>
 
-				<section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
-					<div className="flex items-center gap-3">
+				<section className="rounded-2xl border border-border bg-surface p-4 shadow-sm sm:p-5">
+					<div className="flex min-w-0 items-center gap-3">
 						<div className="flex size-10 items-center justify-center rounded-xl bg-surface-tertiary text-foreground">
 							<KeyRound size={18} />
 						</div>
-						<div>
+						<div className="min-w-0">
 							<h2 className="font-semibold text-foreground">Change password</h2>
 							<p className="text-sm text-muted">
 								Use a strong password you do not use elsewhere.
@@ -200,7 +200,7 @@ function AccountRow({
 	valueClassName,
 }: AccountRowProps) {
 	return (
-		<div className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
+		<div className="flex flex-col gap-1 py-3 first:pt-0 last:pb-0 min-[360px]:flex-row min-[360px]:items-center min-[360px]:justify-between min-[360px]:gap-4">
 			<div className="flex min-w-0 items-center gap-2 text-sm text-muted">
 				<span className="shrink-0">{icon}</span>
 				<span>{label}</span>
@@ -210,7 +210,7 @@ function AccountRow({
 			) : (
 				<p
 					className={[
-						"truncate text-right text-sm font-medium text-foreground",
+						"break-words text-left text-sm font-medium text-foreground min-[360px]:text-right",
 						valueClassName,
 					]
 						.filter(Boolean)

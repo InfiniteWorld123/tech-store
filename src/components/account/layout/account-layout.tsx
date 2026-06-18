@@ -10,9 +10,9 @@ export function AccountLayout() {
 		<div className="min-h-screen flex flex-col">
 			<Header />
 
-			<main className="flex-1 pt-24 pb-20">
-				<div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-					<div className="flex gap-8">
+			<main className="flex-1 pt-20 pb-14 sm:pt-24 sm:pb-20">
+				<div className="w-full max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
+					<div className="grid gap-6 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-8">
 						{/* Sidebar */}
 						<aside className="hidden lg:block w-52 flex-shrink-0">
 							<div className="sticky top-24">
@@ -24,12 +24,12 @@ export function AccountLayout() {
 						</aside>
 
 						{/* Mobile tabs */}
-						<div className="lg:hidden w-full mb-6">
+						<div className="min-w-0 lg:hidden">
 							<AccountSidebar />
 						</div>
 
 						{/* Content */}
-						<div className="flex-1 min-w-0">
+						<div className="min-w-0">
 							<Outlet />
 						</div>
 					</div>

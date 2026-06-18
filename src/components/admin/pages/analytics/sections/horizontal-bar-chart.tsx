@@ -23,8 +23,8 @@ export function HorizontalBarChart({
 	const max = Math.max(...data.map((d) => d.value), 1);
 
 	return (
-		<div className="bg-surface border border-border rounded-2xl p-5 shadow-sm space-y-4">
-			<p className="text-sm font-medium text-muted">{title}</p>
+		<div className="min-w-0 space-y-4 rounded-2xl border border-border bg-surface p-4 shadow-sm sm:p-5">
+			<p className="break-words text-sm font-medium text-muted">{title}</p>
 
 			{isError ? (
 				<p className="text-sm text-danger">Failed to load</p>
@@ -37,12 +37,12 @@ export function HorizontalBarChart({
 			) : (
 				<div className="space-y-3">
 					{data.map((item) => (
-						<div key={item.name} className="space-y-1">
-							<div className="flex items-center justify-between">
-								<span className="text-xs capitalize text-foreground font-medium">
+						<div key={item.name} className="min-w-0 space-y-1">
+							<div className="flex min-w-0 items-center justify-between gap-2">
+								<span className="min-w-0 break-words text-xs font-medium capitalize text-foreground">
 									{item.name.replace(/_/g, " ")}
 								</span>
-								<span className="text-xs font-semibold text-muted">
+								<span className="shrink-0 text-xs font-semibold text-muted">
 									{item.value}
 								</span>
 							</div>

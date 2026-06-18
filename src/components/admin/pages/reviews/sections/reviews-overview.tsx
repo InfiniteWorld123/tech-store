@@ -33,7 +33,7 @@ export function ReviewsOverview() {
 
 	return (
 		<AnalyticsSection title="Reviews Overview" icon={Star}>
-			<div className="grid grid-cols-2 gap-4">
+			<div className="grid grid-cols-1 gap-4 min-[420px]:grid-cols-2">
 				{statCards.map((card) => (
 					<StatCard
 						key={card.label}
@@ -43,7 +43,9 @@ export function ReviewsOverview() {
 						isLoading={isLoading}
 						isError={isError}
 					>
-						<p className="text-2xl font-bold text-foreground">{card.value}</p>
+						<p className="break-words text-2xl font-bold text-foreground">
+							{card.value}
+						</p>
 					</StatCard>
 				))}
 			</div>

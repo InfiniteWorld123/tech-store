@@ -35,9 +35,9 @@ export function OptionsToolbar({
 	};
 
 	return (
-		<div className="flex items-center justify-between gap-3 flex-wrap">
+		<div className="grid w-full min-w-0 grid-cols-1 gap-3 min-[520px]:grid-cols-[minmax(0,1fr)_auto] min-[520px]:items-center">
 			{/* Left: search type + search + count */}
-			<div className="flex items-center gap-2">
+			<div className="grid min-w-0 grid-cols-1 gap-2 min-[420px]:grid-cols-[auto_minmax(0,1fr)] min-[420px]:items-center">
 				<Select.Root
 					selectedKey={searchType}
 					onSelectionChange={(key) => onSearchTypeChange(key as string)}
@@ -46,9 +46,9 @@ export function OptionsToolbar({
 					<Select.Trigger
 						onFocus={warmSearchTypes}
 						onMouseEnter={warmSearchTypes}
-						className="flex items-center gap-1.5 h-9 px-3 text-sm rounded-xl border border-border bg-surface hover:bg-default/50 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-primary/50 min-w-24"
+						className="flex h-9 min-w-0 items-center gap-1.5 rounded-xl border border-border bg-surface px-3 text-sm outline-none transition-colors hover:bg-default/50 focus-visible:ring-2 focus-visible:ring-primary/50"
 					>
-						<Select.Value className="text-foreground" />
+						<Select.Value className="min-w-0 truncate text-foreground" />
 						<Select.Indicator>
 							<ChevronDown size={13} className="text-muted" />
 						</Select.Indicator>
@@ -74,7 +74,7 @@ export function OptionsToolbar({
 					aria-label={`Search ${config.plural}`}
 					value={search}
 					onChange={onSearchChange}
-					className="w-56"
+					className="min-w-0 min-[420px]:min-w-0"
 				>
 					<SearchField.Group>
 						<SearchField.SearchIcon />
@@ -83,7 +83,12 @@ export function OptionsToolbar({
 					</SearchField.Group>
 				</SearchField.Root>
 
-				<Chip size="sm" variant="soft" color="default">
+				<Chip
+					size="sm"
+					variant="soft"
+					color="default"
+					className="justify-self-start min-[420px]:col-span-2"
+				>
 					{totalCount} {totalCount === 1 ? config.singular : config.plural}
 				</Chip>
 			</div>
@@ -93,7 +98,7 @@ export function OptionsToolbar({
 				size="sm"
 				variant="primary"
 				onPress={onCreateClick}
-				className="gap-1.5"
+				className="w-full justify-center gap-1.5 min-[520px]:w-auto"
 			>
 				<Plus size={15} />
 				New {config.singular}

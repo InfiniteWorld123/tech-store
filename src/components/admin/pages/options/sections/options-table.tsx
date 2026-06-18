@@ -150,8 +150,8 @@ export function OptionsList({
 							{config.renderValue(row)}
 						</div>
 					</button>
-					<div className="flex items-center justify-between gap-3 sm:justify-end">
-						<span className="text-xs text-muted">
+					<div className="flex flex-wrap items-center justify-between gap-3 sm:justify-end">
+						<span className="break-words text-xs text-muted">
 							Updated {formatDate(row.updatedAt)}
 						</span>
 						<div className="flex items-center gap-1">
@@ -212,26 +212,26 @@ export function OptionsCards({
 	}
 
 	return (
-		<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+		<div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
 			{rows.map((row) => (
 				<div
 					key={row.id}
 					className="rounded-2xl border border-border bg-default/30 p-4"
 				>
-					<div className="flex items-start justify-between gap-3">
+					<div className="flex min-w-0 flex-col gap-3 min-[360px]:flex-row min-[360px]:items-start min-[360px]:justify-between">
 						<button
 							type="button"
 							onClick={() => onView(row)}
 							className="min-w-0 flex-1 text-left"
 						>
-							<p className="truncate text-sm font-semibold text-foreground">
+							<p className="break-words text-sm font-semibold text-foreground">
 								{row.name}
 							</p>
-							<div className="mt-2 text-sm text-muted">
+							<div className="mt-2 break-words text-sm text-muted">
 								{config.renderValue(row)}
 							</div>
 						</button>
-						<div className="flex items-center gap-1">
+						<div className="flex shrink-0 items-center gap-1">
 							<Button
 								isIconOnly
 								size="sm"
@@ -256,7 +256,7 @@ export function OptionsCards({
 							</Button>
 						</div>
 					</div>
-					<p className="mt-4 text-xs text-muted">
+					<p className="mt-4 break-words text-xs text-muted">
 						Updated {formatDate(row.updatedAt)}
 					</p>
 				</div>

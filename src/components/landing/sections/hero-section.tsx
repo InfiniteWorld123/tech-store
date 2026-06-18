@@ -50,7 +50,14 @@ export function HeroSection() {
 					{/* CTAs */}
 					<div className="flex flex-wrap gap-4 mb-14">
 						<LinkButton
-							to="/"
+							to="/products"
+							search={{
+								categoryIds: [],
+								colorIds: [],
+								storageIds: [],
+								ramIds: [],
+								screenSizeIds: [],
+							}}
 							size="lg"
 							variant="primary"
 							className="font-semibold"
@@ -59,7 +66,7 @@ export function HeroSection() {
 						</LinkButton>
 
 						<LinkButton
-							to="/"
+							to="/categories"
 							size="lg"
 							variant="outline"
 							className="font-semibold border-white/20 text-white hover:bg-white/10"

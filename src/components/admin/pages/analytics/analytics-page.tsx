@@ -389,7 +389,7 @@ export function AnalyticsPage() {
 		isError: boolean,
 		cols: string,
 	) => (
-		<div className={`grid ${cols} gap-4`}>
+		<div className={`grid grid-cols-1 gap-4 ${cols}`}>
 			{cards.map((card) => (
 				<StatCard
 					key={card.label}
@@ -399,21 +399,23 @@ export function AnalyticsPage() {
 					isLoading={isLoading}
 					isError={isError}
 				>
-					<p className="text-2xl font-bold text-foreground">{card.value}</p>
+					<p className="break-words text-2xl font-bold text-foreground">
+						{card.value}
+					</p>
 				</StatCard>
 			))}
 		</div>
 	);
 
 	return (
-		<div className="py-6 space-y-6">
+		<div className="space-y-4 py-4 sm:space-y-6 sm:py-6">
 			{/* ── Orders ── */}
 			<AnalyticsSection title="Orders" icon={ShoppingBag}>
 				{renderStatCards(
 					orderStatCards,
 					isLoadingOrders,
 					isErrorOrders,
-					"grid-cols-2 sm:grid-cols-3",
+					"min-[420px]:grid-cols-2 lg:grid-cols-3",
 				)}
 				<DonutChart
 					title="Orders by Status"
@@ -429,7 +431,7 @@ export function AnalyticsPage() {
 					paymentStatCards,
 					isLoadingPayments,
 					isErrorPayments,
-					"grid-cols-2 sm:grid-cols-3",
+					"min-[420px]:grid-cols-2 lg:grid-cols-3",
 				)}
 				<DonutChart
 					title="Payments by Method"
@@ -445,7 +447,7 @@ export function AnalyticsPage() {
 					shippingStatCards,
 					isLoadingShipping,
 					isErrorShipping,
-					"grid-cols-2 sm:grid-cols-2",
+					"min-[420px]:grid-cols-2",
 				)}
 				<HorizontalBarChart
 					title="Fulfillment Pipeline"
@@ -454,7 +456,7 @@ export function AnalyticsPage() {
 					isError={isErrorShipping}
 					color="bg-accent"
 				/>
-				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+				<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
 					<HorizontalBarChart
 						title="By Carrier"
 						data={shippingByCarrierData}
@@ -478,19 +480,19 @@ export function AnalyticsPage() {
 					productStatCards,
 					isLoadingProducts,
 					isErrorProducts,
-					"grid-cols-2 sm:grid-cols-4",
+					"min-[420px]:grid-cols-2 xl:grid-cols-4",
 				)}
 				{renderStatCards(
 					productAlertCards,
 					isLoadingProducts,
 					isErrorProducts,
-					"grid-cols-2 sm:grid-cols-3",
+					"min-[420px]:grid-cols-2 lg:grid-cols-3",
 				)}
 				{renderStatCards(
 					productReviewStatCards,
 					isLoadingProducts,
 					isErrorProducts,
-					"grid-cols-2 sm:grid-cols-4",
+					"min-[420px]:grid-cols-2 xl:grid-cols-4",
 				)}
 			</AnalyticsSection>
 
@@ -500,7 +502,7 @@ export function AnalyticsPage() {
 					reviewStatCards,
 					isLoadingReviews,
 					isErrorReviews,
-					"grid-cols-2 sm:grid-cols-2",
+					"min-[420px]:grid-cols-2",
 				)}
 				<HorizontalBarChart
 					title="Rating Distribution"
@@ -517,15 +519,15 @@ export function AnalyticsPage() {
 					customerStatCards,
 					isLoadingCustomers,
 					isErrorCustomers,
-					"grid-cols-2 sm:grid-cols-4",
+					"min-[420px]:grid-cols-2 xl:grid-cols-4",
 				)}
 				{renderStatCards(
 					cartStatCards,
 					isLoadingCarts,
 					isErrorCarts,
-					"grid-cols-2 sm:grid-cols-4",
+					"min-[420px]:grid-cols-2 xl:grid-cols-4",
 				)}
-				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+				<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
 					<DonutChart
 						title="Customer Verification"
 						data={customerDonutData}

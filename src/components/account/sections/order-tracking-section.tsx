@@ -29,11 +29,11 @@ export function OrderTrackingSection({ tracking }: Props) {
 	const currentIndex = STATUS_ORDER.indexOf(tracking.shipping.status);
 
 	return (
-		<div className="border border-border rounded-2xl p-5 space-y-4">
-			<div className="flex items-center justify-between">
+		<div className="space-y-4 rounded-2xl border border-border p-4 sm:p-5">
+			<div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
 				<h3 className="font-bold text-foreground">Tracking</h3>
 				{tracking.shipping.trackingNumber && (
-					<span className="text-xs text-muted font-mono">
+					<span className="break-all font-mono text-xs text-muted sm:text-right">
 						{tracking.shipping.carrier.toUpperCase()}{" "}
 						{tracking.shipping.trackingNumber}
 					</span>

@@ -23,9 +23,9 @@ export function AddressCard({ address, onEdit }: Props) {
 			}`}
 		>
 			<div className="flex items-start justify-between gap-2">
-				<div className="flex items-center gap-2">
+				<div className="flex min-w-0 items-center gap-2">
 					<MapPin size={14} className="text-muted flex-shrink-0 mt-0.5" />
-					<p className="font-semibold text-sm text-foreground">
+					<p className="break-words text-sm font-semibold text-foreground">
 						{address.fullName}
 					</p>
 				</div>
@@ -36,7 +36,7 @@ export function AddressCard({ address, onEdit }: Props) {
 				)}
 			</div>
 
-			<div className="text-xs text-muted space-y-0.5 pl-5">
+			<div className="space-y-0.5 break-words pl-5 text-xs text-muted">
 				<p>{address.phone}</p>
 				<p>{address.street}</p>
 				<p>
@@ -46,19 +46,25 @@ export function AddressCard({ address, onEdit }: Props) {
 				<p>{address.country}</p>
 			</div>
 
-			<div className="flex items-center gap-2 pt-1">
+			<div className="flex flex-wrap items-center gap-2 pt-1">
 				{!address.isDefault && (
 					<Button
 						variant="outline"
 						size="sm"
 						isPending={settingDefault}
 						onPress={() => setDefault({ addressId: address.id })}
+						className="min-w-fit"
 					>
 						<Star size={12} />
 						Set default
 					</Button>
 				)}
-				<Button variant="ghost" size="sm" onPress={() => onEdit(address)}>
+				<Button
+					variant="ghost"
+					size="sm"
+					onPress={() => onEdit(address)}
+					className="min-w-fit"
+				>
 					<Edit2 size={12} />
 					Edit
 				</Button>
@@ -67,7 +73,7 @@ export function AddressCard({ address, onEdit }: Props) {
 					size="sm"
 					isPending={removing}
 					onPress={() => remove({ addressId: address.id })}
-					className="text-danger hover:text-danger ml-auto"
+					className="ml-0 min-w-fit text-danger hover:text-danger sm:ml-auto"
 				>
 					<Trash2 size={12} />
 					Delete

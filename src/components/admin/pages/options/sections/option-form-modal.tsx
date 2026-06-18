@@ -288,7 +288,7 @@ export function OptionFormModal({ config, isOpen, onClose, row }: Props) {
 														</div>
 													</ColorPicker.Trigger>
 													<ColorPicker.Popover placement="bottom start">
-														<div className="flex w-56 flex-col gap-3 p-3">
+														<div className="flex w-56 max-w-[calc(100vw-2rem)] flex-col gap-3 p-3">
 															<ColorArea.Root
 																colorSpace="hsb"
 																xChannel="saturation"

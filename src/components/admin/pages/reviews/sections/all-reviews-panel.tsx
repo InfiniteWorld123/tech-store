@@ -33,11 +33,11 @@ function Avatar({ name }: { name: string }) {
 
 function ProductBadge({ name }: { name: string }) {
 	return (
-		<div className="flex items-center gap-2">
+		<div className="flex min-w-0 items-center gap-2">
 			<div className="size-9 rounded-xl bg-default flex items-center justify-center shrink-0 border border-border">
 				<Package size={16} className="text-muted" />
 			</div>
-			<span className="text-xs text-muted whitespace-nowrap">{name}</span>
+			<span className="min-w-0 break-words text-xs text-muted">{name}</span>
 		</div>
 	);
 }
@@ -180,7 +180,7 @@ function CardsView({
 	if (items.length === 0) return <EmptyState />;
 
 	return (
-		<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+		<div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
 			{items.map((r) => (
 				<button
 					key={r.id}
@@ -188,11 +188,11 @@ function CardsView({
 					onClick={() => onView(r)}
 					className="bg-default/40 border border-border rounded-2xl p-4 space-y-3 text-left"
 				>
-					<div className="flex items-center justify-between gap-2">
-						<div className="flex items-center gap-3">
+					<div className="flex min-w-0 items-center justify-between gap-2">
+						<div className="flex min-w-0 items-center gap-3">
 							<Avatar name={r.customer.name} />
-							<div>
-								<p className="text-sm font-semibold text-foreground">
+							<div className="min-w-0">
+								<p className="break-words text-sm font-semibold text-foreground">
 									{r.customer.name}
 								</p>
 								<p className="text-xs text-muted">
@@ -206,7 +206,9 @@ function CardsView({
 						<span className="truncate">{r.product.name}</span>
 					</div>
 					<StarRating rating={r.rating} />
-					<p className="text-sm font-semibold text-foreground">{r.title}</p>
+					<p className="break-words text-sm font-semibold text-foreground">
+						{r.title}
+					</p>
 					<p className="text-xs text-muted line-clamp-3">{r.comment}</p>
 				</button>
 			))}
@@ -241,7 +243,7 @@ export function AllReviewsPanel() {
 	return (
 		<div className="space-y-4">
 			{/* Toolbar */}
-			<div className="flex items-center justify-between gap-3">
+			<div className="flex flex-col gap-3 min-[520px]:flex-row min-[520px]:items-center min-[520px]:justify-between">
 				<ReviewsFilters
 					search={inputValue}
 					rating={rating}
@@ -260,7 +262,7 @@ export function AllReviewsPanel() {
 						: "opacity-100 transition-opacity"
 				}
 			>
-				<div className="bg-surface border border-border rounded-2xl p-5 shadow-sm">
+				<div className="rounded-2xl border border-border bg-surface p-4 shadow-sm sm:p-5">
 					{isError ? (
 						<DataError title="Failed to load reviews" />
 					) : isLoading ? (

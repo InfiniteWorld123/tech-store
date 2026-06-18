@@ -29,7 +29,7 @@ const methodOptions = [
 ];
 
 const selectClass =
-	"appearance-none pl-9 pr-8 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer";
+	"w-full min-w-0 appearance-none pl-9 pr-8 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer";
 
 export function PaymentsToolbar({
 	search,
@@ -53,8 +53,8 @@ export function PaymentsToolbar({
 	};
 
 	return (
-		<div className="flex flex-col sm:flex-row sm:items-center gap-3">
-			<div className="relative flex-1">
+		<div className="grid w-full min-w-0 grid-cols-1 gap-3 min-[520px]:grid-cols-2 xl:flex xl:items-center">
+			<div className="relative min-w-0 min-[520px]:col-span-2 xl:col-span-1 xl:flex-1">
 				<Search
 					size={15}
 					className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
@@ -68,7 +68,7 @@ export function PaymentsToolbar({
 				/>
 			</div>
 
-			<div className="relative">
+			<div className="relative min-w-0">
 				<CreditCard
 					size={15}
 					className="absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none"
@@ -88,7 +88,7 @@ export function PaymentsToolbar({
 				</select>
 			</div>
 
-			<div className="relative">
+			<div className="relative min-w-0">
 				<CreditCard
 					size={15}
 					className="absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none"

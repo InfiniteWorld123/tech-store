@@ -4,10 +4,12 @@ import {
 	BarChart2,
 	CheckCircle2,
 	ChevronRight,
+	Clock,
 	CreditCard,
 	DollarSign,
 	Layers,
 	Package,
+	PackageX,
 	Settings,
 	ShoppingBag,
 	Star,
@@ -88,36 +90,42 @@ export function DashboardPage() {
 			count: outOfStock,
 			severity: "danger" as const,
 			href: "/admin/products",
+			icon: PackageX,
 		},
 		{
 			label: "Pending payments",
 			count: pendingPayments,
 			severity: "danger" as const,
 			href: "/admin/payments",
+			icon: CreditCard,
 		},
 		{
 			label: "Pending orders",
 			count: pendingOrders,
 			severity: "warning" as const,
 			href: "/admin/orders",
+			icon: ShoppingBag,
 		},
 		{
 			label: "Orders being processed",
 			count: processingOrders,
 			severity: "warning" as const,
 			href: "/admin/orders",
+			icon: Clock,
 		},
 		{
 			label: "Unshipped orders",
 			count: unshipped,
 			severity: "warning" as const,
 			href: "/admin/shipping",
+			icon: Truck,
 		},
 		{
 			label: "Low stock variants",
 			count: lowStock,
 			severity: "warning" as const,
 			href: "/admin/products",
+			icon: Package,
 		},
 	];
 
@@ -150,10 +158,10 @@ export function DashboardPage() {
 	];
 
 	return (
-		<div className="space-y-6 py-6">
+		<div className="space-y-4 py-4 sm:space-y-6 sm:py-6">
 			{/* ── Header ── */}
-			<div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-				<div>
+			<div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+				<div className="min-w-0">
 					<h1 className="text-xl font-bold text-foreground">Welcome back</h1>
 					<p className="mt-0.5 text-sm text-muted">{TODAY}</p>
 					<p className="mt-1 text-sm text-muted">
@@ -162,7 +170,7 @@ export function DashboardPage() {
 				</div>
 				<LinkAnchor
 					to="/admin/analytics"
-					className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-border bg-surface px-4 py-2 text-sm font-medium text-muted shadow-sm transition-colors hover:bg-default hover:text-foreground no-underline"
+					className="inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-xl border border-border bg-surface px-4 py-2 text-sm font-medium text-muted shadow-sm transition-colors hover:bg-default hover:text-foreground no-underline sm:w-auto"
 				>
 					View Full Analytics
 					<ChevronRight size={14} />
@@ -170,7 +178,7 @@ export function DashboardPage() {
 			</div>
 
 			{/* ── Hero KPIs ── */}
-			<div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+			<div className="grid grid-cols-1 gap-4 min-[420px]:grid-cols-2 xl:grid-cols-4">
 				<StatCard
 					label="Total Revenue"
 					icon={DollarSign}
@@ -223,8 +231,20 @@ export function DashboardPage() {
 			{/* ── Middle row ── */}
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
 				{/* Needs Attention */}
-				<div className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5 shadow-sm lg:col-span-2">
-					<p className="text-sm font-medium text-muted">Needs Attention</p>
+				<div className="flex min-w-0 flex-col gap-4 rounded-2xl border border-border bg-surface p-4 shadow-sm sm:p-5 lg:col-span-2">
+					<div className="flex min-w-0 items-center justify-between gap-3">
+						<div className="min-w-0">
+							<p className="text-sm font-semibold text-foreground">
+								Needs Attention
+							</p>
+							<p className="mt-0.5 text-xs text-muted">
+								Items that need a quick review
+							</p>
+						</div>
+						<span className="shrink-0 rounded-full border border-border bg-default/50 px-2.5 py-1 text-xs font-semibold text-muted">
+							{attentionItems.filter((item) => item.count > 0).length}
+						</span>
+					</div>
 
 					{isLoadingAttention ? (
 						<div className="space-y-3">
@@ -241,51 +261,81 @@ export function DashboardPage() {
 							</p>
 						</div>
 					) : (
-						<div>
-							{attentionItems.map((item) => (
-								<LinkAnchor
-									key={item.label}
-									to={item.href}
-									className="-mx-2 flex items-center gap-3 rounded-xl border-b border-border px-2 py-3 transition-colors hover:bg-default/50 last:border-0 no-underline"
-								>
-									<span
-										className={`size-2 shrink-0 rounded-full ${
-											item.severity === "danger" ? "bg-danger" : "bg-warning"
-										}`}
-									/>
-									<span className="flex-1 text-sm text-foreground">
-										{item.label}
-									</span>
-									<span
-										className={`text-sm font-bold ${
-											item.severity === "danger"
-												? "text-danger"
-												: item.count > 0
-													? "text-warning"
-													: "text-muted"
+						<div className="grid grid-cols-1 gap-2.5">
+							{attentionItems.map((item) => {
+								const Icon = item.icon;
+								const isDanger = item.severity === "danger";
+								return (
+									<LinkAnchor
+										key={item.label}
+										to={item.href}
+										className={`group flex min-h-16 w-full min-w-0 items-center gap-3 rounded-2xl border px-3.5 py-3 text-left shadow-sm ring-1 ring-transparent transition-all no-underline ${
+											isDanger
+												? "border-danger/20 bg-danger/5 hover:border-danger/35 hover:bg-danger/10 hover:ring-danger/10"
+												: "border-warning/25 bg-warning/5 hover:border-warning/40 hover:bg-warning/10 hover:ring-warning/10"
 										}`}
 									>
-										{item.count}
-									</span>
-									<ChevronRight size={14} className="shrink-0 text-muted" />
-								</LinkAnchor>
-							))}
+										<span
+											className={`flex size-10 shrink-0 items-center justify-center rounded-xl shadow-sm transition-colors ${
+												isDanger
+													? "bg-danger/10 text-danger group-hover:bg-danger group-hover:text-white"
+													: "bg-warning/10 text-warning group-hover:bg-warning group-hover:text-white"
+											}`}
+										>
+											<Icon size={18} />
+										</span>
+										<span className="min-w-0 flex-1">
+											<span className="block break-words text-sm font-semibold text-foreground">
+												{item.label}
+											</span>
+											<span className="mt-0.5 block text-xs text-muted">
+												Review now
+											</span>
+										</span>
+										<span
+											className={`shrink-0 rounded-full px-2.5 py-1 text-sm font-bold ${
+												isDanger
+													? "bg-danger/10 text-danger"
+													: item.count > 0
+														? "bg-warning/10 text-warning"
+														: "bg-default text-muted"
+											}`}
+										>
+											{item.count.toLocaleString()}
+										</span>
+										<ChevronRight
+											size={16}
+											className={`shrink-0 transition-transform group-hover:translate-x-0.5 ${
+												isDanger ? "text-danger" : "text-warning"
+											}`}
+										/>
+									</LinkAnchor>
+								);
+							})}
 						</div>
 					)}
 				</div>
 
 				{/* Quick Actions */}
-				<div className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5 shadow-sm">
+				<div className="flex min-w-0 flex-col gap-4 rounded-2xl border border-border bg-surface p-4 shadow-sm sm:p-5">
 					<p className="text-sm font-medium text-muted">Quick Actions</p>
-					<div className="grid grid-cols-2 gap-2">
+					<div className="grid grid-cols-1 gap-2.5">
 						{QUICK_ACTIONS.map(({ label, icon: Icon, href }) => (
 							<LinkAnchor
 								key={href}
 								to={href}
-								className="flex flex-col items-center gap-1.5 rounded-xl border border-border bg-surface p-3 text-center transition-colors hover:bg-default no-underline"
+								className="group flex min-h-14 w-full min-w-0 items-center gap-3 rounded-xl border border-border bg-surface-tertiary/60 px-3.5 py-3 text-left shadow-sm ring-1 ring-transparent transition-all hover:border-accent/35 hover:bg-surface hover:ring-accent/15 no-underline"
 							>
-								<Icon size={20} className="text-muted" />
-								<span className="text-xs text-muted">{label}</span>
+								<span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-accent shadow-sm transition-colors group-hover:bg-accent group-hover:text-accent-foreground">
+									<Icon size={18} />
+								</span>
+								<span className="min-w-0 flex-1 break-words text-sm font-medium text-foreground">
+									{label}
+								</span>
+								<ChevronRight
+									size={16}
+									className="shrink-0 text-muted transition-transform group-hover:translate-x-0.5 group-hover:text-accent"
+								/>
 							</LinkAnchor>
 						))}
 					</div>

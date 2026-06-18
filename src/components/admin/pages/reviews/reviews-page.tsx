@@ -3,7 +3,7 @@ import { ReviewsOverview } from "./sections/reviews-overview";
 
 export function ReviewsPage() {
 	return (
-		<div className="py-6 space-y-6">
+		<div className="space-y-4 py-4 sm:space-y-6 sm:py-6">
 			{/* ── Overview ── */}
 			<ReviewsOverview />
 

@@ -4,11 +4,13 @@ import {
 	ensureSession,
 } from "#/server/auth/ensure-session.middleware";
 import {
+	confirmOrderPaymentSchema,
 	createStripeCheckoutSessionSchema,
 	getPaymentSchema,
 	listPaymentsSchema,
 	refundPaymentSchema,
 } from "./payments.schemas";
+import { confirmOrderPayment } from "./services/confirm-order-payment.service";
 import { createStripeCheckoutSession } from "./services/create-payment.service";
 import { getPayment } from "./services/get-payment.service";
 import { listPayments } from "./services/list-payments.service";
@@ -21,6 +23,16 @@ export const createStripeCheckoutSessionAction = createServerFn({
 	.inputValidator(createStripeCheckoutSessionSchema)
 	.handler(async ({ context, data }) => {
 		return createStripeCheckoutSession({
+			...data,
+			userId: context.session.user.id,
+		});
+	});
+
+export const confirmOrderPaymentAction = createServerFn({ method: "POST" })
+	.middleware([ensureSession])
+	.inputValidator(confirmOrderPaymentSchema)
+	.handler(async ({ context, data }) => {
+		return confirmOrderPayment({
 			...data,
 			userId: context.session.user.id,
 		});

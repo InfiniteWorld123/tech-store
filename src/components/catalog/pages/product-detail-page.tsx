@@ -41,8 +41,8 @@ export function ProductDetailPage({ slug }: Props) {
 		return (
 			<div className="min-h-screen flex flex-col">
 				<Header />
-				<main className="flex-1 pt-24 pb-20 flex items-center justify-center">
-					<Card className="items-center border-dashed px-6 py-16 text-center max-w-sm">
+				<main className="flex-1 pt-20 pb-14 flex items-center justify-center px-3 sm:pt-24 sm:pb-20">
+					<Card className="max-w-sm items-center border-dashed px-4 py-12 text-center sm:px-6 sm:py-16">
 						<Card.Header className="items-center">
 							<Card.Title>Product not found</Card.Title>
 							<Card.Description>
@@ -71,10 +71,10 @@ export function ProductDetailPage({ slug }: Props) {
 		<div className="min-h-screen flex flex-col">
 			<Header />
 
-			<main className="flex-1 pt-24 pb-20">
-				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<main className="flex-1 pt-20 pb-14 sm:pt-24 sm:pb-20">
+				<div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
 					{/* Breadcrumb */}
-					<nav className="flex items-center gap-2 text-sm text-muted mb-8 flex-wrap">
+					<nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-muted sm:mb-8">
 						<LinkAnchor
 							to="/"
 							className="hover:text-foreground transition-colors"
@@ -90,12 +90,12 @@ export function ProductDetailPage({ slug }: Props) {
 							{product.category.name}
 						</LinkAnchor>
 						<ArrowRight size={14} className="flex-shrink-0" />
-						<span className="text-foreground font-medium truncate max-w-xs">
+						<span className="min-w-0 max-w-full break-words font-medium text-foreground">
 							{product.name}
 						</span>
 					</nav>
 
-					<div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-16">
+					<div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10 xl:gap-16">
 						{/* Left: images */}
 						<ProductImagesGallery
 							mainImage={product.image}
@@ -104,7 +104,7 @@ export function ProductDetailPage({ slug }: Props) {
 						/>
 
 						{/* Right: info */}
-						<div className="flex flex-col gap-6">
+						<div className="flex min-w-0 flex-col gap-6">
 							{/* Badges */}
 							<div className="flex flex-wrap gap-2">
 								{product.isFeatured && (
@@ -130,18 +130,18 @@ export function ProductDetailPage({ slug }: Props) {
 							</div>
 
 							{/* Title */}
-							<div>
+							<div className="min-w-0">
 								<p className="text-sm font-medium text-muted uppercase tracking-wide mb-1">
 									{product.brand}
 								</p>
-								<h1 className="text-2xl sm:text-3xl font-bold text-foreground leading-snug">
+								<h1 className="break-words text-2xl font-bold leading-snug text-foreground sm:text-3xl">
 									{product.name}
 								</h1>
 							</div>
 
 							{/* Rating */}
 							{product.reviewsCount > 0 && (
-								<div className="flex items-center gap-2">
+								<div className="flex flex-wrap items-center gap-2">
 									<div className="flex gap-0.5">
 										{[1, 2, 3, 4, 5].map((i) => (
 											<Star
@@ -164,10 +164,10 @@ export function ProductDetailPage({ slug }: Props) {
 							)}
 
 							{/* Price */}
-							<div className="flex items-baseline gap-3">
+							<div className="flex flex-wrap items-baseline gap-3">
 								{price !== null ? (
 									<>
-										<span className="text-3xl font-bold text-foreground">
+										<span className="break-words text-3xl font-bold text-foreground">
 											€{price.toLocaleString()}
 										</span>
 										{compareAtPrice && (
@@ -204,8 +204,8 @@ export function ProductDetailPage({ slug }: Props) {
 							/>
 
 							{/* Quantity + add to cart */}
-							<div className="flex items-center gap-3">
-								<div className="flex items-center gap-1 border border-border rounded-xl overflow-hidden">
+							<div className="grid grid-cols-1 gap-3 sm:flex sm:items-center">
+								<div className="flex w-full items-center justify-center gap-1 overflow-hidden rounded-xl border border-border sm:w-auto">
 									<button
 										type="button"
 										onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -236,7 +236,7 @@ export function ProductDetailPage({ slug }: Props) {
 
 								<Button
 									variant="primary"
-									className="flex-1"
+									className="w-full sm:flex-1"
 									isDisabled={!inStock || !selectedVariantId || price === null}
 									isPending={isPending}
 									onPress={() => {
@@ -263,8 +263,8 @@ export function ProductDetailPage({ slug }: Props) {
 					</div>
 
 					{/* Tabs: Description + Reviews */}
-					<div className="mt-16">
-						<div className="flex gap-1 border-b border-border mb-8">
+					<div className="mt-12 sm:mt-16">
+						<div className="-mx-3 mb-6 flex gap-1 overflow-x-auto border-b border-border px-3 sm:mx-0 sm:mb-8 sm:px-0">
 							{(["description", "reviews"] as const).map((tab) => (
 								<button
 									key={tab}

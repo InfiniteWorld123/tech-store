@@ -115,7 +115,7 @@ export function AddressFormModal({ isOpen, onClose, editAddress }: Props) {
 		<Modal.Root isOpen={isOpen} onOpenChange={(open) => !open && onClose()}>
 			<Modal.Backdrop>
 				<Modal.Container>
-					<Modal.Dialog className="max-w-md w-full">
+					<Modal.Dialog className="mx-3 max-h-[calc(100dvh-2rem)] w-[calc(100vw-1.5rem)] max-w-md overflow-hidden">
 						<Modal.Header>
 							<Modal.Heading className="text-base font-semibold text-foreground">
 								{editAddress ? "Edit address" : "New address"}
@@ -123,7 +123,7 @@ export function AddressFormModal({ isOpen, onClose, editAddress }: Props) {
 							<Modal.CloseTrigger className="text-muted hover:text-foreground" />
 						</Modal.Header>
 
-						<Modal.Body>
+						<Modal.Body className="overflow-y-auto">
 							<form
 								id="address-form"
 								onSubmit={(e) => {
@@ -132,14 +132,14 @@ export function AddressFormModal({ isOpen, onClose, editAddress }: Props) {
 								}}
 								className="space-y-3"
 							>
-								<div className="grid grid-cols-2 gap-3">
+								<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 									{FIELDS.map((f) => (
 										<Field key={f.name} name={f.name as never}>
 											{(field) => (
 												<div
 													className={
 														f.name === "street" || f.name === "fullName"
-															? "col-span-2"
+															? "sm:col-span-2"
 															: ""
 													}
 												>
@@ -181,8 +181,12 @@ export function AddressFormModal({ isOpen, onClose, editAddress }: Props) {
 							</form>
 						</Modal.Body>
 
-						<Modal.Footer className="gap-2">
-							<Button variant="outline" onPress={onClose}>
+						<Modal.Footer className="flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+							<Button
+								variant="outline"
+								onPress={onClose}
+								className="w-full sm:w-auto"
+							>
 								Cancel
 							</Button>
 							<Subscribe>
@@ -192,6 +196,7 @@ export function AddressFormModal({ isOpen, onClose, editAddress }: Props) {
 										form="address-form"
 										variant="primary"
 										isPending={isSubmitting}
+										className="w-full sm:w-auto"
 									>
 										{editAddress ? "Save changes" : "Add address"}
 									</Button>

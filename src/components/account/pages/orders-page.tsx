@@ -2,8 +2,8 @@
 
 import { Button, Chip, Skeleton } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
-import { Package, Search } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { ArrowRight, Package, Search } from "lucide-react";
 import { useCallback, useEffect } from "react";
 import LinkAnchor from "#/components/ui/buttons/link-anchor";
 import { WindowedPagination } from "#/components/ui/pagination/windowed-pagination";
@@ -15,7 +15,7 @@ import {
 	listCustomerOrdersQueryOptions,
 } from "#/queries/orders.queries";
 import { listProductsQueryOptions } from "#/queries/products.queries";
-import { Route } from "#/routes/account/orders";
+import { Route } from "#/routes/account/orders/index";
 import type { GetProductsInputType } from "#/server/catalog/products/products.types";
 import type { OrderStatusType } from "#/server/orders/admin/admin.types";
 import type { CustomerOrderListItemType } from "#/server/orders/customer/customer.types";
@@ -63,58 +63,70 @@ function OrderRow({ order }: { order: CustomerOrderListItemType }) {
 	};
 
 	return (
-		<LinkAnchor
+		<Link
 			to="/account/orders/$orderId"
 			params={{ orderId: order.id }}
-			className="flex items-center gap-4 p-4 border border-border rounded-2xl hover:border-accent/50 transition-all"
+			className="group flex w-full flex-col gap-3 rounded-2xl border border-border p-4 text-left transition-all hover:border-accent/50 hover:bg-accent/5 sm:flex-row sm:items-center sm:gap-4"
 			onFocus={prefetchOrder}
 			onMouseEnter={prefetchOrder}
 		>
-			{order.firstItemImage ? (
-				<img
-					src={order.firstItemImage}
-					alt={order.firstItemName ?? ""}
-					className="w-12 h-12 rounded-xl object-cover flex-shrink-0"
-				/>
-			) : (
-				<div className="w-12 h-12 rounded-xl bg-surface-secondary flex items-center justify-center flex-shrink-0">
-					<Package size={16} className="text-muted" />
-				</div>
-			)}
+			<div className="flex min-w-0 items-start gap-3 sm:flex-1 sm:items-center">
+				{order.firstItemImage ? (
+					<img
+						src={order.firstItemImage}
+						alt={order.firstItemName ?? ""}
+						className="h-12 w-12 flex-shrink-0 rounded-xl object-cover"
+					/>
+				) : (
+					<div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-surface-secondary">
+						<Package size={16} className="text-muted" />
+					</div>
+				)}
 
-			<div className="flex-1 min-w-0">
-				<div className="flex items-center gap-2 flex-wrap">
-					<p className="text-sm font-semibold text-foreground">
-						#{order.orderNumber}
-					</p>
-					<Chip size="sm" color={orderStatusColor(order.status)} variant="soft">
-						{order.status}
-					</Chip>
-					{order.payment.status === "paid" && (
-						<Chip size="sm" color="success" variant="soft">
-							Paid
+				<div className="min-w-0 flex-1">
+					<div className="flex flex-wrap items-center gap-2">
+						<p className="text-sm font-semibold text-foreground">
+							#{order.orderNumber}
+						</p>
+						<Chip
+							size="sm"
+							color={orderStatusColor(order.status)}
+							variant="soft"
+						>
+							{order.status}
 						</Chip>
-					)}
+						{order.payment.status === "paid" && (
+							<Chip size="sm" color="success" variant="soft">
+								Paid
+							</Chip>
+						)}
+					</div>
+					<p className="mt-0.5 truncate text-xs text-muted">
+						{order.firstItemName ?? "–"}
+						{order.itemCount > 1 && ` +${order.itemCount - 1} more`}
+					</p>
 				</div>
-				<p className="text-xs text-muted mt-0.5 truncate">
-					{order.firstItemName ?? "–"}
-					{order.itemCount > 1 && ` +${order.itemCount - 1} more`}
-				</p>
 			</div>
 
-			<div className="text-right flex-shrink-0">
-				<p className="text-sm font-bold text-foreground">
-					€{order.totalAmount.toLocaleString()}
-				</p>
-				<p className="text-xs text-muted">
-					{new Date(order.placedAt).toLocaleDateString("en-DE", {
-						year: "numeric",
-						month: "short",
-						day: "numeric",
-					})}
+			<div className="flex items-end justify-between gap-3 border-t border-border pt-3 sm:block sm:flex-shrink-0 sm:border-0 sm:pt-0 sm:text-right">
+				<div>
+					<p className="text-sm font-bold text-foreground">
+						€{order.totalAmount.toLocaleString()}
+					</p>
+					<p className="text-xs text-muted">
+						{new Date(order.placedAt).toLocaleDateString("en-DE", {
+							year: "numeric",
+							month: "short",
+							day: "numeric",
+						})}
+					</p>
+				</div>
+				<p className="inline-flex items-center justify-end gap-1 text-xs font-medium text-accent sm:mt-1 sm:opacity-0 sm:transition-opacity sm:group-hover:opacity-100 sm:group-focus:opacity-100">
+					View details
+					<ArrowRight size={12} />
 				</p>
 			</div>
-		</LinkAnchor>
+		</Link>
 	);
 }
 
@@ -206,8 +218,10 @@ export function OrdersPage() {
 		prefetch(listProductsQueryOptions({ data: catalogProductsInput }));
 
 	return (
-		<div>
-			<h1 className="text-2xl font-bold text-foreground mb-6">My Orders</h1>
+		<div className="min-w-0">
+			<h1 className="mb-5 text-xl font-bold text-foreground sm:mb-6 sm:text-2xl">
+				My Orders
+			</h1>
 
 			{/* Search */}
 			<div className="relative mb-5">
@@ -225,7 +239,7 @@ export function OrdersPage() {
 			</div>
 
 			{/* Status tabs */}
-			<div className="flex gap-1 border-b border-border mb-6 overflow-x-auto">
+			<div className="-mx-3 mb-6 flex gap-1 overflow-x-auto border-b border-border px-3 sm:mx-0 sm:px-0">
 				{STATUS_TABS.map((tab) => (
 					<button
 						key={tab.value}
@@ -256,7 +270,7 @@ export function OrdersPage() {
 					))}
 				</div>
 			) : orders.length === 0 ? (
-				<div className="border border-dashed border-border rounded-2xl p-12 text-center space-y-3">
+				<div className="space-y-3 rounded-2xl border border-dashed border-border p-6 text-center sm:p-12">
 					<Package size={28} className="text-muted mx-auto" />
 					<p className="text-foreground font-semibold">No orders found</p>
 					<p className="text-muted text-sm">

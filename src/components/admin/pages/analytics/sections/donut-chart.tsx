@@ -35,8 +35,8 @@ export function DonutChart({
 	}, []);
 
 	return (
-		<div className="bg-surface border border-border rounded-2xl p-4 shadow-sm space-y-4">
-			<p className="text-xs font-semibold uppercase tracking-widest text-muted">
+		<div className="min-w-0 space-y-4 rounded-2xl border border-border bg-surface p-4 shadow-sm">
+			<p className="break-words text-xs font-semibold uppercase tracking-widest text-muted">
 				{title}
 			</p>
 
@@ -45,14 +45,14 @@ export function DonutChart({
 			) : isLoading || !mounted ? (
 				<Skeleton className="h-48 w-full rounded-xl" />
 			) : (
-				<div className="flex items-center gap-6">
-					<PieChart width={160} height={160}>
+				<div className="flex min-w-0 flex-col items-center gap-4 min-[420px]:flex-row min-[420px]:items-center">
+					<PieChart width={140} height={140}>
 						<Pie
 							data={data}
 							cx="50%"
 							cy="50%"
-							innerRadius={45}
-							outerRadius={70}
+							innerRadius={38}
+							outerRadius={60}
 							paddingAngle={3}
 							dataKey="value"
 						>
@@ -72,22 +72,22 @@ export function DonutChart({
 						/>
 					</PieChart>
 
-					<ul className="flex flex-col gap-2 flex-1">
+					<ul className="flex w-full min-w-0 flex-1 flex-col gap-2">
 						{data.map((entry, i) => (
 							<li
 								key={entry.name}
-								className="flex items-center justify-between gap-2"
+								className="flex min-w-0 items-center justify-between gap-2"
 							>
-								<div className="flex items-center gap-2">
+								<div className="flex min-w-0 items-center gap-2">
 									<span
 										className="size-2.5 rounded-full flex-shrink-0"
 										style={{ background: COLORS[i % COLORS.length] }}
 									/>
-									<span className="text-xs text-muted capitalize">
+									<span className="min-w-0 break-words text-xs capitalize text-muted">
 										{entry.name.replace(/_/g, " ")}
 									</span>
 								</div>
-								<span className="text-xs font-semibold text-foreground">
+								<span className="shrink-0 text-xs font-semibold text-foreground">
 									{entry.value}
 								</span>
 							</li>

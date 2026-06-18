@@ -9,7 +9,7 @@ const searchSchema = z.object({
 	searchOrderNumber: z.string().trim().min(1).max(100).optional(),
 });
 
-export const Route = createFileRoute("/account/orders")({
+export const Route = createFileRoute("/account/orders/")({
 	validateSearch: searchSchema,
 	loaderDeps: ({ search }) => search,
 	loader: ({ context: { queryClient }, deps }) =>

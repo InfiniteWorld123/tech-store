@@ -25,9 +25,9 @@ export function ReviewsFilters({
 	onPrefetchRating,
 }: ReviewsFiltersProps) {
 	return (
-		<div className="flex flex-col sm:flex-row sm:items-center gap-3">
+		<div className="grid w-full min-w-0 grid-cols-1 gap-3 min-[520px]:grid-cols-[minmax(0,1fr)_auto] min-[520px]:items-center">
 			{/* Search by title */}
-			<div className="relative flex-1">
+			<div className="relative min-w-0">
 				<Search
 					size={15}
 					className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
@@ -42,7 +42,7 @@ export function ReviewsFilters({
 			</div>
 
 			{/* Rating filter */}
-			<div className="relative">
+			<div className="relative min-w-0">
 				<Star
 					size={15}
 					className="absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none"
@@ -54,7 +54,7 @@ export function ReviewsFilters({
 							e.target.value === "" ? undefined : Number(e.target.value),
 						)
 					}
-					className="appearance-none pl-9 pr-8 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer"
+					className="w-full min-w-0 appearance-none rounded-xl border border-border bg-surface py-2.5 pl-9 pr-8 text-sm text-foreground transition-all focus:outline-none focus:ring-2 focus:ring-accent/40"
 					onMouseEnter={() => {
 						// prefetch all 5 ratings + "all ratings" on hover
 						[undefined, 1, 2, 3, 4, 5].forEach(onPrefetchRating);

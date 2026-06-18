@@ -27,10 +27,17 @@ export function AddressesPage() {
 	};
 
 	return (
-		<div>
-			<div className="flex items-center justify-between mb-6">
-				<h1 className="text-2xl font-bold text-foreground">My Addresses</h1>
-				<Button variant="primary" size="sm" onPress={handleAdd}>
+		<div className="min-w-0">
+			<div className="mb-5 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-center sm:justify-between">
+				<h1 className="text-xl font-bold text-foreground sm:text-2xl">
+					My Addresses
+				</h1>
+				<Button
+					variant="primary"
+					size="sm"
+					onPress={handleAdd}
+					className="w-full sm:w-auto"
+				>
 					<Plus size={14} />
 					Add address
 				</Button>
@@ -43,13 +50,18 @@ export function AddressesPage() {
 					))}
 				</div>
 			) : addresses.length === 0 ? (
-				<div className="border border-dashed border-border rounded-2xl p-12 text-center space-y-3">
+				<div className="space-y-3 rounded-2xl border border-dashed border-border p-6 text-center sm:p-12">
 					<MapPin size={28} className="text-muted mx-auto" />
 					<p className="text-foreground font-semibold">No addresses yet</p>
 					<p className="text-muted text-sm">
 						Add an address to speed up checkout.
 					</p>
-					<Button variant="primary" size="sm" onPress={handleAdd}>
+					<Button
+						variant="primary"
+						size="sm"
+						onPress={handleAdd}
+						className="w-full sm:w-auto"
+					>
 						Add your first address
 					</Button>
 				</div>

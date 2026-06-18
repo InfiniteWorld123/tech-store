@@ -45,16 +45,16 @@ function AdminLayout() {
 	}, [pathname]);
 
 	return (
-		<div className="flex h-screen gap-4 overflow-hidden bg-surface-secondary p-4">
+		<div className="flex h-dvh gap-2 overflow-hidden bg-surface-secondary p-2 sm:gap-4 sm:p-4">
 			<AdminSidebar
 				collapsed={collapsed}
 				onToggleCollapse={() => setCollapsed((c) => !c)}
 				mobileOpen={mobileOpen}
 				onMobileClose={() => setMobileOpen(false)}
 			/>
-			<div className="flex min-w-0 flex-1 flex-col gap-4 overflow-hidden">
+			<div className="flex min-w-0 flex-1 flex-col gap-2 overflow-hidden sm:gap-4">
 				<AdminTopbar onMenuClick={() => setMobileOpen(true)} />
-				<main className="flex-1 overflow-auto px-2 pb-2 rounded-2xl border border-border bg-surface px-4 shadow-sm">
+				<main className="flex-1 overflow-auto rounded-xl border border-border bg-surface px-3 pb-2 shadow-sm sm:rounded-2xl sm:px-4">
 					<Outlet />
 				</main>
 			</div>

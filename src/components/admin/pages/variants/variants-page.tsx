@@ -25,6 +25,7 @@ import {
 import { getAdminFieldError } from "#/components/admin/ui/admin-form-errors";
 import { AdminImageUploader } from "#/components/admin/ui/admin-image-uploader";
 import { InputField } from "#/components/ui/fields/input-field";
+import { WindowedPagination } from "#/components/ui/pagination/windowed-pagination";
 import {
 	usePersistedViewMode,
 	ViewModeToggle,
@@ -228,7 +229,7 @@ export function VariantsPage() {
 		missingOptionGroups.length === 0;
 
 	return (
-		<div className="space-y-4 py-6">
+		<div className="space-y-4 py-4 sm:py-6">
 			<div>
 				<h1 className="text-xl font-bold text-foreground">Variants</h1>
 				<p className="mt-0.5 text-sm text-muted">
@@ -278,7 +279,7 @@ export function VariantsPage() {
 				<ViewModeToggle value={viewMode} onChange={setViewMode} />
 			</div>
 
-			<div className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+			<div className="rounded-2xl border border-border bg-surface p-4 shadow-sm sm:p-5">
 				{!selectedProductId ? (
 					<PanelState
 						icon={Boxes}
@@ -401,8 +402,8 @@ function VariantsToolbar({
 	};
 
 	return (
-		<div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
-			<div className="relative min-w-60 flex-1">
+		<div className="grid w-full min-w-0 flex-1 grid-cols-1 gap-3 min-[520px]:grid-cols-2 xl:flex xl:flex-wrap xl:items-center">
+			<div className="relative min-w-0 min-[520px]:col-span-2 xl:col-span-1 xl:flex-1">
 				<Search
 					size={15}
 					className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
@@ -423,14 +424,19 @@ function VariantsToolbar({
 				}
 				onFocus={warmStockFilters}
 				onMouseEnter={warmStockFilters}
-				className="rounded-xl border border-border bg-surface px-3 py-2.5 text-sm text-foreground transition-all focus:outline-none focus:ring-2 focus:ring-accent/40"
+				className="w-full min-w-0 rounded-xl border border-border bg-surface px-3 py-2.5 text-sm text-foreground transition-all focus:outline-none focus:ring-2 focus:ring-accent/40 xl:w-auto"
 			>
 				<option value="all">All stock</option>
 				<option value="in-stock">In stock</option>
 				<option value="empty">Out of stock</option>
 			</select>
 
-			<Chip size="sm" variant="soft" color="default">
+			<Chip
+				size="sm"
+				variant="soft"
+				color="default"
+				className="justify-self-start"
+			>
 				{totalCount} {totalCount === 1 ? "variant" : "variants"}
 			</Chip>
 
@@ -438,7 +444,7 @@ function VariantsToolbar({
 				type="button"
 				onClick={onCreateClick}
 				disabled={isCreateDisabled}
-				className="inline-flex items-center gap-1.5 rounded-xl bg-accent px-3 py-2 text-sm font-medium text-accent-foreground transition-colors hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent/40 disabled:cursor-not-allowed disabled:opacity-50"
+				className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-accent px-3 py-2 text-sm font-medium text-accent-foreground transition-colors hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent/40 disabled:cursor-not-allowed disabled:opacity-50 min-[520px]:w-auto"
 			>
 				<Plus size={15} />
 				New Variant
@@ -467,18 +473,20 @@ function VariantProductPicker({
 	onPrefetchProduct: (productId: string) => void;
 }) {
 	return (
-		<div className="rounded-2xl border border-border bg-default/30 p-4">
+		<div className="min-w-0 rounded-2xl border border-border bg-default/30 p-4">
 			<div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(20rem,28rem)]">
 				<div className="min-w-0">
 					<p className="text-sm font-semibold text-foreground">
 						Selected product: {selectedProduct ? selectedProduct.name : "None"}
 					</p>
 					{selectedProduct ? (
-						<div className="mt-2 grid gap-2 text-xs text-muted sm:grid-cols-2">
-							<span className="truncate">
+						<div className="mt-2 grid gap-2 text-xs text-muted md:grid-cols-2">
+							<span className="min-w-0 break-words">
 								{selectedProduct.brand} / {selectedProduct.slug}
 							</span>
-							<span className="truncate font-mono">{selectedProduct.id}</span>
+							<span className="min-w-0 break-all font-mono">
+								{selectedProduct.id}
+							</span>
 						</div>
 					) : (
 						<p className="mt-1 text-xs text-muted">
@@ -487,7 +495,7 @@ function VariantProductPicker({
 					)}
 				</div>
 
-				<div className="space-y-2">
+				<div className="min-w-0 space-y-2">
 					<div className="relative">
 						<Search
 							size={15}
@@ -521,7 +529,7 @@ function VariantProductPicker({
 								onFocus={() => onPrefetchProduct(product.id)}
 								onMouseEnter={() => onPrefetchProduct(product.id)}
 								className={[
-									"flex w-full items-center justify-between gap-3 rounded-xl border px-3 py-2 text-left transition-colors",
+									"flex w-full min-w-0 flex-col items-start gap-2 rounded-xl border px-3 py-2 text-left transition-colors min-[360px]:flex-row min-[360px]:items-center min-[360px]:justify-between",
 									product.id === selectedProductId
 										? "border-accent bg-accent/10"
 										: "border-border bg-surface hover:bg-default/50",
@@ -647,8 +655,8 @@ function VariantsTable({
 							<td className="px-2 py-3">
 								<div className="flex items-center gap-3">
 									<VariantImage variant={variant} />
-									<div>
-										<p className="font-mono text-xs font-medium text-foreground">
+									<div className="min-w-0">
+										<p className="break-all font-mono text-xs font-medium text-foreground">
 											{variant.sku}
 										</p>
 										<p className="text-xs text-muted">
@@ -739,7 +747,7 @@ function VariantsList({
 					>
 						<VariantImage variant={variant} />
 						<div className="min-w-0">
-							<p className="font-mono text-xs font-medium text-foreground">
+							<p className="break-all font-mono text-xs font-medium text-foreground">
 								{variant.sku}
 							</p>
 							<div className="mt-2">
@@ -748,7 +756,7 @@ function VariantsList({
 						</div>
 					</button>
 					<div className="flex flex-wrap items-center justify-between gap-3 sm:justify-end">
-						<div className="text-right">
+						<div className="min-w-0 text-left sm:text-right">
 							<p className="text-sm font-semibold text-foreground">
 								{formatCurrency(variant.price)}
 							</p>
@@ -784,7 +792,7 @@ function VariantsCards({
 	}
 
 	return (
-		<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+		<div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
 			{variants.map((variant) => (
 				<div
 					key={variant.id}
@@ -795,11 +803,11 @@ function VariantsCards({
 						onClick={() => onView(variant)}
 						className="block w-full text-left"
 					>
-						<div className="flex items-start justify-between gap-3">
+						<div className="flex min-w-0 flex-col gap-3 min-[360px]:flex-row min-[360px]:items-start min-[360px]:justify-between">
 							<div className="flex min-w-0 items-center gap-3">
 								<VariantImage variant={variant} />
 								<div className="min-w-0">
-									<p className="font-mono text-xs font-medium text-muted">
+									<p className="break-all font-mono text-xs font-medium text-muted">
 										{variant.sku}
 									</p>
 								</div>
@@ -815,9 +823,9 @@ function VariantsCards({
 							<VariantOptions variant={variant} />
 						</div>
 
-						<div className="mt-4 flex items-center justify-between">
-							<div>
-								<p className="text-sm font-bold text-foreground">
+						<div className="mt-4 flex min-w-0 flex-col gap-2 min-[360px]:flex-row min-[360px]:items-center min-[360px]:justify-between">
+							<div className="min-w-0">
+								<p className="break-words text-sm font-bold text-foreground">
 									{formatCurrency(variant.price)}
 								</p>
 								<p className="text-xs text-muted">
@@ -830,8 +838,10 @@ function VariantsCards({
 						</div>
 					</button>
 
-					<div className="mt-4 flex items-center justify-between border-t border-border pt-3 text-xs text-muted">
-						<span>Updated {formatDate(variant.updatedAt)}</span>
+					<div className="mt-4 flex flex-col gap-2 border-t border-border pt-3 text-xs text-muted min-[360px]:flex-row min-[360px]:items-center min-[360px]:justify-between">
+						<span className="break-words">
+							Updated {formatDate(variant.updatedAt)}
+						</span>
 						<VariantActions
 							variant={variant}
 							onEdit={onEdit}
@@ -896,36 +906,18 @@ function VariantsPagination({
 }) {
 	if (totalItems === 0) return null;
 
-	const startItem = (currentPage - 1) * limit + 1;
-	const endItem = Math.min(currentPage * limit, totalItems);
-
 	return (
-		<div className="mt-4 flex flex-col gap-3 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
-			<p className="text-sm text-muted">
-				Showing {startItem}-{endItem} of {totalItems} variants
-			</p>
-			<div className="flex items-center gap-2">
-				<Button
-					size="sm"
-					variant="outline"
-					isDisabled={currentPage === 1}
-					onPress={() => onPageChange(currentPage - 1)}
-				>
-					Previous
-				</Button>
-				<Chip size="sm" variant="soft" color="default">
-					Page {currentPage} of {totalPages}
-				</Chip>
-				<Button
-					size="sm"
-					variant="outline"
-					isDisabled={currentPage >= totalPages}
-					onPress={() => onPageChange(currentPage + 1)}
-				>
-					Next
-				</Button>
-			</div>
-		</div>
+		<WindowedPagination
+			currentPage={currentPage}
+			totalPages={totalPages}
+			totalItems={totalItems}
+			limit={limit}
+			itemLabel="variant"
+			onPageChange={onPageChange}
+			onPrefetchPage={() => undefined}
+			className="mt-4 border-t border-border pt-4"
+			showSummaryWhenSinglePage
+		/>
 	);
 }
 
@@ -1389,7 +1381,7 @@ function VariantDetailSheet({
 			{variant ? (
 				<div className="space-y-5">
 					{variant.images.length > 0 ? (
-						<div className="grid grid-cols-2 gap-2">
+						<div className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-2">
 							{variant.images.map((image, index) => (
 								<img
 									key={image}

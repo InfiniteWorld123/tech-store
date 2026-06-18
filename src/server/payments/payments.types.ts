@@ -1,5 +1,6 @@
 import type { z } from "zod";
 import type {
+	confirmOrderPaymentSchema,
 	createStripeCheckoutSessionSchema,
 	getPaymentSchema,
 	listPaymentsSchema,
@@ -52,6 +53,17 @@ export type CreateStripeCheckoutSessionOutputType = {
 
 export type GetPaymentOutputType = {
 	payment: PaymentType;
+};
+
+export type ConfirmOrderPaymentInputType = z.infer<
+	typeof confirmOrderPaymentSchema
+> & {
+	userId: string;
+};
+
+export type ConfirmOrderPaymentOutputType = {
+	payment: PaymentType;
+	confirmed: boolean;
 };
 
 export type RefundPaymentOutputType = {

@@ -96,7 +96,7 @@ export function ShippingPage() {
 	}
 
 	return (
-		<div className="space-y-4 py-6">
+		<div className="space-y-4 py-4 sm:py-6">
 			{/* Page title */}
 			<div>
 				<h1 className="text-xl font-bold text-foreground">Shipping</h1>
@@ -128,7 +128,7 @@ export function ShippingPage() {
 				<ViewModeToggle value={viewMode} onChange={setViewMode} />
 			</div>
 
-			<div className="bg-surface border border-border rounded-2xl p-5 shadow-sm">
+			<div className="rounded-2xl border border-border bg-surface p-4 shadow-sm sm:p-5">
 				{isLoading ? (
 					<DataLoading label="Loading shipments..." />
 				) : isError ? (

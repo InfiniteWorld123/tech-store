@@ -69,13 +69,13 @@ export function ProductCard({ product, badge }: Props) {
 
 	return (
 		<Card
-			className="group overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+			className="group h-full w-full min-w-0 overflow-hidden transition-all duration-300 sm:hover:-translate-y-1 sm:hover:shadow-lg"
 			onMouseEnter={productPrefetchHandlers.onMouseEnter}
 		>
 			<LinkAnchor
 				to="/products/$slug"
 				params={{ slug: product.slug }}
-				className="block"
+				className="block min-w-0"
 				onFocus={productPrefetchHandlers.onFocus}
 			>
 				<div className="relative bg-surface-secondary aspect-square flex items-center justify-center">
@@ -86,9 +86,11 @@ export function ProductCard({ product, badge }: Props) {
 							className="w-full h-full object-cover"
 						/>
 					) : (
-						<div className="flex flex-col items-center gap-2 text-muted">
+						<div className="flex min-w-0 flex-col items-center gap-2 text-muted">
 							<ImageOff size={36} />
-							<span className="text-xs">{product.brand}</span>
+							<span className="max-w-full break-words px-2 text-center text-xs">
+								{product.brand}
+							</span>
 						</div>
 					)}
 
@@ -116,32 +118,35 @@ export function ProductCard({ product, badge }: Props) {
 				</div>
 			</LinkAnchor>
 
-			<Card.Content className="p-4 flex flex-col gap-2">
-				<div>
-					<p className="text-xs text-muted font-medium uppercase tracking-wide">
+			<Card.Content className="flex min-w-0 flex-1 flex-col gap-2 p-4">
+				<div className="min-w-0">
+					<p className="break-words text-xs font-medium uppercase tracking-wide text-muted">
 						{product.brand}
 					</p>
 					<LinkAnchor
 						to="/products/$slug"
 						params={{ slug: product.slug }}
 						onFocus={productPrefetchHandlers.onFocus}
+						className="block min-w-0"
 					>
-						<h3 className="font-semibold text-foreground text-sm leading-snug line-clamp-2 mt-0.5 hover:text-accent transition-colors">
+						<h3 className="mt-0.5 line-clamp-2 break-words text-sm font-semibold leading-snug text-foreground transition-colors hover:text-accent">
 							{product.name}
 						</h3>
 					</LinkAnchor>
 				</div>
 
-				<div className="flex items-center gap-2">
+				<div className="flex min-w-0 flex-wrap items-center gap-2">
 					<StarRating value={product.ratingAvg} />
 					<span className="text-xs text-muted">
 						({product.reviewsCount.toLocaleString()})
 					</span>
 				</div>
 
-				<div className="flex items-center justify-between mt-1">
-					<div className="flex items-baseline gap-2">
-						<span className="font-bold text-foreground">{priceLabel}</span>
+				<div className="mt-auto flex min-w-0 flex-col gap-2 pt-1 min-[360px]:flex-row min-[360px]:items-end min-[360px]:justify-between">
+					<div className="flex min-w-0 flex-wrap items-baseline gap-2">
+						<span className="break-words font-bold text-foreground">
+							{priceLabel}
+						</span>
 						{product.compareAtPrice && (
 							<span className="text-xs text-muted line-through">
 								€{product.compareAtPrice.toLocaleString()}
@@ -161,6 +166,7 @@ export function ProductCard({ product, badge }: Props) {
 								addToCart({ variantId: product.defaultVariantId, quantity: 1 });
 							}
 						}}
+						className="self-start min-[360px]:self-auto"
 					>
 						<ShoppingCart size={16} />
 					</Button>

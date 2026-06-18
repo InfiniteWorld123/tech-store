@@ -39,7 +39,7 @@ export function CategoriesPage() {
 		useCategoriesPage();
 
 	return (
-		<div className="space-y-4 py-6">
+		<div className="space-y-4 py-4 sm:py-6">
 			{/* Page title */}
 			<div>
 				<h1 className="text-xl font-bold text-foreground">Categories</h1>
@@ -60,7 +60,7 @@ export function CategoriesPage() {
 				<ViewModeToggle value={viewMode} onChange={setViewMode} />
 			</div>
 
-			<div className="bg-surface border border-border rounded-2xl p-5 shadow-sm">
+			<div className="rounded-2xl border border-border bg-surface p-4 shadow-sm sm:p-5">
 				{isLoading ? (
 					<DataLoading label="Loading categories..." />
 				) : isError ? (
@@ -171,18 +171,20 @@ function CategoryDetailSheet({
 		>
 			{category ? (
 				<div className="space-y-5">
-					<div className="flex items-center gap-3 rounded-2xl border border-border bg-default/30 p-4">
+					<div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border bg-default/30 p-4">
 						<CategoryIconDisplay
 							icon={category.icon}
 							iconColor={category.iconColor}
 							iconBg={category.iconBg}
 							name={category.name}
 						/>
-						<div>
-							<p className="text-sm font-semibold text-foreground">
+						<div className="min-w-0">
+							<p className="break-words text-sm font-semibold text-foreground">
 								{category.name}
 							</p>
-							<p className="font-mono text-xs text-muted">{category.slug}</p>
+							<p className="break-all font-mono text-xs text-muted">
+								{category.slug}
+							</p>
 						</div>
 					</div>
 					<DetailSection title="Category">

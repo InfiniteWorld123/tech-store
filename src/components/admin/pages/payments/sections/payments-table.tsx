@@ -37,6 +37,19 @@ function formatDate(iso: string | null) {
 	});
 }
 
+function statusTimelineLabel(item: PaymentListItem) {
+	switch (item.status) {
+		case "paid":
+			return `Paid ${formatDate(item.paidAt)}`;
+		case "refunded":
+			return "Refunded";
+		case "failed":
+			return "Payment failed";
+		default:
+			return `Created ${formatDate(item.createdAt)}`;
+	}
+}
+
 const thClass = "text-left py-3 px-2 text-xs font-semibold text-muted";
 const tdClass = "py-3 px-2";
 
@@ -187,7 +200,7 @@ export function PaymentsCards({ items, onView }: PaymentsTableProps) {
 	}
 
 	return (
-		<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+		<div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
 			{items.map((item) => (
 				<div
 					key={item.id}
@@ -198,9 +211,9 @@ export function PaymentsCards({ items, onView }: PaymentsTableProps) {
 						onClick={() => onView(item)}
 						className="block w-full text-left"
 					>
-						<div className="flex items-start justify-between gap-3">
+						<div className="flex min-w-0 flex-col gap-2 min-[360px]:flex-row min-[360px]:items-start min-[360px]:justify-between">
 							<div className="min-w-0">
-								<p className="font-mono text-xs font-medium text-muted">
+								<p className="break-all font-mono text-xs font-medium text-muted">
 									{item.orderNumber}
 								</p>
 								<p className="mt-1 text-sm font-semibold text-foreground">
@@ -211,12 +224,12 @@ export function PaymentsCards({ items, onView }: PaymentsTableProps) {
 								{item.status.charAt(0).toUpperCase() + item.status.slice(1)}
 							</Chip>
 						</div>
-						<p className="mt-4 text-xl font-bold text-foreground">
+						<p className="mt-4 break-words text-xl font-bold text-foreground">
 							{formatAmount(item.amount, item.currency)}
 						</p>
 					</button>
-					<div className="mt-4 flex items-center justify-between gap-3 text-xs text-muted">
-						<span>Paid {formatDate(item.paidAt)}</span>
+					<div className="mt-4 flex flex-col gap-2 text-xs text-muted min-[360px]:flex-row min-[360px]:items-center min-[360px]:justify-between">
+						<span className="break-words">{statusTimelineLabel(item)}</span>
 						{item.status === "paid" ? (
 							<Button
 								variant="danger-soft"

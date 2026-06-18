@@ -36,6 +36,7 @@ import { getAdminFieldError } from "#/components/admin/ui/admin-form-errors";
 import { AdminImageUploader } from "#/components/admin/ui/admin-image-uploader";
 import { RichTextEditor } from "#/components/admin/ui/rich-text-editor";
 import { InputField } from "#/components/ui/fields/input-field";
+import { WindowedPagination } from "#/components/ui/pagination/windowed-pagination";
 import {
 	usePersistedViewMode,
 	ViewModeToggle,
@@ -214,7 +215,7 @@ export function ProductsPage() {
 	const categories = categoriesData?.data.items ?? [];
 
 	return (
-		<div className="space-y-4 py-6">
+		<div className="space-y-4 py-4 sm:py-6">
 			<div>
 				<h1 className="text-xl font-bold text-foreground">Products</h1>
 				<p className="text-sm text-muted mt-0.5">
@@ -252,7 +253,7 @@ export function ProductsPage() {
 				<ViewModeToggle value={viewMode} onChange={setViewMode} />
 			</div>
 
-			<div className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+			<div className="rounded-2xl border border-border bg-surface p-4 shadow-sm sm:p-5">
 				{isLoading ? (
 					<PanelState icon={Boxes} title="Loading products..." />
 				) : isError ? (
@@ -398,8 +399,8 @@ function ProductToolbar({
 	};
 
 	return (
-		<div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
-			<div className="relative min-w-60 flex-1">
+		<div className="grid w-full min-w-0 flex-1 grid-cols-1 gap-3 min-[520px]:grid-cols-2 xl:flex xl:flex-wrap xl:items-center">
+			<div className="relative min-w-0 min-[520px]:col-span-2 xl:col-span-1 xl:flex-1">
 				<Search
 					size={15}
 					className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
@@ -418,7 +419,7 @@ function ProductToolbar({
 				onChange={(event) => onCategoryChange(event.target.value)}
 				onFocus={warmCategories}
 				onMouseEnter={warmCategories}
-				className="rounded-xl border border-border bg-surface px-3 py-2.5 text-sm text-foreground transition-all focus:outline-none focus:ring-2 focus:ring-accent/40"
+				className="w-full min-w-0 rounded-xl border border-border bg-surface px-3 py-2.5 text-sm text-foreground transition-all focus:outline-none focus:ring-2 focus:ring-accent/40 xl:w-auto"
 			>
 				<option value="">All categories</option>
 				{categories.map((category) => (
@@ -433,7 +434,7 @@ function ProductToolbar({
 				onChange={(event) => onStatusChange(event.target.value as StatusFilter)}
 				onFocus={warmStatuses}
 				onMouseEnter={warmStatuses}
-				className="rounded-xl border border-border bg-surface px-3 py-2.5 text-sm text-foreground transition-all focus:outline-none focus:ring-2 focus:ring-accent/40"
+				className="w-full min-w-0 rounded-xl border border-border bg-surface px-3 py-2.5 text-sm text-foreground transition-all focus:outline-none focus:ring-2 focus:ring-accent/40 xl:w-auto"
 			>
 				<option value="all">All statuses</option>
 				<option value="active">Active</option>
@@ -445,7 +446,7 @@ function ProductToolbar({
 				onChange={(event) => onFlagChange(event.target.value as FlagFilter)}
 				onFocus={warmFlags}
 				onMouseEnter={warmFlags}
-				className="rounded-xl border border-border bg-surface px-3 py-2.5 text-sm text-foreground transition-all focus:outline-none focus:ring-2 focus:ring-accent/40"
+				className="w-full min-w-0 rounded-xl border border-border bg-surface px-3 py-2.5 text-sm text-foreground transition-all focus:outline-none focus:ring-2 focus:ring-accent/40 xl:w-auto"
 			>
 				<option value="all">All flags</option>
 				<option value="featured">Featured</option>
@@ -454,7 +455,12 @@ function ProductToolbar({
 				<option value="out-of-stock">Out of stock</option>
 			</select>
 
-			<Chip size="sm" variant="soft" color="default">
+			<Chip
+				size="sm"
+				variant="soft"
+				color="default"
+				className="justify-self-start"
+			>
 				{totalCount} {totalCount === 1 ? "product" : "products"}
 			</Chip>
 
@@ -462,7 +468,7 @@ function ProductToolbar({
 				size="sm"
 				variant="primary"
 				onPress={onCreateClick}
-				className="gap-1.5"
+				className="w-full justify-center gap-1.5 min-[520px]:w-auto"
 			>
 				<Plus size={15} />
 				New Product
@@ -474,7 +480,7 @@ function ProductToolbar({
 				isPending={isSeeding}
 				isDisabled={isSeeding}
 				onPress={onSeedClick}
-				className="gap-1.5"
+				className="w-full justify-center gap-1.5 min-[520px]:w-auto"
 			>
 				<DatabaseZap size={15} />
 				Seed Catalog
@@ -581,7 +587,7 @@ function ProductsTable({
 										<p className="truncate font-medium text-foreground">
 											{product.name}
 										</p>
-										<p className="text-xs text-muted">
+										<p className="break-words text-xs text-muted">
 											{product.brand} / {product.slug}
 										</p>
 									</div>
@@ -671,7 +677,7 @@ function ProductsList({
 						</div>
 					</button>
 					<div className="flex flex-wrap items-center justify-between gap-3 sm:justify-end">
-						<div className="text-right">
+						<div className="min-w-0 text-left sm:text-right">
 							<p className="text-sm font-semibold text-foreground">
 								{formatCurrency(product.price)}
 							</p>
@@ -710,7 +716,7 @@ function ProductsCards({
 	}
 
 	return (
-		<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+		<div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
 			{products.map((product) => (
 				<div
 					key={product.id}
@@ -721,26 +727,28 @@ function ProductsCards({
 						onClick={() => onView(product)}
 						className="block w-full text-left"
 					>
-						<div className="flex items-start gap-3">
+						<div className="flex min-w-0 items-start gap-3">
 							<ProductImage product={product} />
 							<div className="min-w-0">
 								<p className="truncate text-sm font-semibold text-foreground">
 									{product.name}
 								</p>
-								<p className="text-xs text-muted">{product.brand}</p>
+								<p className="break-words text-xs text-muted">
+									{product.brand}
+								</p>
 							</div>
 						</div>
 
-						<div className="mt-4 flex items-center justify-between">
-							<div>
-								<p className="text-sm font-bold text-foreground">
+						<div className="mt-4 flex min-w-0 flex-col gap-2 min-[360px]:flex-row min-[360px]:items-center min-[360px]:justify-between">
+							<div className="min-w-0">
+								<p className="break-words text-sm font-bold text-foreground">
 									{formatCurrency(product.price)}
 								</p>
 								<p className="text-xs text-muted">
 									{product.stockQuantity ?? 0} in stock
 								</p>
 							</div>
-							<div className="flex items-center gap-1 text-xs text-muted">
+							<div className="flex shrink-0 items-center gap-1 text-xs text-muted">
 								<Star size={13} className="text-warning" />
 								{product.ratingAvg.toFixed(1)}
 							</div>
@@ -751,8 +759,10 @@ function ProductsCards({
 						</div>
 					</button>
 
-					<div className="mt-4 flex items-center justify-between border-t border-border pt-3 text-xs text-muted">
-						<span>Updated {formatDate(product.updatedAt)}</span>
+					<div className="mt-4 flex flex-col gap-2 border-t border-border pt-3 text-xs text-muted min-[360px]:flex-row min-[360px]:items-center min-[360px]:justify-between">
+						<span className="break-words">
+							Updated {formatDate(product.updatedAt)}
+						</span>
 						<ProductActions
 							product={product}
 							onEdit={onEdit}
@@ -833,46 +843,18 @@ function ProductsPagination({
 }) {
 	if (totalItems === 0) return null;
 
-	const startItem = (currentPage - 1) * limit + 1;
-	const endItem = Math.min(currentPage * limit, totalItems);
-
 	return (
-		<div className="mt-4 flex flex-col gap-3 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
-			<p className="text-sm text-muted">
-				Showing {startItem}-{endItem} of {totalItems} products
-			</p>
-			<div className="flex items-center gap-2">
-				<Button
-					size="sm"
-					variant="outline"
-					isDisabled={currentPage === 1}
-					onPress={() => onPageChange(currentPage - 1)}
-					onFocus={() => currentPage > 1 && onPrefetchPage(currentPage - 1)}
-					onMouseEnter={() =>
-						currentPage > 1 && onPrefetchPage(currentPage - 1)
-					}
-				>
-					Previous
-				</Button>
-				<Chip size="sm" variant="soft" color="default">
-					Page {currentPage} of {totalPages}
-				</Chip>
-				<Button
-					size="sm"
-					variant="outline"
-					isDisabled={currentPage >= totalPages}
-					onPress={() => onPageChange(currentPage + 1)}
-					onFocus={() =>
-						currentPage < totalPages && onPrefetchPage(currentPage + 1)
-					}
-					onMouseEnter={() =>
-						currentPage < totalPages && onPrefetchPage(currentPage + 1)
-					}
-				>
-					Next
-				</Button>
-			</div>
-		</div>
+		<WindowedPagination
+			currentPage={currentPage}
+			totalPages={totalPages}
+			totalItems={totalItems}
+			limit={limit}
+			itemLabel="product"
+			onPageChange={onPageChange}
+			onPrefetchPage={onPrefetchPage}
+			className="mt-4 border-t border-border pt-4"
+			showSummaryWhenSinglePage
+		/>
 	);
 }
 

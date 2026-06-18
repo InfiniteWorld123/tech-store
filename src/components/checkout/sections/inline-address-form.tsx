@@ -5,9 +5,11 @@ import { useForm } from "@tanstack/react-form";
 import { getFieldError } from "#/components/ui/fields/form-errors";
 import { useCreateAddress } from "#/mutations/addresses/use-create-address";
 import { createAddressSchema } from "#/server/addresses/addresses.schemas";
+import type { AddressType } from "#/server/addresses/addresses.types";
 
 type Props = {
-	onSuccess: () => void;
+	isDefault?: boolean;
+	onSuccess: (address: AddressType) => void;
 };
 
 type Field = {
@@ -48,7 +50,7 @@ const FIELDS: Field[] = [
 	{ name: "country", label: "Country", placeholder: "Germany", required: true },
 ];
 
-export function InlineAddressForm({ onSuccess }: Props) {
+export function InlineAddressForm({ isDefault = false, onSuccess }: Props) {
 	const { mutateAsync, isPending } = useCreateAddress({ onSuccess });
 
 	const form = useForm({
@@ -73,20 +75,14 @@ export function InlineAddressForm({ onSuccess }: Props) {
 				city: value.city,
 				state: value.state || undefined,
 				country: value.country,
-				isDefault: false,
+				isDefault,
 			});
 		},
 	});
 	const { handleSubmit, Field, Subscribe } = form;
 
 	return (
-		<form
-			onSubmit={(e) => {
-				e.preventDefault();
-				handleSubmit();
-			}}
-			className="space-y-3"
-		>
+		<div className="space-y-3">
 			<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 				{FIELDS.map((f) => (
 					<Field key={f.name} name={f.name as never}>
@@ -127,15 +123,16 @@ export function InlineAddressForm({ onSuccess }: Props) {
 			<Subscribe>
 				{({ isSubmitting }) => (
 					<Button
-						type="submit"
+						type="button"
 						variant="primary"
 						isPending={isSubmitting || isPending}
+						onPress={() => handleSubmit()}
 						className="w-full sm:w-auto"
 					>
 						Save address
 					</Button>
 				)}
 			</Subscribe>
-		</form>
+		</div>
 	);
 }

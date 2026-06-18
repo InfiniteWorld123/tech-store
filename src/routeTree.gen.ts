@@ -34,7 +34,6 @@ import { Route as AdminOptionsRouteImport } from './routes/admin/options'
 import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin/analytics'
 import { Route as AccountReviewsRouteImport } from './routes/account/reviews'
-import { Route as AccountOrdersRouteImport } from './routes/account/orders'
 import { Route as AccountAddressesRouteImport } from './routes/account/addresses'
 import { Route as LandingWithdrawalRouteImport } from './routes/_landing/withdrawal'
 import { Route as LandingTrackRouteImport } from './routes/_landing/track'
@@ -51,6 +50,7 @@ import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
 import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
 import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-password'
+import { Route as AccountOrdersIndexRouteImport } from './routes/account/orders/index'
 import { Route as ApiWebhooksStripeRouteImport } from './routes/api/webhooks/stripe'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AccountOrdersOrderIdRouteImport } from './routes/account/orders/$orderId'
@@ -179,11 +179,6 @@ const AccountReviewsRoute = AccountReviewsRouteImport.update({
   path: '/reviews',
   getParentRoute: () => AccountRoute,
 } as any)
-const AccountOrdersRoute = AccountOrdersRouteImport.update({
-  id: '/orders',
-  path: '/orders',
-  getParentRoute: () => AccountRoute,
-} as any)
 const AccountAddressesRoute = AccountAddressesRouteImport.update({
   id: '/addresses',
   path: '/addresses',
@@ -264,6 +259,11 @@ const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => AuthRoute,
 } as any)
+const AccountOrdersIndexRoute = AccountOrdersIndexRouteImport.update({
+  id: '/orders/',
+  path: '/orders/',
+  getParentRoute: () => AccountRoute,
+} as any)
 const ApiWebhooksStripeRoute = ApiWebhooksStripeRouteImport.update({
   id: '/api/webhooks/stripe',
   path: '/api/webhooks/stripe',
@@ -275,9 +275,9 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountOrdersOrderIdRoute = AccountOrdersOrderIdRouteImport.update({
-  id: '/$orderId',
-  path: '/$orderId',
-  getParentRoute: () => AccountOrdersRoute,
+  id: '/orders/$orderId',
+  path: '/orders/$orderId',
+  getParentRoute: () => AccountRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -302,7 +302,6 @@ export interface FileRoutesByFullPath {
   '/track': typeof LandingTrackRoute
   '/withdrawal': typeof LandingWithdrawalRoute
   '/account/addresses': typeof AccountAddressesRoute
-  '/account/orders': typeof AccountOrdersRouteWithChildren
   '/account/reviews': typeof AccountReviewsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -325,6 +324,7 @@ export interface FileRoutesByFullPath {
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
+  '/account/orders/': typeof AccountOrdersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -346,7 +346,6 @@ export interface FileRoutesByTo {
   '/track': typeof LandingTrackRoute
   '/withdrawal': typeof LandingWithdrawalRoute
   '/account/addresses': typeof AccountAddressesRoute
-  '/account/orders': typeof AccountOrdersRouteWithChildren
   '/account/reviews': typeof AccountReviewsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -369,6 +368,7 @@ export interface FileRoutesByTo {
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
+  '/account/orders': typeof AccountOrdersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -394,7 +394,6 @@ export interface FileRoutesById {
   '/_landing/track': typeof LandingTrackRoute
   '/_landing/withdrawal': typeof LandingWithdrawalRoute
   '/account/addresses': typeof AccountAddressesRoute
-  '/account/orders': typeof AccountOrdersRouteWithChildren
   '/account/reviews': typeof AccountReviewsRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -417,6 +416,7 @@ export interface FileRoutesById {
   '/account/orders/$orderId': typeof AccountOrdersOrderIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
+  '/account/orders/': typeof AccountOrdersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -442,7 +442,6 @@ export interface FileRouteTypes {
     | '/track'
     | '/withdrawal'
     | '/account/addresses'
-    | '/account/orders'
     | '/account/reviews'
     | '/admin/analytics'
     | '/admin/categories'
@@ -465,6 +464,7 @@ export interface FileRouteTypes {
     | '/account/orders/$orderId'
     | '/api/auth/$'
     | '/api/webhooks/stripe'
+    | '/account/orders/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -486,7 +486,6 @@ export interface FileRouteTypes {
     | '/track'
     | '/withdrawal'
     | '/account/addresses'
-    | '/account/orders'
     | '/account/reviews'
     | '/admin/analytics'
     | '/admin/categories'
@@ -509,6 +508,7 @@ export interface FileRouteTypes {
     | '/account/orders/$orderId'
     | '/api/auth/$'
     | '/api/webhooks/stripe'
+    | '/account/orders'
   id:
     | '__root__'
     | '/'
@@ -533,7 +533,6 @@ export interface FileRouteTypes {
     | '/_landing/track'
     | '/_landing/withdrawal'
     | '/account/addresses'
-    | '/account/orders'
     | '/account/reviews'
     | '/admin/analytics'
     | '/admin/categories'
@@ -556,6 +555,7 @@ export interface FileRouteTypes {
     | '/account/orders/$orderId'
     | '/api/auth/$'
     | '/api/webhooks/stripe'
+    | '/account/orders/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -762,13 +762,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountReviewsRouteImport
       parentRoute: typeof AccountRoute
     }
-    '/account/orders': {
-      id: '/account/orders'
-      path: '/orders'
-      fullPath: '/account/orders'
-      preLoaderRoute: typeof AccountOrdersRouteImport
-      parentRoute: typeof AccountRoute
-    }
     '/account/addresses': {
       id: '/account/addresses'
       path: '/addresses'
@@ -881,6 +874,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthForgotPasswordRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/account/orders/': {
+      id: '/account/orders/'
+      path: '/orders'
+      fullPath: '/account/orders/'
+      preLoaderRoute: typeof AccountOrdersIndexRouteImport
+      parentRoute: typeof AccountRoute
+    }
     '/api/webhooks/stripe': {
       id: '/api/webhooks/stripe'
       path: '/api/webhooks/stripe'
@@ -897,10 +897,10 @@ declare module '@tanstack/react-router' {
     }
     '/account/orders/$orderId': {
       id: '/account/orders/$orderId'
-      path: '/$orderId'
+      path: '/orders/$orderId'
       fullPath: '/account/orders/$orderId'
       preLoaderRoute: typeof AccountOrdersOrderIdRouteImport
-      parentRoute: typeof AccountOrdersRoute
+      parentRoute: typeof AccountRoute
     }
   }
 }
@@ -923,30 +923,20 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
-interface AccountOrdersRouteChildren {
-  AccountOrdersOrderIdRoute: typeof AccountOrdersOrderIdRoute
-}
-
-const AccountOrdersRouteChildren: AccountOrdersRouteChildren = {
-  AccountOrdersOrderIdRoute: AccountOrdersOrderIdRoute,
-}
-
-const AccountOrdersRouteWithChildren = AccountOrdersRoute._addFileChildren(
-  AccountOrdersRouteChildren,
-)
-
 interface AccountRouteChildren {
   AccountAddressesRoute: typeof AccountAddressesRoute
-  AccountOrdersRoute: typeof AccountOrdersRouteWithChildren
   AccountReviewsRoute: typeof AccountReviewsRoute
   AccountIndexRoute: typeof AccountIndexRoute
+  AccountOrdersOrderIdRoute: typeof AccountOrdersOrderIdRoute
+  AccountOrdersIndexRoute: typeof AccountOrdersIndexRoute
 }
 
 const AccountRouteChildren: AccountRouteChildren = {
   AccountAddressesRoute: AccountAddressesRoute,
-  AccountOrdersRoute: AccountOrdersRouteWithChildren,
   AccountReviewsRoute: AccountReviewsRoute,
   AccountIndexRoute: AccountIndexRoute,
+  AccountOrdersOrderIdRoute: AccountOrdersOrderIdRoute,
+  AccountOrdersIndexRoute: AccountOrdersIndexRoute,
 }
 
 const AccountRouteWithChildren =

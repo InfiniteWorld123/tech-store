@@ -9,6 +9,7 @@ type WindowedPaginationProps = {
 	onPageChange: (page: number) => void;
 	onPrefetchPage: (page: number) => void;
 	className?: string;
+	showSummaryWhenSinglePage?: boolean;
 };
 
 function getPageNumbers(
@@ -44,21 +45,34 @@ export function WindowedPagination({
 	onPageChange,
 	onPrefetchPage,
 	className,
+	showSummaryWhenSinglePage = false,
 }: WindowedPaginationProps) {
-	if (totalItems === 0 || totalPages <= 1) return null;
+	if (totalItems === 0) return null;
 
 	const displayPage = Math.min(Math.max(currentPage, 1), totalPages);
 	const startItem = (displayPage - 1) * limit + 1;
 	const endItem = Math.min(displayPage * limit, totalItems);
 	const label = `${itemLabel}${totalItems === 1 ? "" : "s"}`;
 
+	if (totalPages <= 1) {
+		if (!showSummaryWhenSinglePage) return null;
+
+		return (
+			<div className={className}>
+				<p className="text-xs text-muted sm:text-sm">
+					Showing {startItem}-{endItem} of {totalItems} {label}
+				</p>
+			</div>
+		);
+	}
+
 	return (
 		<div className={className}>
 			<Pagination className="w-full">
-				<Pagination.Summary>
+				<Pagination.Summary className="text-xs sm:text-sm">
 					Showing {startItem}-{endItem} of {totalItems} {label}
 				</Pagination.Summary>
-				<Pagination.Content>
+				<Pagination.Content className="max-w-full justify-center overflow-x-auto pb-1">
 					<Pagination.Item>
 						<Pagination.Previous
 							isDisabled={displayPage === 1}
@@ -69,17 +83,23 @@ export function WindowedPagination({
 							}
 						>
 							<Pagination.PreviousIcon />
-							<span>Previous</span>
+							<span className="hidden sm:inline">Previous</span>
 						</Pagination.Previous>
+					</Pagination.Item>
+
+					<Pagination.Item className="sm:hidden">
+						<span className="inline-flex h-9 items-center rounded-lg border border-border px-3 text-sm font-medium text-foreground">
+							{displayPage} / {totalPages}
+						</span>
 					</Pagination.Item>
 
 					{getPageNumbers(displayPage, totalPages).map((page) =>
 						typeof page !== "number" ? (
-							<Pagination.Item key={page}>
+							<Pagination.Item key={page} className="hidden sm:list-item">
 								<Pagination.Ellipsis />
 							</Pagination.Item>
 						) : (
-							<Pagination.Item key={page}>
+							<Pagination.Item key={page} className="hidden sm:list-item">
 								<Pagination.Link
 									isActive={page === displayPage}
 									onPress={() => onPageChange(page)}
@@ -105,7 +125,7 @@ export function WindowedPagination({
 								displayPage < totalPages && onPrefetchPage(displayPage + 1)
 							}
 						>
-							<span>Next</span>
+							<span className="hidden sm:inline">Next</span>
 							<Pagination.NextIcon />
 						</Pagination.Next>
 					</Pagination.Item>

@@ -50,13 +50,13 @@ const shippingStatusOptions = [
 const carrierOptions = ["", "dhl", "hermes", "ups", "fedex"];
 
 const selectClass =
-	"appearance-none pl-9 pr-8 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer";
+	"w-full min-w-0 appearance-none pl-9 pr-8 py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all cursor-pointer";
 const iconClass =
 	"absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none";
 const chevronClass =
 	"absolute right-2.5 top-1/2 -translate-y-1/2 text-muted pointer-events-none";
 const dateClass =
-	"appearance-none py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all";
+	"w-full min-w-0 appearance-none py-2.5 text-sm rounded-xl border border-border bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all";
 
 export function OrdersToolbar({
 	inputValue,
@@ -102,9 +102,9 @@ export function OrdersToolbar({
 	};
 
 	return (
-		<div className="flex flex-wrap items-center gap-3">
+		<div className="grid w-full min-w-0 grid-cols-1 gap-3 min-[520px]:grid-cols-2 xl:flex xl:flex-wrap xl:items-center">
 			{/* Search */}
-			<div className="relative flex-1 min-w-48">
+			<div className="relative min-w-0 min-[520px]:col-span-2 xl:col-span-1 xl:flex-1">
 				<Search size={15} className={iconClass} />
 				<input
 					type="text"
@@ -116,7 +116,7 @@ export function OrdersToolbar({
 			</div>
 
 			{/* Order Status */}
-			<div className="relative">
+			<div className="relative min-w-0">
 				<Package size={15} className={iconClass} />
 				<select
 					value={orderStatus}
@@ -135,7 +135,7 @@ export function OrdersToolbar({
 			</div>
 
 			{/* Payment Status */}
-			<div className="relative">
+			<div className="relative min-w-0">
 				<CreditCard size={15} className={iconClass} />
 				<select
 					value={paymentStatus}
@@ -154,7 +154,7 @@ export function OrdersToolbar({
 			</div>
 
 			{/* Shipping Status */}
-			<div className="relative">
+			<div className="relative min-w-0">
 				<Truck size={15} className={iconClass} />
 				<select
 					value={shippingStatus}
@@ -174,7 +174,7 @@ export function OrdersToolbar({
 			</div>
 
 			{/* Carrier */}
-			<div className="relative">
+			<div className="relative min-w-0">
 				<Building2 size={15} className={iconClass} />
 				<select
 					value={carrier}
@@ -193,8 +193,8 @@ export function OrdersToolbar({
 			</div>
 
 			{/* Date range */}
-			<div className="flex items-center gap-2">
-				<div className="relative">
+			<div className="grid min-w-0 grid-cols-1 gap-2 min-[420px]:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] min-[420px]:items-center min-[520px]:col-span-2 xl:col-span-1">
+				<div className="relative min-w-0">
 					<Calendar size={15} className={iconClass} />
 					<input
 						type="date"
@@ -207,7 +207,9 @@ export function OrdersToolbar({
 						className={`${dateClass} pl-9 pr-3`}
 					/>
 				</div>
-				<span className="text-xs text-muted">to</span>
+				<span className="hidden justify-self-center text-xs text-muted min-[420px]:block">
+					to
+				</span>
 				<input
 					type="date"
 					value={dateTo}

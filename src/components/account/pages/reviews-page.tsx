@@ -29,8 +29,10 @@ export function ReviewsPage() {
 	};
 
 	return (
-		<div>
-			<h1 className="text-2xl font-bold text-foreground mb-6">My Reviews</h1>
+		<div className="min-w-0">
+			<h1 className="mb-5 text-xl font-bold text-foreground sm:mb-6 sm:text-2xl">
+				My Reviews
+			</h1>
 
 			{isLoading ? (
 				<div className="space-y-4">
@@ -39,7 +41,7 @@ export function ReviewsPage() {
 					))}
 				</div>
 			) : reviews.length === 0 ? (
-				<div className="border border-dashed border-border rounded-2xl p-12 text-center space-y-3">
+				<div className="space-y-3 rounded-2xl border border-dashed border-border p-6 text-center sm:p-12">
 					<Star size={28} className="text-muted mx-auto" />
 					<p className="text-foreground font-semibold">No reviews yet</p>
 					<p className="text-muted text-sm">

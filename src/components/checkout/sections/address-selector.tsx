@@ -70,7 +70,8 @@ export function AddressSelector({
 				<div className="border border-border rounded-2xl p-4 space-y-3">
 					<p className="text-sm font-semibold text-foreground">New address</p>
 					<InlineAddressForm
-						onSuccess={() => {
+						onSuccess={(address) => {
+							onSelect(address.id);
 							setShowForm(false);
 						}}
 					/>
