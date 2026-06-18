@@ -12,8 +12,12 @@ dist-ssr
 __unconfig*
 todos.json
 
-
-#Ignore cursor AI rules
-.cursor/rules/codacy.mdc
-# heroui-agents-md
+# AI tools
+.claude/
+.cursor/
+.codacy/
 .heroui-docs/
+CLAUDE.md
+skills-lock.json
+.cta.json
+reading/
