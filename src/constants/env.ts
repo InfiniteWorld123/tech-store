@@ -16,6 +16,7 @@ const getOptionalEnvVar = (key: string) => {
 
 export const env = {
 	BASE_URL: getEnvVar("BASE_URL"),
+	BETTER_AUTH_SECRET: getEnvVar("BETTER_AUTH_SECRET"),
 	DATABASE_URL: getEnvVar("DATABASE_URL"),
 	RESEND: getEnvVar("RESEND"),
 	CONTACT_EMAIL:
