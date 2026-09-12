@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "techstore",
+  "workers_dev": false,
   "main": "@tanstack/react-start/server-entry",
   "compatibility_date": "2026-09-12",
   "compatibility_flags": ["nodejs_compat"],
