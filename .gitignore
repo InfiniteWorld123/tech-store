@@ -9,6 +9,8 @@ dist-ssr
 .wrangler
 .output
 .vercel
+.env*
+worker-configuration.d.ts
 .vinxi
 __unconfig*
 todos.json
