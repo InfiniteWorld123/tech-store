@@ -53,7 +53,25 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "TanStack Start Starter",
+				title: "Tech Store – Demo-Onlineshop von Yaman Warda",
+			},
+			{
+				name: "description",
+				content:
+					"Tech Store ist ein Demo-Projekt von Yaman Warda: ein Onlineshop für Laptops, Smartphones, Audio und Gaming mit Warenkorb, Checkout und Admin-Bereich. Produkte, Preise und Bewertungen sind Beispieldaten.",
+			},
+			{
+				property: "og:title",
+				content: "Tech Store – Demo-Onlineshop von Yaman Warda",
+			},
+			{
+				property: "og:description",
+				content:
+					"Demo-Onlineshop mit Warenkorb, Checkout und Admin-Bereich. Produkte, Preise und Bewertungen sind Beispieldaten.",
+			},
+			{
+				property: "og:type",
+				content: "website",
 			},
 		],
 		links: [

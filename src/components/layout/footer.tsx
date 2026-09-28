@@ -116,8 +116,8 @@ export function Footer() {
 				{/* Bottom bar */}
 				<div className="mt-10 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted">
 					<p>
-						© {new Date().getFullYear()} TechStore Demo GmbH. All rights
-						reserved.
+						© {new Date().getFullYear()} Tech Store · Demo project by Yaman
+						Warda – products, prices, and reviews are sample data.
 					</p>
 					<div className="flex gap-4">
 						<LinkAnchor
