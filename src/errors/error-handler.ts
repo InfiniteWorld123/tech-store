@@ -74,9 +74,13 @@ export const handleError = (error: unknown): Error & JsonError => {
 			);
 		}
 
+		// Unexpected errors (database, network, bugs) are logged for the Worker
+		// logs and never echoed to the client, since their messages can reveal
+		// connection details.
+		console.error("[unexpected error]", error);
 		return toErrorWithJson(
 			jsonError({
-				message: error.message || "An unexpected error occurred",
+				message: "An unexpected error occurred",
 				status: HttpStatusCode.INTERNAL_SERVER_ERROR,
 				code: "INTERNAL_ERROR",
 			}),
@@ -84,6 +88,7 @@ export const handleError = (error: unknown): Error & JsonError => {
 	}
 
 	// 3. Fallback
+	console.error("[unexpected error]", error);
 	return toErrorWithJson(
 		jsonError({
 			message: "An unexpected error occurred",
