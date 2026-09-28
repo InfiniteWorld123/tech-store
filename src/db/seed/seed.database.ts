@@ -1,9 +1,11 @@
-import { inArray } from "drizzle-orm";
+import { and, eq, exists, inArray, not, notExists, or } from "drizzle-orm";
 import type { BatchItem } from "drizzle-orm/batch";
 import type { NeonHttpDatabase } from "drizzle-orm/neon-http";
 import {
+	cartItem,
 	category,
 	color,
+	orderItem,
 	product,
 	ram,
 	review,
@@ -83,8 +85,107 @@ const required = <K, V>(
 	return value;
 };
 
+/**
+ * Removes catalog rows that do not belong to the seed. Products referenced by
+ * orders or carts cannot be deleted without breaking those records, so they
+ * are only hidden (isActive = false).
+ */
+const removeLegacyCatalog = async (db: SeedDatabase, data: SeedData) => {
+	const seedProductIds = data.products.map((item) => item.id);
+	const referenced = await db
+		.selectDistinct({ productId: variant.productId })
+		.from(variant)
+		.where(
+			and(
+				not(inArray(variant.productId, seedProductIds)),
+				or(
+					exists(
+						db
+							.select()
+							.from(orderItem)
+							.where(eq(orderItem.variantId, variant.id)),
+					),
+					exists(
+						db
+							.select()
+							.from(cartItem)
+							.where(eq(cartItem.variantId, variant.id)),
+					),
+				),
+			),
+		);
+	const keptIds = referenced.map((row) => row.productId);
+	const keep = [...seedProductIds, ...keptIds];
+
+	const [hidden, deleted] = await db.batch([
+		db
+			.update(product)
+			.set({ isActive: false })
+			.where(inArray(product.id, keptIds))
+			.returning({ id: product.id }),
+		db
+			.delete(product)
+			.where(not(inArray(product.id, keep)))
+			.returning({ id: product.id }),
+	]);
+	return {
+		hiddenLegacyProducts: hidden.length,
+		deletedLegacyProducts: deleted.length,
+	};
+};
+
+const removeUnusedTaxonomy = async (db: SeedDatabase) => {
+	const [categories] = await db.batch([
+		db
+			.delete(category)
+			.where(
+				notExists(
+					db.select().from(product).where(eq(product.categoryId, category.id)),
+				),
+			)
+			.returning({ id: category.id }),
+		db
+			.delete(color)
+			.where(
+				notExists(
+					db.select().from(variant).where(eq(variant.colorId, color.id)),
+				),
+			),
+		db
+			.delete(storage)
+			.where(
+				notExists(
+					db.select().from(variant).where(eq(variant.storageId, storage.id)),
+				),
+			),
+		db
+			.delete(ram)
+			.where(
+				notExists(db.select().from(variant).where(eq(variant.ramId, ram.id))),
+			),
+		db
+			.delete(screenSize)
+			.where(
+				notExists(
+					db
+						.select()
+						.from(variant)
+						.where(eq(variant.screenSizeId, screenSize.id)),
+				),
+			),
+	]);
+	return { deletedEmptyCategories: categories.length };
+};
+
 /** Replaces the seed catalog, customers, and reviews in one transaction. */
-export const writeSeed = async (db: SeedDatabase, data: SeedData) => {
+export const writeSeed = async (
+	db: SeedDatabase,
+	data: SeedData,
+	options: { replaceCatalog?: boolean } = {},
+) => {
+	const legacy = options.replaceCatalog
+		? await removeLegacyCatalog(db, data)
+		: null;
 	const ids = await upsertOptions(db, data);
 
 	const productRows = data.products.map((item) => ({
@@ -217,7 +318,13 @@ export const writeSeed = async (db: SeedDatabase, data: SeedData) => {
 			),
 	]);
 
+	const taxonomy = options.replaceCatalog
+		? await removeUnusedTaxonomy(db)
+		: null;
+
 	return {
+		...legacy,
+		...taxonomy,
 		products: products.length,
 		variants: variants.length,
 		variantImages: images.length,

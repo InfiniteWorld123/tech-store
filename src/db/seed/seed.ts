@@ -17,6 +17,12 @@ if (process.argv.includes("--dry-run")) {
 	console.info("Tech Store seed dry run", seedSummary(data));
 } else {
 	if (!databaseUrl) throw new Error("DATABASE_URL is required to seed");
-	const written = await writeSeed(drizzle({ client: neon(databaseUrl) }), data);
+	const written = await writeSeed(
+		drizzle({ client: neon(databaseUrl) }),
+		data,
+		{
+			replaceCatalog: process.argv.includes("--replace-catalog"),
+		},
+	);
 	console.info("Tech Store seed complete", { ...seedSummary(data), written });
 }
