@@ -1,4 +1,4 @@
-import { count, eq, ilike, type SQL } from "drizzle-orm";
+import { and, count, eq, ilike, type SQL } from "drizzle-orm";
 import { HttpStatusCode } from "#/constants/http";
 import { type JsonOk, jsonOk } from "#/constants/json";
 import { db } from "#/db/drizzle";
@@ -46,7 +46,11 @@ export const listCategories = async (
 				totalProducts: count(product.id),
 			})
 			.from(category)
-			.leftJoin(product, eq(product.categoryId, category.id))
+			// Count only products customers can see.
+			.leftJoin(
+				product,
+				and(eq(product.categoryId, category.id), eq(product.isActive, true)),
+			)
 			.groupBy(category.id);
 
 		const listedCategories = searchCondition
